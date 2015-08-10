@@ -1,0 +1,1 @@
+SELECT ID, TABLE_SCHEMA, TABLE_NAME from information_schema.tables WHERE TABLE_SCHEMA = :table_schema
