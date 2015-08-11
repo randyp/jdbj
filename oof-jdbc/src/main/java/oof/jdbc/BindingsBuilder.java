@@ -13,8 +13,8 @@ import java.util.*;
 @Immutable
 public class BindingsBuilder {
 
-    final NamedParameterStatement statement;
-    final Map<String, Binding> bindings;
+    private final NamedParameterStatement statement;
+    private final Map<String, Binding> bindings;
 
     public BindingsBuilder(NamedParameterStatement statement) {
         this(statement, new HashMap<>());
@@ -23,6 +23,14 @@ public class BindingsBuilder {
     BindingsBuilder(NamedParameterStatement statement, Map<String, Binding> bindings){
         this.statement = statement;
         this.bindings = bindings;
+    }
+
+    public String buildSql() {
+        return statement.jdbcSql(bindings);
+    }
+
+    public void bindToStatement(PreparedStatement ps) throws SQLException {
+        statement.bind(bindings, ps);
     }
 
     public BindingsBuilder bind(String name, Binding binding){
@@ -228,6 +236,6 @@ public class BindingsBuilder {
     }
 
     public BindingsBuilder bindObject(String name, Object x, SQLType targetSqlType) throws SQLException {
-        return bind(name, pc->pc.setObject(x, targetSqlType));
+        return bind(name, pc -> pc.setObject(x, targetSqlType));
     }
 }
