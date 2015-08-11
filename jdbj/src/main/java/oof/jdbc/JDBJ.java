@@ -5,10 +5,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 
-public class OJ {
+public final class JDBJ {
 
+    /**
+     *
+     * @param resource
+     * @return a phase 2 builder
+     */
     public static ReturnsBuilder query(String resource)  {
-        final URL url = OJ.class.getClassLoader().getResource(resource);
+        final URL url = JDBJ.class.getClassLoader().getResource(resource);
         if(url == null){
             throw new IllegalArgumentException("resource not found: " + resource);
         }
@@ -28,12 +33,17 @@ public class OJ {
         }
     }
 
+    /**
+     *
+     * @param queryString
+     * @return a phase 2 builder
+     */
     public static ReturnsBuilder queryString(String queryString) {
         final NamedParameterStatement statement = NamedParameterStatement.make(queryString);
         return new ReturnsBuilder(statement);
     }
 
-    private OJ() {
+    private JDBJ() {
     }
 }
 

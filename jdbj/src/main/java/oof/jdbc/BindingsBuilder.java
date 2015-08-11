@@ -1,6 +1,8 @@
 package oof.jdbc;
 
 
+import oof.jdbc.lambda.Binding;
+
 import javax.annotation.concurrent.Immutable;
 import java.io.InputStream;
 import java.io.Reader;
@@ -11,7 +13,7 @@ import java.sql.Date;
 import java.util.*;
 
 @Immutable
-public class BindingsBuilder {
+public final class BindingsBuilder {
 
     private final NamedParameterStatement statement;
     private final Map<String, Binding> bindings;

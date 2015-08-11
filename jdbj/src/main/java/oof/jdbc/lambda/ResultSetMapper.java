@@ -1,4 +1,4 @@
-package oof.jdbc;
+package oof.jdbc.lambda;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

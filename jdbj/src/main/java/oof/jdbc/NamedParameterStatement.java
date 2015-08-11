@@ -1,5 +1,6 @@
 package oof.jdbc;
 
+import oof.jdbc.lambda.Binding;
 import oof.jdbc.lexer.ColonStatementLexer;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.Token;
@@ -14,10 +15,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Immutable
-public class NamedParameterStatement {
+public final class NamedParameterStatement {
 
 
-    public static NamedParameterStatement make(String sql){
+    static NamedParameterStatement make(String sql){
         final ColonStatementLexer lexer = new ColonStatementLexer(new ANTLRInputStream(sql));
         //noinspection unchecked
         final List<Token> tokens = (List<Token>) lexer.getAllTokens();
@@ -33,13 +34,13 @@ public class NamedParameterStatement {
     private final List<Token> tokens;
     private final List<String> parametersToBind;
 
-    public NamedParameterStatement(Set<String> namedParameters, List<Token> tokens) {
+    private NamedParameterStatement(Set<String> namedParameters, List<Token> tokens) {
         this.namedParameters = Collections.unmodifiableSet(namedParameters);
         this.tokens = Collections.unmodifiableList(tokens);
         this.parametersToBind = Collections.unmodifiableList(
                 tokens.stream()
                         .filter(t -> t.getType() == ColonStatementLexer.NAMED_PARAM)
-                        .map(t -> t.getText())
+                        .map(Token::getText)
                         .collect(Collectors.toList())
         );
     }

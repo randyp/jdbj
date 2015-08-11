@@ -1,4 +1,6 @@
-package oof.jdbc;
+package oof.jdbc.lambda;
+
+import oof.jdbc.PreparedColumn;
 
 import java.sql.SQLException;
 

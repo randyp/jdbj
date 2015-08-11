@@ -1,6 +1,5 @@
 package oof.jdbc;
 
-import javax.annotation.concurrent.Immutable;
 import java.io.InputStream;
 import java.io.Reader;
 import java.math.BigDecimal;
@@ -8,7 +7,6 @@ import java.net.URL;
 import java.sql.*;
 import java.util.Calendar;
 
-@Immutable
 public class PreparedColumn {
 
     private final PreparedStatement ps;
