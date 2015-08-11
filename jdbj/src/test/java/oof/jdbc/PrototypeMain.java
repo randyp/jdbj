@@ -33,7 +33,7 @@ public class PrototypeMain {
 
                 stream.filter(s->s.length() > 5).forEach(System.out::println);
             }
-            
+
         }
     }
 }
