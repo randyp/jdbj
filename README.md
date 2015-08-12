@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/randyp/jdbj.svg?branch=master)](https://travis-ci.org/randyp/jdbj)
+
 jdbj is a jdbc fluent interface for capturing query intent long before query execution
 
 #### Why?
