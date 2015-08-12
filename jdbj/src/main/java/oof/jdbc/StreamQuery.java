@@ -8,7 +8,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Spliterator;
-import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -17,15 +16,15 @@ import java.util.stream.StreamSupport;
  * @param <R>
  */
 @Immutable
-public final class StreamBindingsBuilder<R> extends DecoratesBindingBuilder<StreamBindingsBuilder<R>> {
+public final class StreamQuery<R> extends DecoratesBindingBuilder<StreamQuery<R>> {
 
     private final ResultSetMapper<R> mapper;
 
-    StreamBindingsBuilder(NamedParameterStatement statement, ResultSetMapper<R> mapper) {
+    StreamQuery(NamedParameterStatement statement, ResultSetMapper<R> mapper) {
         this(new BindingsBuilder(statement), mapper);
     }
 
-    StreamBindingsBuilder(BindingsBuilder bindingsBuilder, ResultSetMapper<R> mapper) {
+    StreamQuery(BindingsBuilder bindingsBuilder, ResultSetMapper<R> mapper) {
         super(bindingsBuilder);
         this.mapper = mapper;
     }
@@ -63,7 +62,7 @@ public final class StreamBindingsBuilder<R> extends DecoratesBindingBuilder<Stre
     }
 
     @Override
-    StreamBindingsBuilder<R> prototype(BindingsBuilder newBindings) {
-        return new StreamBindingsBuilder<>(newBindings, mapper);
+    StreamQuery<R> prototype(BindingsBuilder newBindings) {
+        return new StreamQuery<>(newBindings, mapper);
     }
 }

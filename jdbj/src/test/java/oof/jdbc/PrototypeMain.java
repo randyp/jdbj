@@ -6,9 +6,9 @@ import java.util.stream.Stream;
 
 public class PrototypeMain {
 
-    private static final ReturnsBuilder query = JDBJ.query("tables_by_schema.sql");
+    private static final ReturnsQuery query = JDBJ.query("tables_by_schema.sql");
 
-    private static final MapReturnsBuilder<String> QueryReadyToGo = query
+    private static final MapQuery<String> QueryReadyToGo = query
             .map(rs -> rs.getLong("id") + " " + rs.getString("TABLE_SCHEMA") + "." + rs.getString("TABLE_NAME"));
 
     public static void main(String[] args) throws Exception {

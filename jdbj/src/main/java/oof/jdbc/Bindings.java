@@ -30,8 +30,11 @@ public class Bindings {
     }
 
     public Bindings addValueBinding(String name, Binding binding) {
+        if (name == null) {
+            throw new IllegalArgumentException("name cannot be null");
+        }
         if (binding == null) {
-            throw new NullPointerException();
+            throw new IllegalArgumentException("binding cannot be null");
         }
 
         if(containsKey(name)){
@@ -45,12 +48,15 @@ public class Bindings {
     }
 
     public Bindings addListBinding(String name, List<Binding> bindings) {
+        if (name == null) {
+            throw new IllegalArgumentException("name cannot be null");
+        }
         if (bindings == null) {
-            throw new NullPointerException();
+            throw new IllegalArgumentException("bindings cannot be null");
         }
         for (Binding binding : bindings) {
             if(binding == null){
-                throw new NullPointerException();
+                throw new IllegalArgumentException("bindings cannot contain null elements");
             }
         }
 

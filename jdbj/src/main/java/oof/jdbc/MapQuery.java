@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.function.Function;
 
 @Immutable
-public final class MapReturnsBuilder<R> {
+public final class MapQuery<R> {
 
     private final NamedParameterStatement statement;
     private final ResultSetMapper<R> mapper;
 
-    MapReturnsBuilder(NamedParameterStatement statement, ResultSetMapper<R> mapper) {
+    MapQuery(NamedParameterStatement statement, ResultSetMapper<R> mapper) {
         this.statement = statement;
         this.mapper = mapper;
     }
@@ -25,16 +25,16 @@ public final class MapReturnsBuilder<R> {
      * @param <R2>
      * @return phase 2 builder
      */
-    public <R2> MapReturnsBuilder<R2> remap(Function<R, R2> remap){
-        return new MapReturnsBuilder<>(statement, rs -> remap.apply(mapper.map(rs)));
+    public <R2> MapQuery<R2> remap(Function<R, R2> remap){
+        return new MapQuery<>(statement, rs -> remap.apply(mapper.map(rs)));
     }
 
     /**
      *
      * @return phase 3 builder
      */
-    public StreamBindingsBuilder<R> stream() {
-        return new StreamBindingsBuilder<>(statement, mapper);
+    public StreamQuery<R> stream() {
+        return new StreamQuery<>(statement, mapper);
     }
 
     /**
@@ -52,5 +52,14 @@ public final class MapReturnsBuilder<R> {
     }
 
 
+    public ExecuteQuery<R> first() {
+        return new ExecuteQuery<>(statement, rs -> {
+            R result = null;
+            if(rs.next()){
+                result = mapper.map(rs);
+            }
+            return result;
+        });
 
+    }
 }

@@ -12,7 +12,7 @@ public final class JDBJ {
      * @param resource
      * @return a phase 2 builder
      */
-    public static ReturnsBuilder query(String resource)  {
+    public static ReturnsQuery query(String resource)  {
         final URL url = JDBJ.class.getClassLoader().getResource(resource);
         if(url == null){
             throw new IllegalArgumentException("resource not found: " + resource);
@@ -38,9 +38,9 @@ public final class JDBJ {
      * @param queryString
      * @return a phase 2 builder
      */
-    public static ReturnsBuilder queryString(String queryString) {
+    public static ReturnsQuery queryString(String queryString) {
         final NamedParameterStatement statement = NamedParameterStatement.make(queryString);
-        return new ReturnsBuilder(statement);
+        return new ReturnsQuery(statement);
     }
 
     private JDBJ() {

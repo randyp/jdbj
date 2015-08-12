@@ -9,11 +9,11 @@ import javax.annotation.concurrent.Immutable;
  * Phase 2 Builder
  */
 @Immutable
-public final class ReturnsBuilder{
+public final class ReturnsQuery {
 
     final NamedParameterStatement statement;
 
-    public ReturnsBuilder(NamedParameterStatement statement) {
+    public ReturnsQuery(NamedParameterStatement statement) {
         this.statement = statement;
     }
 
@@ -23,8 +23,8 @@ public final class ReturnsBuilder{
      * @param <R>
      * @return phase 2 builder which maps individual results to elements
      */
-    public <R> MapReturnsBuilder<R> map(ResultSetMapper<R> mapper){
-        return new MapReturnsBuilder<>(statement, mapper);
+    public <R> MapQuery<R> map(ResultSetMapper<R> mapper){
+        return new MapQuery<>(statement, mapper);
     }
 
     public ExecuteQueryNoResult runnable(ResultSetRunnable runnable){

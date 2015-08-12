@@ -1,7 +1,6 @@
 package oof.jdbc.binding;
 
 import oof.jdbc.PreparedColumn;
-import oof.jdbc.binding.PositionalBinding;
 import oof.jdbc.lambda.Binding;
 
 import java.sql.PreparedStatement;

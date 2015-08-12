@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.*;
 import java.util.Calendar;
+import java.util.List;
 
 public abstract class DecoratesBindingBuilder<E extends DecoratesBindingBuilder<E>> {
     
@@ -211,6 +212,18 @@ public abstract class DecoratesBindingBuilder<E extends DecoratesBindingBuilder<
 
     public final E bindCharacterStream(String name, Reader reader) throws SQLException {
         return prototype(bindingsBuilder.bindCharacterStream(name, reader));
+    }
+
+    public E bindStrings(String name, List<String> xs) {
+        return prototype(bindingsBuilder.bindStrings(name, xs));
+    }
+
+    public E bindStrings(String name, String... xs) {
+        return prototype(bindingsBuilder.bindStrings(name, xs));
+    }
+
+    public E bindLongs(String name, long... xs) {
+        return prototype(bindingsBuilder.bindLongs(name, xs));
     }
 
     abstract E prototype(BindingsBuilder newBindings);

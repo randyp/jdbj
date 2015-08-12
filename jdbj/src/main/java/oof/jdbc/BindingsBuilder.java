@@ -254,4 +254,13 @@ public final class BindingsBuilder {
     public BindingsBuilder bindStrings(String name, String... xs){
         return bindStrings(name, Arrays.asList(xs));
     }
+
+    public BindingsBuilder bindLongs(String name, long... xs){
+        final List<Binding> bindings = new ArrayList<>();
+        for (final long x : xs) {
+            bindings.add(pc -> pc.setLong(x));
+        }
+
+        return bindList(name, bindings);
+    }
 }
