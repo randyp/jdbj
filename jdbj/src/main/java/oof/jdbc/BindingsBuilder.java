@@ -11,18 +11,20 @@ import java.net.URL;
 import java.sql.*;
 import java.sql.Date;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Immutable
 public final class BindingsBuilder {
 
     private final NamedParameterStatement statement;
-    private final Map<String, Binding> bindings;
+    private final Bindings bindings;
 
-    public BindingsBuilder(NamedParameterStatement statement) {
-        this(statement, new HashMap<>());
+    BindingsBuilder(NamedParameterStatement statement) {
+        this(statement, Bindings.empty());
     }
 
-    BindingsBuilder(NamedParameterStatement statement, Map<String, Binding> bindings){
+    BindingsBuilder(NamedParameterStatement statement, Bindings bindings){
         this.statement = statement;
         this.bindings = bindings;
     }
@@ -39,14 +41,16 @@ public final class BindingsBuilder {
         if(!statement.containsParameter(name)){
             throw new IllegalArgumentException("\""+name+"\" is not a named parameter");
         }
-        if(bindings.containsKey(name)){
-            throw new IllegalArgumentException("named parameter \""+name+"\" already has a binding");
+
+        return new BindingsBuilder(statement, bindings.addValueBinding(name, binding));
+    }
+
+    public BindingsBuilder bindList(String name, List<Binding> bindings){
+        if(!statement.containsParameter(name)){
+            throw new IllegalArgumentException("\""+name+"\" is not a named parameter");
         }
 
-        final Map<String, Binding> newBindings = new HashMap<>(bindings);
-        newBindings.put(name, binding);
-
-        return new BindingsBuilder(statement, newBindings);
+        return new BindingsBuilder(statement, this.bindings.addListBinding(name, bindings));
     }
 
     public BindingsBuilder bindNull(String name, int sqlType) throws SQLException {
@@ -239,5 +243,15 @@ public final class BindingsBuilder {
 
     public BindingsBuilder bindObject(String name, Object x, SQLType targetSqlType) throws SQLException {
         return bind(name, pc -> pc.setObject(x, targetSqlType));
+    }
+
+    public BindingsBuilder bindStrings(String name, List<String> xs){
+        final Function<String, Binding> createBinding = x -> (Binding) preparedColumn -> preparedColumn.setString(x);
+        final List<Binding> bindings = xs.stream().map(createBinding).collect(Collectors.toList());
+        return bindList(name, bindings);
+    }
+
+    public BindingsBuilder bindStrings(String name, String... xs){
+        return bindStrings(name, Arrays.asList(xs));
     }
 }

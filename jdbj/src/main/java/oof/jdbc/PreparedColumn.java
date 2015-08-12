@@ -1,11 +1,14 @@
 package oof.jdbc;
 
+import oof.jdbc.lambda.Binding;
+
 import java.io.InputStream;
 import java.io.Reader;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.*;
 import java.util.Calendar;
+import java.util.List;
 
 public class PreparedColumn {
 
@@ -231,5 +234,13 @@ public class PreparedColumn {
 
     public Struct createStruct(String typeName, Object[] attributes) throws SQLException {
         return ps.getConnection().createStruct(typeName, attributes);
+    }
+
+    public void setList(List<Binding> bindings) throws SQLException {
+        for (int i = 0; i < bindings.size(); i++) {
+            Binding binding = bindings.get(i);
+            final PreparedColumn pc = i == 0 ? this : new PreparedColumn(ps, parameterIndex + i);
+            binding.bind(pc);
+        }
     }
 }
