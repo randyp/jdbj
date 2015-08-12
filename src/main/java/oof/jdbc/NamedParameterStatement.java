@@ -1,7 +1,7 @@
 package oof.jdbc;
 
 import oof.jdbc.binding.PositionalBinding;
-import oof.jdbc.lexer.ColonStatementLexer;
+import oof.jdbc.lexer.NamedParameterStatementLexer;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.Token;
 
@@ -17,11 +17,11 @@ import java.util.stream.Collectors;
 public final class NamedParameterStatement {
 
     static NamedParameterStatement make(String sql){
-        final ColonStatementLexer lexer = new ColonStatementLexer(new ANTLRInputStream(sql));
+        final NamedParameterStatementLexer lexer = new NamedParameterStatementLexer(new ANTLRInputStream(sql));
         //noinspection unchecked
         final List<Token> tokens = (List<Token>) lexer.getAllTokens();
         final Set<String> namedParameters = tokens.stream()
-                .filter(t -> t.getType() == ColonStatementLexer.NAMED_PARAM)
+                .filter(t -> t.getType() == NamedParameterStatementLexer.NAMED_PARAM)
                 .map(Token::getText)
                 .collect(Collectors.toSet());
 
@@ -37,7 +37,7 @@ public final class NamedParameterStatement {
         this.tokens = Collections.unmodifiableList(tokens);
         this.parametersToBind = Collections.unmodifiableList(
                 tokens.stream()
-                        .filter(t -> t.getType() == ColonStatementLexer.NAMED_PARAM)
+                        .filter(t -> t.getType() == NamedParameterStatementLexer.NAMED_PARAM)
                         .map(Token::getText)
                         .collect(Collectors.toList())
         );
@@ -51,7 +51,7 @@ public final class NamedParameterStatement {
         final StringBuilder builder = new StringBuilder();
 
         for (Token token : tokens) {
-            if(token.getType() == ColonStatementLexer.NAMED_PARAM){
+            if(token.getType() == NamedParameterStatementLexer.NAMED_PARAM){
                 final PositionalBinding positionalBinding = bindings.get(token.getText());
                 positionalBinding.appendPositionalParametersToQueryString(builder);
             }else{
