@@ -1,9 +1,10 @@
 jdbj is a jdbc fluent interface for capturing query intent long before query execution
 
-### Why?
+#### Why?
+Other jdbc convenience libraries follow the "create, bind, execute/map" pattern that we inherited from older procedural code.
 A better pattern is "build, bind, execute" where the intent of a query is captured long before
 
-guiding principles
+#### Guiding Principles
 * no *connection handles* - just use the Connection as an argument to immutable objects
 * where possible, bubble up the SQLException (not possible in Stream.tryAdvance)
 * use immutable builders to capture the query intent long before query execution
