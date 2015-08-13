@@ -27,8 +27,8 @@ public final class ReturnsQuery {
         return new MapQuery<>(statement, mapper);
     }
 
-    public ExecuteQueryNoResult runnable(ResultSetRunnable runnable){
-        return new ExecuteQueryNoResult(statement, runnable);
+    public ExecuteQueryRunnable runnable(ResultSetRunnable runnable){
+        return new ExecuteQueryRunnable(statement, runnable);
     }
 
 }

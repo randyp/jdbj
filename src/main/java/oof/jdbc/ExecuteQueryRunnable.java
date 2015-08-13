@@ -13,15 +13,15 @@ import java.sql.SQLException;
  * Phase 3 Builder
  */
 @Immutable
-public final class ExecuteQueryNoResult extends DecoratesBindingBuilder<ExecuteQueryNoResult> {
+public final class ExecuteQueryRunnable extends DecoratesBindingBuilder<ExecuteQueryRunnable> {
 
     private final ResultSetRunnable runnable;
 
-    ExecuteQueryNoResult(NamedParameterStatement statement, ResultSetRunnable runnable) {
+    ExecuteQueryRunnable(NamedParameterStatement statement, ResultSetRunnable runnable) {
         this(new BindingsBuilder(statement), runnable);
     }
 
-    ExecuteQueryNoResult(BindingsBuilder bindingsBuilder, ResultSetRunnable runnable) {
+    ExecuteQueryRunnable(BindingsBuilder bindingsBuilder, ResultSetRunnable runnable) {
         super(bindingsBuilder);
         this.runnable = runnable;
     }
@@ -44,7 +44,7 @@ public final class ExecuteQueryNoResult extends DecoratesBindingBuilder<ExecuteQ
     }
 
     @Override
-    ExecuteQueryNoResult prototype(BindingsBuilder newBindings) {
-        return new ExecuteQueryNoResult(newBindings, runnable);
+    ExecuteQueryRunnable prototype(BindingsBuilder newBindings) {
+        return new ExecuteQueryRunnable(newBindings, runnable);
     }
 }

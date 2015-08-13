@@ -19,7 +19,7 @@ public class JDBJTest {
     @Test
     public void selectRunExecute() throws Exception {
         final String[] firstColumnName = {null};
-        final ExecuteQueryNoResult query = JDBJ.queryString("SELECT * FROM INFORMATION_SCHEMA.TABLES")
+        final ExecuteQueryRunnable query = JDBJ.queryString("SELECT * FROM INFORMATION_SCHEMA.TABLES")
                 .runnable(rs -> firstColumnName[0] = rs.getMetaData().getColumnName(1));
 
         try (Connection connection = db.getConnection()) {
@@ -32,7 +32,7 @@ public class JDBJTest {
     @Test
     public void selectRunBindValueExecute() throws Exception {
         final int[] count = {0};
-        final ExecuteQueryNoResult query = JDBJ.queryString("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE id = :id")
+        final ExecuteQueryRunnable query = JDBJ.queryString("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE id = :id")
                 .runnable(rs -> {
                     while (rs.next()) {
                         count[0]++;
@@ -50,7 +50,7 @@ public class JDBJTest {
     @Test
     public void selectRunBindStringListExecute() throws Exception {
         final int[] count = {0};
-        final ExecuteQueryNoResult query = JDBJ.queryString("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA in :schemas")
+        final ExecuteQueryRunnable query = JDBJ.queryString("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA in :schemas")
                 .runnable(rs -> {
                     while(rs.next()){
                         count[0]++;
