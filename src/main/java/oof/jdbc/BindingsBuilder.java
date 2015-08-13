@@ -61,16 +61,6 @@ public final class BindingsBuilder {
         return bind(name, pc->pc.setArray(x));
     }
 
-    public BindingsBuilder bindArray(String name, String typeName, Object[] elements) throws SQLException {
-        return bind(name, pc -> {
-            if(elements != null) {
-
-            }else{
-                pc.setObject(null);
-            }
-        });
-    }
-
     public BindingsBuilder bindNull(String name, int sqlType) throws SQLException {
         return bind(name, pc -> pc.setNull(sqlType));
     }
