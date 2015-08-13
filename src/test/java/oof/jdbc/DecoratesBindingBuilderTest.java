@@ -1,7 +1,6 @@
 package oof.jdbc;
 
 import oof.jdbc.lambda.ResultSetMapper;
-import oof.jdbc.lambda.ResultSetRunnable;
 import org.junit.ClassRule;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -17,6 +16,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.sql.*;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -617,9 +617,17 @@ public class DecoratesBindingBuilderTest {
 
     public static class date {
 
+        private final long expectedTime;
+
+        public date() {
+            final Calendar instance = GregorianCalendar.getInstance();
+            instance.set(2015, Calendar.JANUARY, 1, 0, 0, 0);
+            this.expectedTime = 1000*(instance.getTimeInMillis()/1000);
+        }
+
         @Test
         public void value() throws Exception {
-            final Date expected = new Date(28800000L);
+            final Date expected = new Date(expectedTime);
 
             final Date selected;
             try (Connection connection = db.getConnection()) {
@@ -643,7 +651,7 @@ public class DecoratesBindingBuilderTest {
 
         @Test
         public void valueCalendar() throws Exception {
-            final Date expected = new Date(28800000L);
+            final Date expected = new Date(expectedTime);
 
             final Date selected;
             try (Connection connection = db.getConnection()) {
@@ -1138,9 +1146,17 @@ public class DecoratesBindingBuilderTest {
 
     public static class time {
 
+        private final long expectedTime;
+
+        public time() {
+            final Calendar instance = GregorianCalendar.getInstance();
+            instance.set(1970, Calendar.JANUARY, 1, 12, 11, 10);
+            this.expectedTime = 1000*(instance.getTimeInMillis()/1000);
+        }
+
         @Test
         public void value() throws Exception {
-            final Time expected = new Time(28800000L);
+            final Time expected = new Time(expectedTime);
 
             final Time selected;
             try (Connection connection = db.getConnection()) {
@@ -1164,7 +1180,7 @@ public class DecoratesBindingBuilderTest {
 
         @Test
         public void valueCalendar() throws Exception {
-            final Time expected = new Time(28800000L);
+            final Time expected = new Time(expectedTime);
 
             final Time selected;
             try (Connection connection = db.getConnection()) {
@@ -1190,9 +1206,17 @@ public class DecoratesBindingBuilderTest {
 
     public static class timestamp {
 
+        private final long expectedTime;
+
+        public timestamp() {
+            final Calendar instance = GregorianCalendar.getInstance();
+            instance.set(2015, Calendar.JANUARY, 1, 0, 0, 0);
+            this.expectedTime = 1000*(instance.getTimeInMillis()/1000);
+        }
+
         @Test
         public void value() throws Exception {
-            final Timestamp expected = new Timestamp(28800000L);
+            final Timestamp expected = new Timestamp(expectedTime);
 
             final Timestamp selected;
             try (Connection connection = db.getConnection()) {
@@ -1216,7 +1240,7 @@ public class DecoratesBindingBuilderTest {
 
         @Test
         public void valueCalendar() throws Exception {
-            final Timestamp expected = new Timestamp(28800000L);
+            final Timestamp expected = new Timestamp(expectedTime);
 
             final Timestamp selected;
             try (Connection connection = db.getConnection()) {
@@ -1277,7 +1301,7 @@ public class DecoratesBindingBuilderTest {
             try (Connection connection = db.getConnection()) {
                 selected = new TestBuilder()
                         .bindStrings(":binding", Arrays.asList(expected))
-                        .execute(connection, rs ->  (Object[]) rs.getObject(1));
+                        .execute(connection, rs -> (Object[]) rs.getObject(1));
             }
             assertArrayEquals(expected, selected);
         }
@@ -1311,7 +1335,7 @@ public class DecoratesBindingBuilderTest {
             try (Connection connection = db.getConnection()) {
                 selected = new TestBuilder()
                         .bindLongs(":binding", input)
-                        .execute(connection, rs ->  (Object[]) rs.getObject(1));
+                        .execute(connection, rs -> (Object[]) rs.getObject(1));
             }
             assertArrayEquals(expected, selected);
         }
