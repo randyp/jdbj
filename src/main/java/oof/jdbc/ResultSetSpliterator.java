@@ -3,7 +3,6 @@ package oof.jdbc;
 import oof.jdbc.lambda.ResultSetMapper;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 
@@ -25,7 +24,7 @@ public class ResultSetSpliterator<R> implements Spliterator<R> {
                 action.accept(mapper.map(rs));
             }
             return advanced;
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new AdvanceFailedException(e);
         }
     }
@@ -42,6 +41,6 @@ public class ResultSetSpliterator<R> implements Spliterator<R> {
 
     @Override
     public int characteristics() {
-        return Spliterator.IMMUTABLE | Spliterator.NONNULL;
+        return Spliterator.IMMUTABLE;
     }
 }

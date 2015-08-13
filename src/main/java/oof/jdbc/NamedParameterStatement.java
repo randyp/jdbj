@@ -9,6 +9,7 @@ import javax.annotation.concurrent.Immutable;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -67,6 +68,14 @@ public final class NamedParameterStatement {
         for (String namedParameter : parametersToBind) {
             final PositionalBinding binding = bindings.get(namedParameter);
             parameterIndex = binding.bind(ps, parameterIndex);
+        }
+    }
+
+    public void checkAllBindingsPresent(Bindings bindings) {
+        final Set<String> missingBindings = new HashSet<>(namedParameters);
+        missingBindings.removeAll(bindings.keys());
+        if(!missingBindings.isEmpty()){
+            throw new IllegalStateException("missing bindings, cannot proceed: " + bindings);
         }
     }
 }

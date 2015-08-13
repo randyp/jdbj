@@ -33,6 +33,8 @@ public final class ExecuteQueryNoResult extends DecoratesBindingBuilder<ExecuteQ
      * @throws SQLException
      */
     public void execute(Connection connection) throws SQLException {
+        checkAllBindingsPresent();
+
         try(PreparedStatement ps = connection.prepareStatement(bindingsBuilder.buildSql())){
             bindingsBuilder.bindToStatement(ps);
             try(ResultSet rs = ps.executeQuery()){

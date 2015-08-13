@@ -18,7 +18,9 @@ public final class ListBinding implements PositionalBinding {
     @Override
     public int bind(PreparedStatement ps, int parameterIndex) throws SQLException {
         for (int i = 0; i < bindings.size(); i++) {
-            bindings.get(i).bind(new PreparedColumn(ps, parameterIndex+i));
+            final PreparedColumn preparedColumn = new PreparedColumn(ps, parameterIndex + i);
+            bindings.get(i).bind(preparedColumn);
+            preparedColumn.setNullIfNotSet();
         }
         return parameterIndex + bindings.size();
     }

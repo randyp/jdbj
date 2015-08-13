@@ -6,9 +6,7 @@ import oof.jdbc.binding.PositionalBinding;
 import oof.jdbc.binding.ValueBinding;
 import oof.jdbc.lambda.Binding;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Immutable
 public class Bindings {
@@ -80,6 +78,12 @@ public class Bindings {
         }else{
             throw new IllegalArgumentException("no such binding: \"" + namedParameter+"\"");
         }
+        return toReturn;
+    }
+
+    public Set<String> keys() {
+        final Set<String> toReturn = new HashSet<>(valueBindings.keySet());
+        toReturn.addAll(listBindings.keySet());
         return toReturn;
     }
 }

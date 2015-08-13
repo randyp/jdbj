@@ -31,6 +31,8 @@ public final class ExecuteQuery<R> extends DecoratesBindingBuilder<ExecuteQuery<
      * @throws SQLException
      */
     public R execute(Connection connection) throws SQLException {
+        checkAllBindingsPresent();
+
         try(PreparedStatement ps = connection.prepareStatement(bindingsBuilder.buildSql())){
             bindingsBuilder.bindToStatement(ps);
             try(ResultSet rs = ps.executeQuery()){

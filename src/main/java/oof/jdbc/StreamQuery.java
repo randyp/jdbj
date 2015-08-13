@@ -39,6 +39,8 @@ public final class StreamQuery<R> extends DecoratesBindingBuilder<StreamQuery<R>
      * @throws SQLException
      */
     public Stream<R> execute(Connection connection) throws SQLException {
+        checkAllBindingsPresent();
+
         final PreparedStatement ps = connection.prepareStatement(bindingsBuilder.buildSql());
         bindingsBuilder.bindToStatement(ps);
         final ResultSet rs = ps.executeQuery();

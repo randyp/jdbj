@@ -16,7 +16,9 @@ public final class ValueBinding implements PositionalBinding {
 
     @Override
     public int bind(PreparedStatement ps, int parameterIndex) throws SQLException {
-        binding.bind(new PreparedColumn(ps, parameterIndex));
+        final PreparedColumn preparedColumn = new PreparedColumn(ps, parameterIndex);
+        binding.bind(preparedColumn);
+        preparedColumn.setNullIfNotSet();
         return parameterIndex+1;
     }
 

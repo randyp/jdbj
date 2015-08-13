@@ -29,6 +29,10 @@ public final class BindingsBuilder {
         this.bindings = bindings;
     }
 
+    public void checkAllBindingsPresent(){
+        statement.checkAllBindingsPresent(bindings);
+    }
+
     public String buildSql() {
         return statement.jdbcSql(bindings);
     }
@@ -51,6 +55,20 @@ public final class BindingsBuilder {
         }
 
         return new BindingsBuilder(statement, this.bindings.addListBinding(name, bindings));
+    }
+
+    public BindingsBuilder bindArray(String name, Array x) throws SQLException {
+        return bind(name, pc->pc.setArray(x));
+    }
+
+    public BindingsBuilder bindArray(String name, String typeName, Object[] elements) throws SQLException {
+        return bind(name, pc -> {
+            if(elements != null) {
+
+            }else{
+                pc.setObject(null);
+            }
+        });
     }
 
     public BindingsBuilder bindNull(String name, int sqlType) throws SQLException {
@@ -139,10 +157,6 @@ public final class BindingsBuilder {
 
     public BindingsBuilder bindClob(String name, Clob x) throws SQLException {
         return bind(name, pc->pc.setClob(x));
-    }
-
-    public BindingsBuilder bindArray(String name, Array x) throws SQLException {
-        return bind(name, pc->pc.setArray(x));
     }
 
     public BindingsBuilder bindDate(String name, Date x, Calendar cal) throws SQLException {
@@ -246,16 +260,25 @@ public final class BindingsBuilder {
     }
 
     public BindingsBuilder bindStrings(String name, List<String> xs){
+        if (xs == null) {
+            throw new IllegalArgumentException("xs cannot be null - consider using bindArray");
+        }
         final Function<String, Binding> createBinding = x -> (Binding) preparedColumn -> preparedColumn.setString(x);
         final List<Binding> bindings = xs.stream().map(createBinding).collect(Collectors.toList());
         return bindList(name, bindings);
     }
 
     public BindingsBuilder bindStrings(String name, String... xs){
+        if (xs == null) {
+            throw new IllegalArgumentException("xs cannot be null - consider using bindArray");
+        }
         return bindStrings(name, Arrays.asList(xs));
     }
 
     public BindingsBuilder bindLongs(String name, long... xs){
+        if (xs == null) {
+            throw new IllegalArgumentException("xs cannot be null - consider using bindArray");
+        }
         final List<Binding> bindings = new ArrayList<>();
         for (final long x : xs) {
             bindings.add(pc -> pc.setLong(x));
