@@ -147,4 +147,25 @@ public class JDBJTest {
         assertTrue(result.isPresent());
         assertEquals("SESSION_STATE", result.get());
     }
+
+    @Test
+    public void query() throws Exception {
+        final ExecuteQuery<String> query = JDBJ.query("tables_by_schema.sql")
+                .map(rs -> rs.getString("TABLE_NAME"))
+                .first()
+                .bindString(":table_schema", "INFORMATION_SCHEMA");
+
+        final String result;
+        try (Connection connection = db.getConnection()) {
+            result = query.execute(connection);
+        }
+
+        assertNotNull(result);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void queryResourceNotFound() throws Exception {
+        //noinspection AccessStaticViaInstance
+        new JDBJ().query("tables_by_froozgaba.sql");
+    }
 }

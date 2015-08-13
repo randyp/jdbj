@@ -2,6 +2,7 @@ package oof.jdbc;
 
 import oof.jdbc.lambda.ResultSetMapper;
 
+import javax.annotation.Nullable;
 import java.sql.ResultSet;
 import java.util.Spliterator;
 import java.util.function.Consumer;
@@ -30,7 +31,7 @@ public class ResultSetSpliterator<R> implements Spliterator<R> {
     }
 
     @Override
-    public Spliterator<R> trySplit() {
+    public @Nullable Spliterator<R> trySplit() {
         return null;
     }
 

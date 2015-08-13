@@ -23,19 +23,19 @@ public class Bindings {
         this.listBindings = listBindings;
     }
 
-    public boolean containsKey(String key) {
-        return valueBindings.containsKey(key) || listBindings.containsKey(key);
-    }
-
-    public Bindings addValueBinding(String name, Binding binding) {
+    public boolean containsBinding(String name) {
         if (name == null) {
             throw new IllegalArgumentException("name cannot be null");
         }
+        return valueBindings.containsKey(name) || listBindings.containsKey(name);
+    }
+
+    public Bindings addValueBinding(String name, Binding binding) {
         if (binding == null) {
             throw new IllegalArgumentException("binding cannot be null");
         }
 
-        if(containsKey(name)){
+        if(containsBinding(name)){
             throw new IllegalArgumentException("named parameter \""+name+"\" already has a binding");
         }
 
@@ -58,7 +58,7 @@ public class Bindings {
             }
         }
 
-        if(containsKey(name)){
+        if(containsBinding(name)){
             throw new IllegalArgumentException("named parameter \""+name+"\" already has a binding");
         }
 

@@ -2,6 +2,7 @@ package oof.jdbc;
 
 import oof.jdbc.lambda.Binding;
 
+import javax.annotation.Nullable;
 import java.io.InputStream;
 import java.io.Reader;
 import java.math.BigDecimal;
@@ -23,47 +24,47 @@ public abstract class DecoratesBindingBuilder<E extends DecoratesBindingBuilder<
         return prototype(bindingsBuilder.bind(name, binding));
     }
 
-    public final E bindArray(String name, Array x) throws SQLException {
+    public final E bindArray(String name, @Nullable Array x) throws SQLException {
         return prototype(bindingsBuilder.bindArray(name, x));
     }
 
-    public final E bindAsciiStream(String name, InputStream x) throws SQLException {
+    public final E bindAsciiStream(String name, @Nullable InputStream x) throws SQLException {
         return prototype(bindingsBuilder.bindAsciiStream(name, x));
     }
 
-    public final E bindAsciiStream(String name, InputStream x, int length) throws SQLException {
+    public final E bindAsciiStream(String name, @Nullable InputStream x, int length) throws SQLException {
         return prototype(bindingsBuilder.bindAsciiStream(name, x, length));
     }
 
-    public final E bindAsciiStream(String name, InputStream x, long length) throws SQLException {
+    public final E bindAsciiStream(String name, @Nullable InputStream x, long length) throws SQLException {
         return prototype(bindingsBuilder.bindAsciiStream(name, x, length));
     }
 
-    public final E bindBigDecimal(String name, BigDecimal x) throws SQLException {
+    public final E bindBigDecimal(String name,@Nullable  BigDecimal x) throws SQLException {
         return prototype(bindingsBuilder.bindBigDecimal(name, x));
     }
 
-    public final E bindBinaryStream(String name, InputStream x) throws SQLException {
+    public final E bindBinaryStream(String name, @Nullable InputStream x) throws SQLException {
         return prototype(bindingsBuilder.bindBinaryStream(name, x));
     }
 
-    public final E bindBinaryStream(String name, InputStream x, int length) throws SQLException {
+    public final E bindBinaryStream(String name, @Nullable InputStream x, int length) throws SQLException {
         return prototype(bindingsBuilder.bindBinaryStream(name, x, length));
     }
 
-    public final E bindBinaryStream(String name, InputStream x, long length) throws SQLException {
+    public final E bindBinaryStream(String name, @Nullable InputStream x, long length) throws SQLException {
         return prototype(bindingsBuilder.bindBinaryStream(name, x, length));
     }
 
-    public final E bindBlob(String name, Blob x) throws SQLException {
+    public final E bindBlob(String name, @Nullable Blob x) throws SQLException {
         return prototype(bindingsBuilder.bindBlob(name, x));
     }
 
-    public final E bindBlob(String name, InputStream inputStream) throws SQLException {
+    public final E bindBlob(String name, @Nullable InputStream inputStream) throws SQLException {
         return prototype(bindingsBuilder.bindBlob(name, inputStream));
     }
 
-    public final E bindBlob(String name, InputStream inputStream, long length) throws SQLException {
+    public final E bindBlob(String name, @Nullable InputStream inputStream, long length) throws SQLException {
         return prototype(bindingsBuilder.bindBlob(name, inputStream, length));
     }
 
@@ -79,35 +80,35 @@ public abstract class DecoratesBindingBuilder<E extends DecoratesBindingBuilder<
         return prototype(bindingsBuilder.bindBytes(name, x));
     }
 
-    public final E bindCharacterStream(String name, Reader reader) throws SQLException {
+    public final E bindCharacterStream(String name, @Nullable Reader reader) throws SQLException {
         return prototype(bindingsBuilder.bindCharacterStream(name, reader));
     }
 
-    public final E bindCharacterStream(String name, Reader reader, int length) throws SQLException {
+    public final E bindCharacterStream(String name, @Nullable Reader reader, int length) throws SQLException {
         return prototype(bindingsBuilder.bindCharacterStream(name, reader, length));
     }
 
-    public final E bindCharacterStream(String name, Reader reader, long length) throws SQLException {
+    public final E bindCharacterStream(String name, @Nullable Reader reader, long length) throws SQLException {
         return prototype(bindingsBuilder.bindCharacterStream(name, reader, length));
     }
 
-    public final E bindClob(String name, Clob x) throws SQLException {
+    public final E bindClob(String name, @Nullable Clob x) throws SQLException {
         return prototype(bindingsBuilder.bindClob(name, x));
     }
 
-    public final E bindClob(String name, Reader reader) throws SQLException {
+    public final E bindClob(String name, @Nullable Reader reader) throws SQLException {
         return prototype(bindingsBuilder.bindClob(name, reader));
     }
 
-    public final E bindClob(String name, Reader reader, long length) throws SQLException {
+    public final E bindClob(String name, @Nullable Reader reader, long length) throws SQLException {
         return prototype(bindingsBuilder.bindClob(name, reader, length));
     }
 
-    public final E bindDate(String name, Date x) throws SQLException {
+    public final E bindDate(String name, @Nullable Date x) throws SQLException {
         return prototype(bindingsBuilder.bindDate(name, x));
     }
 
-    public final E bindDate(String name, Date x, Calendar cal) throws SQLException {
+    public final E bindDate(String name, @Nullable Date x, Calendar cal) throws SQLException {
         return prototype(bindingsBuilder.bindDate(name, x, cal));
     }
 
@@ -127,27 +128,27 @@ public abstract class DecoratesBindingBuilder<E extends DecoratesBindingBuilder<
         return prototype(bindingsBuilder.bindLong(name, x));
     }
 
-    public final E bindNCharacterStream(String name, Reader value) throws SQLException {
+    public final E bindNCharacterStream(String name, @Nullable Reader value) throws SQLException {
         return prototype(bindingsBuilder.bindNCharacterStream(name, value));
     }
 
-    public final E bindNCharacterStream(String name, Reader value, long length) throws SQLException {
+    public final E bindNCharacterStream(String name, @Nullable Reader value, long length) throws SQLException {
         return prototype(bindingsBuilder.bindNCharacterStream(name, value, length));
     }
 
-    public final E bindNClob(String name, NClob value) throws SQLException {
+    public final E bindNClob(String name, @Nullable NClob value) throws SQLException {
         return prototype(bindingsBuilder.bindNClob(name, value));
     }
 
-    public final E bindNClob(String name, Reader reader) throws SQLException {
+    public final E bindNClob(String name, @Nullable Reader reader) throws SQLException {
         return prototype(bindingsBuilder.bindNClob(name, reader));
     }
 
-    public final E bindNClob(String name, Reader reader, long length) throws SQLException {
+    public final E bindNClob(String name, @Nullable Reader reader, long length) throws SQLException {
         return prototype(bindingsBuilder.bindNClob(name, reader, length));
     }
 
-    public final E bindNString(String name, String value) throws SQLException {
+    public final E bindNString(String name, @Nullable String value) throws SQLException {
         return prototype(bindingsBuilder.bindNString(name, value));
     }
 
@@ -159,27 +160,27 @@ public abstract class DecoratesBindingBuilder<E extends DecoratesBindingBuilder<
         return prototype(bindingsBuilder.bindNull(name, sqlType, typeName));
     }
 
-    public final E bindObject(String name, Object x) throws SQLException {
+    public final E bindObject(String name, @Nullable Object x) throws SQLException {
         return prototype(bindingsBuilder.bindObject(name, x));
     }
 
-    public final E bindObject(String name, Object x, SQLType targetSqlType) throws SQLException {
+    public final E bindObject(String name, @Nullable Object x, SQLType targetSqlType) throws SQLException {
         return prototype(bindingsBuilder.bindObject(name, x, targetSqlType));
     }
 
-    public final E bindObject(String name, Object x, int targetSqlType) throws SQLException {
+    public final E bindObject(String name, @Nullable Object x, int targetSqlType) throws SQLException {
         return prototype(bindingsBuilder.bindObject(name, x, targetSqlType));
     }
 
-    public final E bindObject(String name, Object x, SQLType targetSqlType, int scaleOrLength) throws SQLException {
+    public final E bindObject(String name, @Nullable Object x, SQLType targetSqlType, int scaleOrLength) throws SQLException {
         return prototype(bindingsBuilder.bindObject(name, x, targetSqlType, scaleOrLength));
     }
 
-    public final E bindObject(String name, Object x, int targetSqlType, int scaleOrLength) throws SQLException {
+    public final E bindObject(String name, @Nullable Object x, int targetSqlType, int scaleOrLength) throws SQLException {
         return prototype(bindingsBuilder.bindObject(name, x, targetSqlType, scaleOrLength));
     }
 
-    public final E bindRef(String name, Ref x) throws SQLException {
+    public final E bindRef(String name, @Nullable Ref x) throws SQLException {
         return prototype(bindingsBuilder.bindRef(name, x));
     }
 
@@ -187,31 +188,31 @@ public abstract class DecoratesBindingBuilder<E extends DecoratesBindingBuilder<
         return prototype(bindingsBuilder.bindShort(name, x));
     }
 
-    public final E bindString(String name, String x) throws SQLException {
+    public final E bindString(String name, @Nullable String x) throws SQLException {
         return prototype(bindingsBuilder.bindString(name, x));
     }
 
-    public final E bindSQLXML(String name, SQLXML xmlObject) throws SQLException {
+    public final E bindSQLXML(String name, @Nullable SQLXML xmlObject) throws SQLException {
         return prototype(bindingsBuilder.bindSQLXML(name, xmlObject));
     }
 
-    public final E bindTime(String name, Time x) throws SQLException {
+    public final E bindTime(String name, @Nullable Time x) throws SQLException {
         return prototype(bindingsBuilder.bindTime(name, x));
     }
 
-    public final E bindTime(String name, Time x, Calendar cal) throws SQLException {
+    public final E bindTime(String name, @Nullable Time x, Calendar cal) throws SQLException {
         return prototype(bindingsBuilder.bindTime(name, x, cal));
     }
 
-    public final E bindTimestamp(String name, Timestamp x) throws SQLException {
+    public final E bindTimestamp(String name, @Nullable Timestamp x) throws SQLException {
         return prototype(bindingsBuilder.bindTimestamp(name, x));
     }
 
-    public final E bindTimestamp(String name, Timestamp x, Calendar cal) throws SQLException {
+    public final E bindTimestamp(String name, @Nullable Timestamp x, Calendar cal) throws SQLException {
         return prototype(bindingsBuilder.bindTimestamp(name, x, cal));
     }
 
-    public final E bindURL(String name, URL x) throws SQLException {
+    public final E bindURL(String name, @Nullable URL x) throws SQLException {
         return prototype(bindingsBuilder.bindURL(name, x));
     }
 

@@ -17,7 +17,7 @@ public class BindingsTest {
     @Test
     public void empty() throws Exception {
         final Bindings bindings = Bindings.empty();
-        assertFalse(bindings.containsKey(":status"));
+        assertFalse(bindings.containsBinding(":status"));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -30,7 +30,7 @@ public class BindingsTest {
         final Binding binding = pc -> pc.setString("ACTIVE");
         final Bindings bindings = Bindings.empty().addValueBinding(":status", binding);
 
-        assertTrue(bindings.containsKey(":status"));
+        assertTrue(bindings.containsBinding(":status"));
         final PositionalBinding positionalBinding = bindings.get(":status");
         assertTrue(positionalBinding instanceof ValueBinding);
     }
@@ -39,7 +39,7 @@ public class BindingsTest {
     public void listBinding() throws Exception {
         final Bindings bindings = Bindings.empty().addListBinding(":status", Collections.singletonList(pc -> pc.setString("ACTIVE")));
 
-        assertTrue(bindings.containsKey(":status"));
+        assertTrue(bindings.containsBinding(":status"));
         final PositionalBinding positionalBinding = bindings.get(":status");
         assertTrue(positionalBinding instanceof ListBinding);
     }
