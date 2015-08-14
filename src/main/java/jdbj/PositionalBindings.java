@@ -9,7 +9,7 @@ import jdbj.lambda.Binding;
 import java.util.*;
 
 @Immutable
-public class PositionalBindings {
+public class PositionalBindings implements ValueBindings {
 
     public static PositionalBindings empty() {
         return new PositionalBindings(new HashMap<>(), new HashMap<>());
@@ -23,6 +23,7 @@ public class PositionalBindings {
         this.listBindings = listBindings;
     }
 
+    @Override
     public boolean containsBinding(String name) {
         if (name == null) {
             throw new IllegalArgumentException("name cannot be null");
@@ -30,6 +31,7 @@ public class PositionalBindings {
         return valueBindings.containsKey(name) || listBindings.containsKey(name);
     }
 
+    @Override
     public PositionalBindings addValueBinding(String name, Binding binding) {
         if (binding == null) {
             throw new IllegalArgumentException("binding cannot be null");
@@ -68,7 +70,7 @@ public class PositionalBindings {
         return new PositionalBindings(valueBindings, newListBindings);
     }
 
-
+    @Override
     public PositionalBinding get(String namedParameter) {
         final PositionalBinding toReturn;
         if(valueBindings.containsKey(namedParameter)){
@@ -81,6 +83,7 @@ public class PositionalBindings {
         return toReturn;
     }
 
+    @Override
     public Set<String> keys() {
         final Set<String> toReturn = new HashSet<>(valueBindings.keySet());
         toReturn.addAll(listBindings.keySet());
