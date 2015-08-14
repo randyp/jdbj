@@ -1381,7 +1381,7 @@ public class PositionalBindingsBuilderTest {
     private static class TestBuilder extends PositionalBindingsBuilder<TestBuilder> {
 
         TestBuilder() {
-            this(statement, PositionalBindings.empty());
+            this(PositionalBindingsBuilderTest.statement, PositionalBindings.empty());
         }
 
         TestBuilder(NamedParameterStatement statement, PositionalBindings bindings) {
