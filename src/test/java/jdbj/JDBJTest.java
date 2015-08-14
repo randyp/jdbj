@@ -8,6 +8,7 @@ import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 import org.junit.runners.model.Statement;
 
+import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -346,7 +347,8 @@ public class JDBJTest {
         public void insertBatch() throws Exception {
             final NewStudent newStudent = new NewStudent("Ada10", "Dada10", new BigDecimal("3.1"));
 
-            BatchedInsertReturnKeysQuery<Long> insertQuery = JDBJ.insertQueryStringGetKeys(Student.insert, rs->rs.getLong(1))
+            //noinspection deprecation
+            BatchedInsertReturnKeysQuery<Long> insertQuery = JDBJ.insertQueryStringGetKeys(Student.insert, rs -> rs.getLong(1))
                     .asBatch()
                     .startBatch()
                     .bindString(":first_name", newStudent.firstName)
@@ -366,7 +368,8 @@ public class JDBJTest {
 
         @Test(expected = IllegalStateException.class)
         public void noBatchesAdded() throws Exception {
-            BatchedInsertReturnKeysQuery<Long> insertQuery = JDBJ.insertQueryStringGetKeys(Student.insert, rs->rs.getLong(1)).asBatch();
+            //noinspection deprecation
+            BatchedInsertReturnKeysQuery<Long> insertQuery = JDBJ.insertQueryStringGetKeys(Student.insert, rs -> rs.getLong(1)).asBatch();
 
             try (Connection connection = db.getConnection()) {
                 insertQuery.execute(connection);
@@ -377,7 +380,7 @@ public class JDBJTest {
         public void missingBindings() throws Exception {
             final NewStudent student = new NewStudent("Ada10", "Dada10", new BigDecimal("3.1"));
 
-            JDBJ.insertQueryStringGetKeys(Student.insert, rs->rs.getLong(1)).asBatch()
+            JDBJ.insertQueryStringGetKeys(Student.insert, rs -> rs.getLong(1)).asBatch()
                     .startBatch()
                     .bindString(":first_name", student.firstName)
                     .bindString(":last_name", student.lastName)
@@ -388,6 +391,7 @@ public class JDBJTest {
         public void batchAlreadyEnded() throws Exception {
             final NewStudent student = new NewStudent("Ada10", "Dada10", new BigDecimal("3.1"));
 
+            //noinspection deprecation
             final BatchedInsertReturnKeysQuery<Long>.Batch batch = JDBJ.insertQueryStringGetKeys(Student.insert, rs -> rs.getLong(1)).asBatch()
                     .startBatch()
                     .bindString(":first_name", student.firstName)
@@ -396,6 +400,148 @@ public class JDBJTest {
 
             batch.endBatch();
             batch.bindString(":first_name", student.firstName);
+        }
+    }
+
+    public static class Transaction {
+
+        @ClassRule
+        public static TestRule create_table = Student.createTableRule;
+
+        @After
+        public void tearDown() throws Exception {
+            try (Connection connection = db.getConnection();
+                 PreparedStatement ps = connection.prepareStatement("DELETE FROM student")) {
+                ps.execute();
+            }
+        }
+
+        final Student student = new Student(10L, "Ada", "Dada", new BigDecimal("3.1"));
+
+        final InsertQuery insertQuery = JDBJ.insertQueryString(Student.insert_id)
+                .bindLong(":id", student.id)
+                .bindString(":first_name", student.firstName)
+                .bindString(":last_name", student.lastName)
+                .bindBigDecimal(":gpa", student.gpa);
+
+        @Test
+        public void committed() throws Exception {
+            JDBJ.transaction(db, connection -> assertEquals(1, insertQuery.execute(connection)));
+
+            final List<Student> actual;
+            try (Connection connection = db.getConnection()) {
+                actual = Student.selectAll.execute(connection);
+            }
+
+            assertEquals(Collections.singletonList(student), actual);
+        }
+
+        @Test
+        public void rollback() throws Exception {
+            try {
+                JDBJ.transaction(db, connection -> {
+                    assertEquals(1, insertQuery.execute(connection));
+                    throw new SQLException("did I do that?");
+                });
+                fail("should have throw steve urkel exception");
+            } catch (SQLException e) {
+                assertEquals("did I do that?", e.getMessage());
+            }
+
+            final List<Student> actual;
+            try (Connection connection = db.getConnection()) {
+                actual = Student.selectAll.execute(connection);
+            }
+            assertTrue(actual.isEmpty());
+        }
+
+        @Test
+        public void autoCommitTurnedOff() throws Exception {
+            try (Connection connection = db.getConnection()) {
+                DataSource fakeDataSource = new FakeDataSource<>(()->new FakeConnection(connection));
+
+                assertTrue(connection.getAutoCommit());
+                JDBJ.transaction(fakeDataSource, c -> {
+                    assertFalse(connection.getAutoCommit());
+                    assertEquals(1, insertQuery.execute(c));
+                });
+                assertTrue(connection.getAutoCommit());
+            }
+        }
+
+        @Test(expected = IllegalStateException.class)
+        public void exceptIfAutocommitAlreadyOff() throws Exception {
+            try (Connection connection = db.getConnection()) {
+                DataSource fakeDataSource = new FakeDataSource<>(()->connection);
+                connection.setAutoCommit(false);
+                JDBJ.transaction(fakeDataSource, c -> assertEquals(1, insertQuery.execute(c)));
+            }
+        }
+
+        @Test
+        public void exceptDuringAutocommitIgnored() throws Exception {
+            try (Connection connection = db.getConnection()) {
+                DataSource fakeDataSource = new FakeDataSource<>(()->new FakeConnection(connection){
+                    @Override
+                    public void setAutoCommit(boolean autoCommit) throws SQLException {
+                        super.setAutoCommit(autoCommit);
+                        if(autoCommit){
+                            throw new SQLException();
+                        }
+                    }
+
+                    @Override
+                    public void close() throws SQLException {
+                        connection.close();
+                    }
+                });
+                JDBJ.transaction(fakeDataSource, c -> assertEquals(1, insertQuery.execute(c)));
+                assertTrue(connection.isClosed());
+            }
+        }
+
+        @Test
+        public void exceptDuringCloseIgnored() throws Exception {
+            try (Connection connection = db.getConnection()) {
+                DataSource fakeDataSource = new FakeDataSource<>(()->new FakeConnection(connection){
+                    @Override
+                    public void close() throws SQLException {
+                        connection.close();
+                        throw new SQLException("should be ignored");
+                    }
+                });
+                JDBJ.transaction(fakeDataSource, c -> assertEquals(1, insertQuery.execute(c)));
+                assertTrue(connection.isClosed());
+            }
+        }
+
+        @Test
+        public void exceptDuringRollbackIgnored() throws Exception {
+            try (Connection connection = db.getConnection()) {
+                DataSource fakeDataSource = new FakeDataSource<>(()->new FakeConnection(connection){
+
+                    @Override
+                    public void rollback() throws SQLException {
+                        super.rollback();
+                        throw new SQLException("should be ignored");
+                    }
+
+                    @Override
+                    public void close() throws SQLException {
+                        connection.close();
+                    }
+                });
+                try{
+                    JDBJ.transaction(fakeDataSource, c -> {
+                        assertEquals(1, insertQuery.execute(c));
+                        throw new SQLException("did I do that?");
+                    });
+                    fail("should have throw steve urkel exception");
+                }catch (SQLException e){
+                    assertEquals("did I do that?", e.getMessage());
+                }
+                assertTrue(connection.isClosed());
+            }
         }
     }
 
@@ -422,7 +568,7 @@ public class JDBJTest {
             this.gpa = gpa;
         }
 
-        public Student withId(long id){
+        public Student withId(long id) {
             return new Student(id, firstName, lastName, gpa);
         }
     }
