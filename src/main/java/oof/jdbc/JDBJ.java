@@ -16,18 +16,7 @@ public final class JDBJ {
         if (url == null) {
             throw new IllegalArgumentException("resource not found: " + resource);
         }
-
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()))) {
-
-            final StringBuilder queryString = new StringBuilder();
-            String line;
-            while ((line = br.readLine()) != null) {
-                queryString.append(line).append('\n');
-            }
-            return queryString(queryString.toString());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return queryString(readQueryResource(url));
     }
 
     /**
@@ -39,8 +28,33 @@ public final class JDBJ {
         return new ReturnsQuery(statement);
     }
 
+    /**
+     * @param queryString
+     * @return a phase 2 builder
+     */
+    public static InsertQuery insertQueryString(String queryString) {
+        final NamedParameterStatement statement = NamedParameterStatement.make(queryString);
+        return new InsertQuery(statement);
+    }
+
     JDBJ() {
 
+    }
+
+    private static String readQueryResource(URL url) {
+        final String queryString1;
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()))) {
+
+            final StringBuilder queryString = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) {
+                queryString.append(line).append('\n');
+            }
+            queryString1 = queryString.toString();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return queryString1;
     }
 }
 
