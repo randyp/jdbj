@@ -1350,18 +1350,18 @@ public class DecoratesBindingBuilderTest {
         }
     }
 
-    private static class TestBuilder extends DecoratesBindingBuilder<TestBuilder> {
+    private static class TestBuilder extends DecoratesPositionalBindingBuilder<TestBuilder> {
 
         TestBuilder() {
-            this(new BindingsBuilder(statement));
+            this(new PositionalBindingsBuilder(statement));
         }
 
-        TestBuilder(BindingsBuilder bindingsBuilder) {
+        TestBuilder(PositionalBindingsBuilder bindingsBuilder) {
             super(bindingsBuilder);
         }
 
         @Override
-        TestBuilder prototype(BindingsBuilder newBindings) {
+        TestBuilder prototype(PositionalBindingsBuilder newBindings) {
             return new TestBuilder(newBindings);
         }
 

@@ -11,15 +11,15 @@ import java.sql.*;
  * @param <R>
  */
 @Immutable
-public final class ExecuteQuery<R> extends DecoratesBindingBuilder<ExecuteQuery<R>> {
+public final class ExecuteQuery<R> extends DecoratesPositionalBindingBuilder<ExecuteQuery<R>> {
 
     private final ResultSetToResult<R> toResult;
 
     ExecuteQuery(NamedParameterStatement statement, ResultSetToResult<R> toResult) {
-        this(new BindingsBuilder(statement), toResult);
+        this(new PositionalBindingsBuilder(statement), toResult);
     }
 
-    ExecuteQuery(BindingsBuilder bindingsBuilder, ResultSetToResult<R> toResult) {
+    ExecuteQuery(PositionalBindingsBuilder bindingsBuilder, ResultSetToResult<R> toResult) {
         super(bindingsBuilder);
         this.toResult = toResult;
     }
@@ -42,7 +42,7 @@ public final class ExecuteQuery<R> extends DecoratesBindingBuilder<ExecuteQuery<
     }
 
     @Override
-    ExecuteQuery<R> prototype(BindingsBuilder newBindings) {
+    ExecuteQuery<R> prototype(PositionalBindingsBuilder newBindings) {
         return new ExecuteQuery<>(newBindings, toResult);
     }
 }

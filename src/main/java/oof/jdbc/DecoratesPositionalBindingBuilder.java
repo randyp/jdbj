@@ -12,11 +12,11 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
-public abstract class DecoratesBindingBuilder<E extends DecoratesBindingBuilder<E>> {
+public abstract class DecoratesPositionalBindingBuilder<E extends DecoratesPositionalBindingBuilder<E>> {
     
-    final BindingsBuilder bindingsBuilder;
+    final PositionalBindingsBuilder bindingsBuilder;
 
-    DecoratesBindingBuilder(BindingsBuilder bindingsBuilder) {
+    DecoratesPositionalBindingBuilder(PositionalBindingsBuilder bindingsBuilder) {
         this.bindingsBuilder = bindingsBuilder;
     }
 
@@ -240,5 +240,5 @@ public abstract class DecoratesBindingBuilder<E extends DecoratesBindingBuilder<
         bindingsBuilder.checkAllBindingsPresent();
     }
 
-    abstract E prototype(BindingsBuilder newBindings);
+    abstract E prototype(PositionalBindingsBuilder newBindings);
 }

@@ -16,15 +16,15 @@ import java.util.stream.StreamSupport;
  * @param <R>
  */
 @Immutable
-public final class StreamQuery<R> extends DecoratesBindingBuilder<StreamQuery<R>> {
+public final class StreamQuery<R> extends DecoratesPositionalBindingBuilder<StreamQuery<R>> {
 
     private final ResultSetMapper<R> mapper;
 
     StreamQuery(NamedParameterStatement statement, ResultSetMapper<R> mapper) {
-        this(new BindingsBuilder(statement), mapper);
+        this(new PositionalBindingsBuilder(statement), mapper);
     }
 
-    StreamQuery(BindingsBuilder bindingsBuilder, ResultSetMapper<R> mapper) {
+    StreamQuery(PositionalBindingsBuilder bindingsBuilder, ResultSetMapper<R> mapper) {
         super(bindingsBuilder);
         this.mapper = mapper;
     }
@@ -64,7 +64,7 @@ public final class StreamQuery<R> extends DecoratesBindingBuilder<StreamQuery<R>
     }
 
     @Override
-    StreamQuery<R> prototype(BindingsBuilder newBindings) {
+    StreamQuery<R> prototype(PositionalBindingsBuilder newBindings) {
         return new StreamQuery<>(newBindings, mapper);
     }
 }

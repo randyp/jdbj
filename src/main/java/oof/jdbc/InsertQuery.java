@@ -9,18 +9,18 @@ import java.sql.SQLException;
  * Phase 2 Builder
  */
 @Immutable
-public final class InsertQuery extends DecoratesBindingBuilder<InsertQuery> {
+public final class InsertQuery extends DecoratesPositionalBindingBuilder<InsertQuery> {
 
     InsertQuery(NamedParameterStatement statement) {
-        this(new BindingsBuilder(statement));
+        this(new PositionalBindingsBuilder(statement));
     }
 
-    InsertQuery(BindingsBuilder bindingsBuilder) {
+    InsertQuery(PositionalBindingsBuilder bindingsBuilder) {
         super(bindingsBuilder);
     }
 
     @Override
-    InsertQuery prototype(BindingsBuilder newBindings) {
+    InsertQuery prototype(PositionalBindingsBuilder newBindings) {
         return new InsertQuery(newBindings);
     }
 

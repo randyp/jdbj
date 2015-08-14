@@ -9,16 +9,16 @@ import oof.jdbc.lambda.Binding;
 import java.util.*;
 
 @Immutable
-public class Bindings {
+public class PositionalBindings {
 
-    public static Bindings empty() {
-        return new Bindings(new HashMap<>(), new HashMap<>());
+    public static PositionalBindings empty() {
+        return new PositionalBindings(new HashMap<>(), new HashMap<>());
     }
 
     private final Map<String, Binding> valueBindings;
     private final Map<String, List<Binding>> listBindings;
 
-    private Bindings(Map<String, Binding> valueBindings, Map<String, List<Binding>> listBindings) {
+    private PositionalBindings(Map<String, Binding> valueBindings, Map<String, List<Binding>> listBindings) {
         this.valueBindings = valueBindings;
         this.listBindings = listBindings;
     }
@@ -30,7 +30,7 @@ public class Bindings {
         return valueBindings.containsKey(name) || listBindings.containsKey(name);
     }
 
-    public Bindings addValueBinding(String name, Binding binding) {
+    public PositionalBindings addValueBinding(String name, Binding binding) {
         if (binding == null) {
             throw new IllegalArgumentException("binding cannot be null");
         }
@@ -42,10 +42,10 @@ public class Bindings {
         final Map<String, Binding> newValueBindings = new HashMap<>(valueBindings);
         newValueBindings.put(name, binding);
 
-        return new Bindings(newValueBindings, listBindings);
+        return new PositionalBindings(newValueBindings, listBindings);
     }
 
-    public Bindings addListBinding(String name, List<Binding> bindings) {
+    public PositionalBindings addListBinding(String name, List<Binding> bindings) {
         if (name == null) {
             throw new IllegalArgumentException("name cannot be null");
         }
@@ -65,7 +65,7 @@ public class Bindings {
         final Map<String, List<Binding>> newListBindings = new HashMap<>(listBindings);
         newListBindings.put(name, bindings);
 
-        return new Bindings(valueBindings, newListBindings);
+        return new PositionalBindings(valueBindings, newListBindings);
     }
 
 
