@@ -28,6 +28,7 @@ public final class ExecuteQueryRunnable extends PositionalBindingsBuilder<Execut
 
     /**
      * phase 4 method
+     *
      * @param connection
      * @return
      * @throws SQLException
@@ -35,9 +36,13 @@ public final class ExecuteQueryRunnable extends PositionalBindingsBuilder<Execut
     public void execute(Connection connection) throws SQLException {
         checkAllBindingsPresent();
 
-        try(PreparedStatement ps = connection.prepareStatement(buildSql())){
+        try (PreparedStatement ps = connection.prepareStatement(
+                buildSql(),
+                ResultSet.TYPE_FORWARD_ONLY,
+                ResultSet.CONCUR_READ_ONLY)
+        ) {
             bindToStatement(ps);
-            try(ResultSet rs = ps.executeQuery()){
+            try (ResultSet rs = ps.executeQuery()) {
                 runnable.run(rs);
             }
         }

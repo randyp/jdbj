@@ -8,6 +8,7 @@ import java.sql.*;
 
 /**
  * Phase 3 Builder
+ *
  * @param <R>
  */
 @Immutable
@@ -26,6 +27,7 @@ public final class ExecuteQuery<R> extends PositionalBindingsBuilder<ExecuteQuer
 
     /**
      * phase 4 method
+     *
      * @param connection
      * @return R
      * @throws SQLException
@@ -33,9 +35,13 @@ public final class ExecuteQuery<R> extends PositionalBindingsBuilder<ExecuteQuer
     public R execute(Connection connection) throws SQLException {
         checkAllBindingsPresent();
 
-        try(PreparedStatement ps = connection.prepareStatement(buildSql())){
+        try (PreparedStatement ps = connection.prepareStatement(
+                buildSql(),
+                ResultSet.TYPE_FORWARD_ONLY,
+                ResultSet.CONCUR_READ_ONLY
+        )) {
             bindToStatement(ps);
-            try(ResultSet rs = ps.executeQuery()){
+            try (ResultSet rs = ps.executeQuery()) {
                 return toResult.from(rs);
             }
         }

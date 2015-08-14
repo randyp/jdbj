@@ -13,6 +13,7 @@ import java.util.stream.StreamSupport;
 
 /**
  * Phase 3 class
+ *
  * @param <R>
  */
 @Immutable
@@ -31,7 +32,7 @@ public final class StreamQuery<R> extends PositionalBindingsBuilder<StreamQuery<
 
     /**
      * Phase 4 method
-     *
+     * <p>
      * Be sure to close the stream!!!
      *
      * @param connection
@@ -41,7 +42,11 @@ public final class StreamQuery<R> extends PositionalBindingsBuilder<StreamQuery<
     public Stream<R> execute(Connection connection) throws SQLException {
         checkAllBindingsPresent();
 
-        final PreparedStatement ps = connection.prepareStatement(buildSql());
+        final PreparedStatement ps = connection.prepareStatement(
+                buildSql(),
+                ResultSet.TYPE_FORWARD_ONLY,
+                ResultSet.CONCUR_READ_ONLY
+        );
         bindToStatement(ps);
         final ResultSet rs = ps.executeQuery();
         final Spliterator<R> rsplit = new ResultSetSpliterator<>(rs, mapper);
