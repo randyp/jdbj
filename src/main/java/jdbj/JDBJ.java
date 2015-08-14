@@ -42,19 +42,18 @@ public final class JDBJ {
     }
 
     private static String readQueryResource(URL url) {
-        final String queryString1;
+        final StringBuilder queryString = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()))) {
 
-            final StringBuilder queryString = new StringBuilder();
+
             String line;
             while ((line = br.readLine()) != null) {
                 queryString.append(line).append('\n');
             }
-            queryString1 = queryString.toString();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return queryString1;
+        return queryString.toString();
     }
 }
 
