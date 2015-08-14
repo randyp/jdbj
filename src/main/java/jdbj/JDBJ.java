@@ -1,8 +1,10 @@
 package jdbj;
 
+import jdbj.lambda.ConnectionCallable;
 import jdbj.lambda.ConnectionRunnable;
 import jdbj.lambda.ResultSetMapper;
 
+import javax.annotation.Nullable;
 import javax.sql.DataSource;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -54,11 +56,29 @@ public final class JDBJ {
     }
 
     public static void transaction(DataSource dataSource, ConnectionRunnable runnable) throws SQLException {
-        int transactionIsolation = Connection.TRANSACTION_READ_COMMITTED;
-        transaction(dataSource, transactionIsolation, runnable);
+        returningTransactionOptionalIsolation(dataSource, null, c -> {
+            runnable.run(c);
+            return null;
+        });
     }
 
     public static void transaction(DataSource dataSource, int transactionIsolation, ConnectionRunnable runnable) throws SQLException {
+        returningTransactionOptionalIsolation(dataSource, transactionIsolation, c->{
+            runnable.run(c);
+            return null;
+        });
+    }
+
+    public static <R> R returningTransaction(DataSource dataSource, ConnectionCallable<R> callable) throws SQLException {
+        return returningTransactionOptionalIsolation(dataSource, null, callable);
+    }
+
+    public static <R> R returningTransaction(DataSource dataSource, int transactionIsolation, ConnectionCallable<R> callable) throws SQLException {
+        return returningTransactionOptionalIsolation(dataSource, transactionIsolation, callable);
+    }
+
+    private static <R> R returningTransactionOptionalIsolation(DataSource dataSource, @Nullable Integer transactionIsolation, ConnectionCallable<R> callable) throws SQLException{
+
         Connection connection = null;
         Integer oldTransactionIsolation = null;
         try {
@@ -67,13 +87,16 @@ public final class JDBJ {
             if(!connection.getAutoCommit()){
                 throw new IllegalStateException("autocommit is already turned off, which means rollback point is not start of transaction");
             }
-            oldTransactionIsolation = connection.getTransactionIsolation();
+            if(transactionIsolation != null){
+                oldTransactionIsolation = connection.getTransactionIsolation();
+                connection.setTransactionIsolation(transactionIsolation);
+            }
 
-            connection.setTransactionIsolation(transactionIsolation);
             connection.setAutoCommit(false);
 
-            runnable.run(connection);
+            R result = callable.call(connection);
             connection.commit();
+            return result;
         } catch (SQLException e ) {
             try {
                 if(connection != null){

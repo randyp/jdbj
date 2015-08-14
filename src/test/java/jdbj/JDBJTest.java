@@ -437,6 +437,26 @@ public class JDBJTest {
         }
 
         @Test
+        public void returning() throws Exception {
+            final List<Student> actual = JDBJ.returningTransaction(db, connection -> {
+                assertEquals(1, insertQuery.execute(connection));
+                return Student.selectAll.execute(connection);
+            });
+
+            assertEquals(Collections.singletonList(student), actual);
+        }
+
+        @Test
+        public void returningWithIsolation() throws Exception {
+            final List<Student> actual = JDBJ.returningTransaction(db, Connection.TRANSACTION_READ_COMMITTED, connection -> {
+                assertEquals(1, insertQuery.execute(connection));
+                return Student.selectAll.execute(connection);
+            });
+
+            assertEquals(Collections.singletonList(student), actual);
+        }
+
+        @Test
         public void rollback() throws Exception {
             try {
                 JDBJ.transaction(db, connection -> {
@@ -470,22 +490,37 @@ public class JDBJTest {
         }
 
         @Test
-        public void transactionIsolationReturned() throws Exception {
+        public void transactionIsolationReset() throws Exception {
             try (Connection connection = db.getConnection()) {
                 final int originalIsolation = Connection.TRANSACTION_READ_UNCOMMITTED;
 
                 connection.setTransactionIsolation(originalIsolation);
                 DataSource fakeDataSource = new FakeDataSource<>(()->new FakeConnection(connection));
 
-                assertTrue(connection.getAutoCommit());
                 JDBJ.transaction(fakeDataSource, Connection.TRANSACTION_READ_COMMITTED, c -> {
                     assertEquals(Connection.TRANSACTION_READ_COMMITTED, c.getTransactionIsolation());
                     assertEquals(1, insertQuery.execute(c));
                 });
-                assertTrue(connection.getAutoCommit());
                 assertEquals(originalIsolation, connection.getTransactionIsolation());
             }
         }
+
+        @Test
+        public void transactionIsolationNotResetIfNotProvided() throws Exception {
+            try (Connection connection = db.getConnection()) {
+                final int originalIsolation = Connection.TRANSACTION_READ_UNCOMMITTED;
+
+                connection.setTransactionIsolation(originalIsolation);
+                DataSource fakeDataSource = new FakeDataSource<>(()->new FakeConnection(connection));
+
+                JDBJ.transaction(fakeDataSource, c -> {
+                    assertEquals(Connection.TRANSACTION_READ_UNCOMMITTED, c.getTransactionIsolation());
+                    assertEquals(1, insertQuery.execute(c));
+                });
+                assertEquals(originalIsolation, connection.getTransactionIsolation());
+            }
+        }
+
 
         @Test(expected = IllegalStateException.class)
         public void exceptIfAutocommitAlreadyOff() throws Exception {
@@ -537,7 +572,7 @@ public class JDBJTest {
                         connection.close();
                     }
                 });
-                JDBJ.transaction(fakeDataSource, c -> assertEquals(1, insertQuery.execute(c)));
+                JDBJ.transaction(fakeDataSource, Connection.TRANSACTION_READ_COMMITTED, c -> assertEquals(1, insertQuery.execute(c)));
                 assertTrue(connection.isClosed());
             }
         }
