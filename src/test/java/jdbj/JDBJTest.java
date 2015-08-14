@@ -13,6 +13,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -63,7 +64,7 @@ public class JDBJTest {
             final int[] count = {0};
             final ExecuteQueryRunnable query = JDBJ.queryString("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA in :schemas")
                     .runnable(rs -> {
-                        while(rs.next()){
+                        while (rs.next()) {
                             count[0]++;
                         }
                     })
@@ -79,7 +80,7 @@ public class JDBJTest {
         @Test
         public void selectMapToListExecute() throws Exception {
             final ExecuteQuery<List<String>> query = JDBJ.queryString("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE id = -28")
-                    .map(rs->rs.getString("TABLE_NAME"))
+                    .map(rs -> rs.getString("TABLE_NAME"))
                     .toList();
 
             final List<String> results;
@@ -94,7 +95,7 @@ public class JDBJTest {
         public void selectMapToListBindLongsExecute() throws Exception {
             //noinspection RedundantArrayCreation
             final ExecuteQuery<List<String>> query = JDBJ.queryString("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE id in :ids")
-                    .map(rs->rs.getString("TABLE_NAME"))
+                    .map(rs -> rs.getString("TABLE_NAME"))
                     .toList()
                     .bindLongs(":ids", new long[]{-28L});
 
@@ -184,7 +185,106 @@ public class JDBJTest {
     public static class Insert {
 
         @ClassRule
-        public static final TestRule createStudent = (base, description) -> new Statement() {
+        public static TestRule create_table = Student.createTableRule;
+
+        @After
+        public void tearDown() throws Exception {
+            try (Connection connection = db.getConnection();
+                 PreparedStatement ps = connection.prepareStatement("DELETE FROM student")) {
+                ps.execute();
+            }
+        }
+
+        @Test(expected = IllegalStateException.class)
+        public void insertQueryNotEnoughBindings() throws Exception {
+            final InsertQuery insertQuery = JDBJ.insertQueryString(Student.insert);
+            try (Connection connection = db.getConnection()) {
+                insertQuery.execute(connection);
+            }
+        }
+
+        @Test
+        public void insertOne() throws Exception {
+            final Student expected = new Student(10L, "Ada", "Dada", new BigDecimal("3.1"));
+            final InsertQuery insertQuery = JDBJ.insertQueryString(Student.insert)
+                    .bindLong(":id", expected.id)
+                    .bindString(":first_name", expected.firstName)
+                    .bindString(":last_name", expected.lastName)
+                    .bindBigDecimal(":gpa", expected.gpa);
+
+            final List<Student> actual;
+            try (Connection connection = db.getConnection()) {
+                assertEquals(1, insertQuery.execute(connection));
+                actual = Student.selectAll.execute(connection);
+            }
+            assertEquals(Collections.singletonList(expected), actual);
+        }
+    }
+
+    public static class BatchInsert {
+
+        @ClassRule
+        public static TestRule create_table = Student.createTableRule;
+
+        @After
+        public void tearDown() throws Exception {
+            try (Connection connection = db.getConnection();
+                 PreparedStatement ps = connection.prepareStatement("DELETE FROM student")) {
+                ps.execute();
+            }
+        }
+
+        @Test
+        public void insertBatch() throws Exception {
+            final List<Student> expected = Arrays.asList(
+                    new Student(10L, "Ada10", "Dada10", new BigDecimal("3.1")),
+                    new Student(11L, "Ada11", "Dada11", new BigDecimal("3.2"))
+            );
+
+            BatchedInsertQuery insertQuery = JDBJ.insertQueryString(Student.insert).asBatch();
+            for (Student student : expected) {
+                insertQuery.startBatch()
+                        .bindLong(":id", student.id)
+                        .bindString(":first_name", student.firstName)
+                        .bindString(":last_name", student.lastName)
+                        .bindBigDecimal(":gpa", student.gpa)
+                        .endBatch();
+            }
+
+            final List<Student> actual;
+            try (Connection connection = db.getConnection()) {
+                assertArrayEquals(new int[]{1, 1}, insertQuery.execute(connection));
+                actual = Student.selectAll.execute(connection);
+            }
+            assertEquals(expected, actual);
+        }
+
+        @Test(expected = IllegalStateException.class)
+        public void noBatchesAdded() throws Exception {
+            BatchedInsertQuery insertQuery = JDBJ.insertQueryString(Student.insert).asBatch();
+
+            try (Connection connection = db.getConnection()) {
+                insertQuery.execute(connection);
+            }
+        }
+
+        @Test(expected = IllegalStateException.class)
+        public void missingBindings() throws Exception {
+            final Student student = new Student(10L, "Ada10", "Dada10", new BigDecimal("3.1"));
+
+            JDBJ.insertQueryString(Student.insert).asBatch()
+                    .startBatch()
+                    .bindLong(":id", student.id)
+                    .bindString(":first_name", student.firstName)
+                    .bindString(":last_name", student.lastName)
+                    .endBatch();
+        }
+    }
+
+
+    private static class Student {
+
+        public static final TestRule createTableRule = (base, description) -> new Statement() {
             @Override
             public void evaluate() throws Throwable {
                 final String createStudents = "CREATE TABLE student(id BIGINT, first_name varchar, last_name varchar, gpa varchar)";
@@ -201,55 +301,17 @@ public class JDBJTest {
             }
         };
 
+        static final String insert = "INSERT INTO student(id, first_name, last_name, gpa) VALUES(:id, :first_name, :last_name, :gpa)";
 
-        public static final String insert = "INSERT INTO student(id, first_name, last_name, gpa) VALUES(:id, :first_name, :last_name, :gpa)";
-
-        private static final ExecuteQuery<List<Student>> selectAll = JDBJ.queryString("SELECT * FROM student ORDER BY id ASC")
+        static final ExecuteQuery<List<Student>> selectAll = JDBJ.queryString("SELECT * FROM student ORDER BY id ASC")
                 .map(Student::from)
                 .toList();
-
-        @After
-        public void tearDown() throws Exception {
-            try(Connection connection = db.getConnection();
-                PreparedStatement ps = connection.prepareStatement("DELETE FROM student")){
-                ps.execute();
-            }
-        }
-
-        @Test(expected = IllegalStateException.class)
-        public void insertQueryNotEnoughBindings() throws Exception {
-            final InsertQuery insertQuery = JDBJ.insertQueryString(insert);
-            try(Connection connection = db.getConnection()){
-                insertQuery.execute(connection);
-            }
-        }
-
-        @Test
-        public void insertOne() throws Exception {
-            final Student expected = new Student(10L, "Ada", "Dada", new BigDecimal("3.1"));
-            final InsertQuery insertQuery = JDBJ.insertQueryString(insert)
-                    .bindLong(":id", expected.id)
-                    .bindString(":first_name", expected.firstName)
-                    .bindString(":last_name", expected.lastName)
-                    .bindBigDecimal(":gpa", expected.gpa);
-
-            final List<Student> actual;
-            try(Connection connection = db.getConnection()){
-                assertEquals(1, insertQuery.execute(connection));
-                actual = selectAll.execute(connection);
-            }
-            assertEquals(Collections.singletonList(expected), actual);
-        }
-    }
-
-
-    private static class Student {
 
         static Student from(ResultSet rs) throws SQLException {
             return new Student(rs.getLong("id"),
                     rs.getString("first_name"),
                     rs.getString("last_name"),
-                     rs.getBigDecimal("gpa"));
+                    rs.getBigDecimal("gpa"));
         }
 
         long id;

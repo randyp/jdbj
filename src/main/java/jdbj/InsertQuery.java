@@ -19,6 +19,10 @@ public final class InsertQuery extends PositionalBindingsBuilder<InsertQuery> {
         super(statement, bindings, (InsertQuery::new));
     }
 
+    public BatchedInsertQuery asBatch(){
+        return new BatchedInsertQuery(statement);
+    }
+
     public int execute(Connection connection) throws SQLException {
         checkAllBindingsPresent();
 

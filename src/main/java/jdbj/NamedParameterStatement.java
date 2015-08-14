@@ -51,7 +51,7 @@ public final class NamedParameterStatement {
         return namedParameters.contains(name);
     }
 
-    public String jdbcSql(PositionalBindings bindings) {
+    public String jdbcSql(ValueBindings bindings) {
         if(bindings == null){
             throw new IllegalArgumentException("bindings cannot be null");
         }
@@ -69,7 +69,7 @@ public final class NamedParameterStatement {
         return builder.toString();
     }
 
-    public void bind(PreparedStatement ps, PositionalBindings bindings) throws SQLException {
+    public void bind(PreparedStatement ps, ValueBindings bindings) throws SQLException {
         if (ps == null) {
             throw new IllegalArgumentException("ps cannot be null");
         }
@@ -83,14 +83,14 @@ public final class NamedParameterStatement {
         }
     }
 
-    public void checkAllBindingsPresent(PositionalBindings bindings) {
+    public void checkAllBindingsPresent(ValueBindings bindings) {
         if(bindings == null){
             throw new IllegalArgumentException("bindings cannot be null");
         }
         final Set<String> missingBindings = new HashSet<>(namedParameters);
         missingBindings.removeAll(bindings.keys());
         if(!missingBindings.isEmpty()){
-            throw new IllegalStateException("missing bindings, cannot proceed: " + bindings);
+            throw new IllegalStateException("missing bindings, cannot proceed: " + missingBindings);
         }
     }
 }

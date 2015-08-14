@@ -12,9 +12,9 @@ import java.util.List;
 @Immutable
 public class PositionalBindingsBuilder<E extends PositionalBindingsBuilder<E>> implements ListBindingsBuilder<E> {
 
-    private final NamedParameterStatement statement;
-    private final PositionalBindings bindings;
-    private final PositionalBindingsBuilderFactory<E> factory;
+    final NamedParameterStatement statement;
+    final PositionalBindings bindings;
+    final PositionalBindingsBuilderFactory<E> factory;
 
     PositionalBindingsBuilder(NamedParameterStatement statement, PositionalBindings bindings, PositionalBindingsBuilderFactory<E> factory){
         this.statement = statement;
