@@ -279,6 +279,21 @@ public class JDBJTest {
                     .bindString(":last_name", student.lastName)
                     .endBatch();
         }
+
+        @Test(expected = IllegalStateException.class)
+        public void batchAlreadyEnded() throws Exception {
+            final Student student = new Student(10L, "Ada10", "Dada10", new BigDecimal("3.1"));
+
+            final BatchedInsertQuery.Batch batch = JDBJ.insertQueryString(Student.insert_id).asBatch()
+                    .startBatch()
+                    .bindLong(":id", student.id)
+                    .bindString(":first_name", student.firstName)
+                    .bindString(":last_name", student.lastName)
+                    .bindBigDecimal(":gpa", student.gpa);
+
+            batch.endBatch();
+            batch.bindLong(":id", student.id);
+        }
     }
 
     public static class InsertReturnKeys {
@@ -360,13 +375,27 @@ public class JDBJTest {
 
         @Test(expected = IllegalStateException.class)
         public void missingBindings() throws Exception {
-            final Student student = new Student(10L, "Ada10", "Dada10", new BigDecimal("3.1"));
+            final NewStudent student = new NewStudent("Ada10", "Dada10", new BigDecimal("3.1"));
 
             JDBJ.insertQueryStringGetKeys(Student.insert, rs->rs.getLong(1)).asBatch()
                     .startBatch()
                     .bindString(":first_name", student.firstName)
                     .bindString(":last_name", student.lastName)
                     .endBatch();
+        }
+
+        @Test(expected = IllegalStateException.class)
+        public void batchAlreadyEnded() throws Exception {
+            final NewStudent student = new NewStudent("Ada10", "Dada10", new BigDecimal("3.1"));
+
+            final BatchedInsertReturnKeysQuery<Long>.Batch batch = JDBJ.insertQueryStringGetKeys(Student.insert, rs -> rs.getLong(1)).asBatch()
+                    .startBatch()
+                    .bindString(":first_name", student.firstName)
+                    .bindString(":last_name", student.lastName)
+                    .bindBigDecimal(":gpa", student.gpa);
+
+            batch.endBatch();
+            batch.bindString(":first_name", student.firstName);
         }
     }
 
