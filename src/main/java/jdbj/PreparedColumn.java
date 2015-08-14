@@ -281,28 +281,4 @@ public class PreparedColumn {
         }
         set=true;
     }
-
-    public Array createArray(String typeName, Object[] elements) throws SQLException {
-        return ps.getConnection().createArrayOf(typeName, elements);
-    }
-
-    public Blob createBlob() throws SQLException {
-        return ps.getConnection().createBlob();
-    }
-
-    public Clob createClob() throws SQLException {
-        return ps.getConnection().createClob();
-    }
-
-    public NClob createNClob() throws SQLException {
-        return ps.getConnection().createNClob();
-    }
-
-    public SQLXML createSQLXML() throws SQLException {
-        return ps.getConnection().createSQLXML();
-    }
-
-    public Struct createStruct(String typeName, Object[] attributes) throws SQLException {
-        return ps.getConnection().createStruct(typeName, attributes);
-    }
 }
