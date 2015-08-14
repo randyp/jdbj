@@ -14,7 +14,7 @@ import java.util.List;
  * Also worth noting: returning keys during batch execution is generally not supported.
  * Usually (Oracle, H2) only the keys from the last batch will be returned.
  */
-@Deprecated
+@Deprecated //no plans to remove, just wanted you to read the above documentation...
 public class BatchedInsertReturnKeysQuery<R> {
 
     private final List<ValueBindings> batches = new ArrayList<>();
