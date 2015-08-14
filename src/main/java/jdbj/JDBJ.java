@@ -54,13 +54,24 @@ public final class JDBJ {
     }
 
     public static void transaction(DataSource dataSource, ConnectionRunnable runnable) throws SQLException {
+        int transactionIsolation = Connection.TRANSACTION_READ_COMMITTED;
+        transaction(dataSource, transactionIsolation, runnable);
+    }
+
+    public static void transaction(DataSource dataSource, int transactionIsolation, ConnectionRunnable runnable) throws SQLException {
         Connection connection = null;
+        Integer oldTransactionIsolation = null;
         try {
             connection = dataSource.getConnection();
+
             if(!connection.getAutoCommit()){
                 throw new IllegalStateException("autocommit is already turned off, which means rollback point is not start of transaction");
             }
+            oldTransactionIsolation = connection.getTransactionIsolation();
+
+            connection.setTransactionIsolation(transactionIsolation);
             connection.setAutoCommit(false);
+
             runnable.run(connection);
             connection.commit();
         } catch (SQLException e ) {
@@ -79,6 +90,13 @@ public final class JDBJ {
                 } catch (SQLException e) {
                     //ignore
                 }
+                if(oldTransactionIsolation != null){
+                    try {
+                        connection.setTransactionIsolation(oldTransactionIsolation);
+                    } catch (SQLException e) {
+                        //ignore
+                    }
+                }
                 try {
                     connection.close();
                 } catch (SQLException e) {
@@ -86,7 +104,6 @@ public final class JDBJ {
                 }
             }
         }
-
     }
 
     JDBJ() {

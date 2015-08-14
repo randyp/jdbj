@@ -462,10 +462,28 @@ public class JDBJTest {
 
                 assertTrue(connection.getAutoCommit());
                 JDBJ.transaction(fakeDataSource, c -> {
-                    assertFalse(connection.getAutoCommit());
+                    assertFalse(c.getAutoCommit());
                     assertEquals(1, insertQuery.execute(c));
                 });
                 assertTrue(connection.getAutoCommit());
+            }
+        }
+
+        @Test
+        public void transactionIsolationReturned() throws Exception {
+            try (Connection connection = db.getConnection()) {
+                final int originalIsolation = Connection.TRANSACTION_READ_UNCOMMITTED;
+
+                connection.setTransactionIsolation(originalIsolation);
+                DataSource fakeDataSource = new FakeDataSource<>(()->new FakeConnection(connection));
+
+                assertTrue(connection.getAutoCommit());
+                JDBJ.transaction(fakeDataSource, Connection.TRANSACTION_READ_COMMITTED, c -> {
+                    assertEquals(Connection.TRANSACTION_READ_COMMITTED, c.getTransactionIsolation());
+                    assertEquals(1, insertQuery.execute(c));
+                });
+                assertTrue(connection.getAutoCommit());
+                assertEquals(originalIsolation, connection.getTransactionIsolation());
             }
         }
 
@@ -479,7 +497,7 @@ public class JDBJTest {
         }
 
         @Test
-        public void exceptDuringAutocommitIgnored() throws Exception {
+        public void exceptDuringAutocommitResetIgnored() throws Exception {
             try (Connection connection = db.getConnection()) {
                 DataSource fakeDataSource = new FakeDataSource<>(()->new FakeConnection(connection){
                     @Override
@@ -487,6 +505,30 @@ public class JDBJTest {
                         super.setAutoCommit(autoCommit);
                         if(autoCommit){
                             throw new SQLException();
+                        }
+                    }
+
+                    @Override
+                    public void close() throws SQLException {
+                        connection.close();
+                    }
+                });
+                JDBJ.transaction(fakeDataSource, c -> assertEquals(1, insertQuery.execute(c)));
+                assertTrue(connection.isClosed());
+            }
+        }
+
+        @Test
+        public void exceptDuringIsolationResetIgnored() throws Exception {
+            try (Connection connection = db.getConnection()) {
+                connection.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
+                DataSource fakeDataSource = new FakeDataSource<>(()->new FakeConnection(connection){
+                    @Override
+                    public void setTransactionIsolation(int level) throws SQLException {
+                        final int beforeSet = connection.getTransactionIsolation();
+                        super.setTransactionIsolation(level);
+                        if(beforeSet == Connection.TRANSACTION_READ_COMMITTED){
+                            throw new SQLException("should be ignored");
                         }
                     }
 
