@@ -10,7 +10,7 @@ import java.net.URL;
 import java.sql.*;
 import java.util.Calendar;
 
-public interface ValueBindingsBuilder<E extends PositionalBindingsBuilder> {
+public interface ValueBindingsBuilder<E> {
 
     E bind(String name, Binding b);
 
