@@ -1,14 +1,11 @@
 package jdbj;
 
-import jdbj.lambda.Binding;
-
 import java.io.InputStream;
 import java.io.Reader;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.*;
 import java.util.Calendar;
-import java.util.List;
 
 public class PreparedColumn {
 
@@ -270,15 +267,6 @@ public class PreparedColumn {
 
     public void setObject( Object x, SQLType targetSqlType) throws SQLException {
         ps.setObject(parameterIndex, x, targetSqlType);
-        set=true;
-    }
-
-    public void setList(List<Binding> bindings) throws SQLException {
-        for (int i = 0; i < bindings.size(); i++) {
-            Binding binding = bindings.get(i);
-            final PreparedColumn pc = i == 0 ? this : new PreparedColumn(ps, parameterIndex + i);
-            binding.bind(pc);
-        }
         set=true;
     }
 }
