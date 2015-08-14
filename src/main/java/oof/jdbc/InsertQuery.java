@@ -9,26 +9,21 @@ import java.sql.SQLException;
  * Phase 2 Builder
  */
 @Immutable
-public final class InsertQuery extends DecoratesPositionalBindingBuilder<InsertQuery> {
+public final class InsertQuery extends PositionalBindingsBuilder<InsertQuery> {
 
     InsertQuery(NamedParameterStatement statement) {
-        this(new PositionalBindingsBuilder(statement));
+        this(statement, PositionalBindings.empty());
     }
 
-    InsertQuery(PositionalBindingsBuilder bindingsBuilder) {
-        super(bindingsBuilder);
-    }
-
-    @Override
-    InsertQuery prototype(PositionalBindingsBuilder newBindings) {
-        return new InsertQuery(newBindings);
+    InsertQuery(NamedParameterStatement statement, PositionalBindings bindings) {
+        super(statement, bindings, (InsertQuery::new));
     }
 
     public int execute(Connection connection) throws SQLException {
         checkAllBindingsPresent();
 
-        try(PreparedStatement ps = connection.prepareStatement(bindingsBuilder.buildSql())){
-            bindingsBuilder.bindToStatement(ps);
+        try (PreparedStatement ps = connection.prepareStatement(buildSql())) {
+            bindToStatement(ps);
             return ps.executeUpdate();
         }
     }

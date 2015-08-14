@@ -16,16 +16,16 @@ import java.util.stream.StreamSupport;
  * @param <R>
  */
 @Immutable
-public final class StreamQuery<R> extends DecoratesPositionalBindingBuilder<StreamQuery<R>> {
+public final class StreamQuery<R> extends PositionalBindingsBuilder<StreamQuery<R>> {
 
     private final ResultSetMapper<R> mapper;
 
     StreamQuery(NamedParameterStatement statement, ResultSetMapper<R> mapper) {
-        this(new PositionalBindingsBuilder(statement), mapper);
+        this(statement, PositionalBindings.empty(), mapper);
     }
 
-    StreamQuery(PositionalBindingsBuilder bindingsBuilder, ResultSetMapper<R> mapper) {
-        super(bindingsBuilder);
+    StreamQuery(NamedParameterStatement statement, PositionalBindings bindings, ResultSetMapper<R> mapper) {
+        super(statement, bindings, ((s, b) -> new StreamQuery<>(s, b, mapper)));
         this.mapper = mapper;
     }
 
@@ -41,8 +41,8 @@ public final class StreamQuery<R> extends DecoratesPositionalBindingBuilder<Stre
     public Stream<R> execute(Connection connection) throws SQLException {
         checkAllBindingsPresent();
 
-        final PreparedStatement ps = connection.prepareStatement(bindingsBuilder.buildSql());
-        bindingsBuilder.bindToStatement(ps);
+        final PreparedStatement ps = connection.prepareStatement(buildSql());
+        bindToStatement(ps);
         final ResultSet rs = ps.executeQuery();
         final Spliterator<R> rsplit = new ResultSetSpliterator<>(rs, mapper);
 
@@ -61,10 +61,5 @@ public final class StreamQuery<R> extends DecoratesPositionalBindingBuilder<Stre
                         //ignore
                     }
                 });
-    }
-
-    @Override
-    StreamQuery<R> prototype(PositionalBindingsBuilder newBindings) {
-        return new StreamQuery<>(newBindings, mapper);
     }
 }

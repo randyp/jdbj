@@ -11,16 +11,16 @@ import java.sql.*;
  * @param <R>
  */
 @Immutable
-public final class ExecuteQuery<R> extends DecoratesPositionalBindingBuilder<ExecuteQuery<R>> {
+public final class ExecuteQuery<R> extends PositionalBindingsBuilder<ExecuteQuery<R>> {
 
     private final ResultSetToResult<R> toResult;
 
     ExecuteQuery(NamedParameterStatement statement, ResultSetToResult<R> toResult) {
-        this(new PositionalBindingsBuilder(statement), toResult);
+        this(statement, PositionalBindings.empty(), toResult);
     }
 
-    ExecuteQuery(PositionalBindingsBuilder bindingsBuilder, ResultSetToResult<R> toResult) {
-        super(bindingsBuilder);
+    public ExecuteQuery(NamedParameterStatement statement, PositionalBindings bindings, ResultSetToResult<R> toResult) {
+        super(statement, bindings, (s, b) -> new ExecuteQuery<>(s, b, toResult));
         this.toResult = toResult;
     }
 
@@ -33,16 +33,12 @@ public final class ExecuteQuery<R> extends DecoratesPositionalBindingBuilder<Exe
     public R execute(Connection connection) throws SQLException {
         checkAllBindingsPresent();
 
-        try(PreparedStatement ps = connection.prepareStatement(bindingsBuilder.buildSql())){
-            bindingsBuilder.bindToStatement(ps);
+        try(PreparedStatement ps = connection.prepareStatement(buildSql())){
+            bindToStatement(ps);
             try(ResultSet rs = ps.executeQuery()){
                 return toResult.from(rs);
             }
         }
     }
 
-    @Override
-    ExecuteQuery<R> prototype(PositionalBindingsBuilder newBindings) {
-        return new ExecuteQuery<>(newBindings, toResult);
-    }
 }
