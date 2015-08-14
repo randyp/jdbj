@@ -197,7 +197,7 @@ public class JDBJTest {
 
         @Test(expected = IllegalStateException.class)
         public void insertQueryNotEnoughBindings() throws Exception {
-            final InsertQuery insertQuery = JDBJ.insertQueryString(Student.insert);
+            final InsertQuery insertQuery = JDBJ.insertQueryString(Student.insert_id);
             try (Connection connection = db.getConnection()) {
                 insertQuery.execute(connection);
             }
@@ -206,7 +206,7 @@ public class JDBJTest {
         @Test
         public void insertOne() throws Exception {
             final Student expected = new Student(10L, "Ada", "Dada", new BigDecimal("3.1"));
-            final InsertQuery insertQuery = JDBJ.insertQueryString(Student.insert)
+            final InsertQuery insertQuery = JDBJ.insertQueryString(Student.insert_id)
                     .bindLong(":id", expected.id)
                     .bindString(":first_name", expected.firstName)
                     .bindString(":last_name", expected.lastName)
@@ -241,7 +241,7 @@ public class JDBJTest {
                     new Student(11L, "Ada11", "Dada11", new BigDecimal("3.2"))
             );
 
-            BatchedInsertQuery insertQuery = JDBJ.insertQueryString(Student.insert).asBatch();
+            BatchedInsertQuery insertQuery = JDBJ.insertQueryString(Student.insert_id).asBatch();
             for (Student student : expected) {
                 insertQuery.startBatch()
                         .bindLong(":id", student.id)
@@ -261,7 +261,7 @@ public class JDBJTest {
 
         @Test(expected = IllegalStateException.class)
         public void noBatchesAdded() throws Exception {
-            BatchedInsertQuery insertQuery = JDBJ.insertQueryString(Student.insert).asBatch();
+            BatchedInsertQuery insertQuery = JDBJ.insertQueryString(Student.insert_id).asBatch();
 
             try (Connection connection = db.getConnection()) {
                 insertQuery.execute(connection);
@@ -272,7 +272,7 @@ public class JDBJTest {
         public void missingBindings() throws Exception {
             final Student student = new Student(10L, "Ada10", "Dada10", new BigDecimal("3.1"));
 
-            JDBJ.insertQueryString(Student.insert).asBatch()
+            JDBJ.insertQueryString(Student.insert_id).asBatch()
                     .startBatch()
                     .bindLong(":id", student.id)
                     .bindString(":first_name", student.firstName)
@@ -281,13 +281,129 @@ public class JDBJTest {
         }
     }
 
+    public static class InsertReturnKeys {
 
-    private static class Student {
+        @ClassRule
+        public static TestRule create_table = Student.createTableRule;
+
+        @After
+        public void tearDown() throws Exception {
+            try (Connection connection = db.getConnection();
+                 PreparedStatement ps = connection.prepareStatement("DELETE FROM student")) {
+                ps.execute();
+            }
+        }
+
+        @Test
+        public void insertOne() throws Exception {
+            final NewStudent newStudent = new NewStudent("Ada", "Dada", new BigDecimal("3.1"));
+            final InsertReturnKeysQuery<Long> insertQuery = JDBJ.insertQueryStringGetKeys(Student.insert, rs -> rs.getLong(1))
+                    .bindString(":first_name", newStudent.firstName)
+                    .bindString(":last_name", newStudent.lastName)
+                    .bindBigDecimal(":gpa", newStudent.gpa);
+
+            final List<Long> keys;
+            final List<Student> actual;
+            try (Connection connection = db.getConnection()) {
+                keys = insertQuery.execute(connection);
+                actual = Student.selectAll.execute(connection);
+            }
+            assertEquals(1, keys.size());
+            assertEquals(Collections.singletonList(newStudent.withId(keys.get(0))), actual);
+        }
+    }
+
+    public static class BatchedInsertReturnKeys {
+
+        @ClassRule
+        public static TestRule create_table = Student.createTableRule;
+
+        @After
+        public void tearDown() throws Exception {
+            try (Connection connection = db.getConnection();
+                 PreparedStatement ps = connection.prepareStatement("DELETE FROM student")) {
+                ps.execute();
+            }
+        }
+
+        //can only test with one batch, as keys are only available from last batch in H2
+        @Test
+        public void insertBatch() throws Exception {
+            final NewStudent newStudent = new NewStudent("Ada10", "Dada10", new BigDecimal("3.1"));
+
+            BatchedInsertReturnKeysQuery<Long> insertQuery = JDBJ.insertQueryStringGetKeys(Student.insert, rs->rs.getLong(1))
+                    .asBatch()
+                    .startBatch()
+                    .bindString(":first_name", newStudent.firstName)
+                    .bindString(":last_name", newStudent.lastName)
+                    .bindBigDecimal(":gpa", newStudent.gpa)
+                    .endBatch();
+
+            final List<Long> keys;
+            final List<Student> actual;
+            try (Connection connection = db.getConnection()) {
+                keys = insertQuery.execute(connection);
+                actual = Student.selectAll.execute(connection);
+            }
+            assertEquals(1, keys.size());
+            assertEquals(Collections.singletonList(newStudent.withId(keys.get(0))), actual);
+        }
+
+        @Test(expected = IllegalStateException.class)
+        public void noBatchesAdded() throws Exception {
+            BatchedInsertReturnKeysQuery<Long> insertQuery = JDBJ.insertQueryStringGetKeys(Student.insert, rs->rs.getLong(1)).asBatch();
+
+            try (Connection connection = db.getConnection()) {
+                insertQuery.execute(connection);
+            }
+        }
+
+        @Test(expected = IllegalStateException.class)
+        public void missingBindings() throws Exception {
+            final Student student = new Student(10L, "Ada10", "Dada10", new BigDecimal("3.1"));
+
+            JDBJ.insertQueryStringGetKeys(Student.insert, rs->rs.getLong(1)).asBatch()
+                    .startBatch()
+                    .bindString(":first_name", student.firstName)
+                    .bindString(":last_name", student.lastName)
+                    .endBatch();
+        }
+    }
+
+    private static class NewStudent {
+
+        static final String insert = "INSERT INTO student(first_name, last_name, gpa) VALUES(:first_name, :last_name, :gpa)";
+
+        final String firstName;
+        final String lastName;
+        final BigDecimal gpa;
+
+        public NewStudent(String firstName, String lastName, BigDecimal gpa) {
+            if (firstName == null) {
+                throw new IllegalArgumentException();
+            }
+            if (lastName == null) {
+                throw new IllegalArgumentException();
+            }
+            if (gpa == null) {
+                throw new IllegalArgumentException();
+            }
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.gpa = gpa;
+        }
+
+        public Student withId(long id){
+            return new Student(id, firstName, lastName, gpa);
+        }
+    }
+
+    private static class Student extends NewStudent {
 
         public static final TestRule createTableRule = (base, description) -> new Statement() {
             @Override
             public void evaluate() throws Throwable {
-                final String createStudents = "CREATE TABLE student(id BIGINT, first_name varchar, last_name varchar, gpa varchar)";
+                final String createStudents = "CREATE TABLE student(id BIGINT PRIMARY KEY auto_increment, first_name varchar, last_name varchar, gpa varchar)";
                 try (Connection connection = db.getConnection();
                      PreparedStatement preparedStatement = connection.prepareStatement(createStudents)) {
                     preparedStatement.execute();
@@ -301,7 +417,7 @@ public class JDBJTest {
             }
         };
 
-        static final String insert = "INSERT INTO student(id, first_name, last_name, gpa) VALUES(:id, :first_name, :last_name, :gpa)";
+        static final String insert_id = "INSERT INTO student(id, first_name, last_name, gpa) VALUES(:id, :first_name, :last_name, :gpa)";
 
         static final ExecuteQuery<List<Student>> selectAll = JDBJ.queryString("SELECT * FROM student ORDER BY id ASC")
                 .map(Student::from)
@@ -314,25 +430,11 @@ public class JDBJTest {
                     rs.getBigDecimal("gpa"));
         }
 
-        long id;
-        String firstName;
-        String lastName;
-        BigDecimal gpa;
+        final long id;
 
         public Student(long id, String firstName, String lastName, BigDecimal gpa) {
-            if (firstName == null) {
-                throw new IllegalArgumentException();
-            }
-            if (lastName == null) {
-                throw new IllegalArgumentException();
-            }
-            if (gpa == null) {
-                throw new IllegalArgumentException();
-            }
+            super(firstName, lastName, gpa);
             this.id = id;
-            this.firstName = firstName;
-            this.lastName = lastName;
-            this.gpa = gpa;
         }
 
         @Override

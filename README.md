@@ -120,6 +120,7 @@ public class StudentDAO {
 * use immutable builders to capture the query intent long before query execution
 * hide the PreparedStatement as much as possible during the binding phase so that we can...
 * use named parameters only
+* assume that we are using read only, fetch forward cursors
 
 #### Credits
 To the [jdbi team](http://jdbi.org/) for authoring jdbi. Much of jdbj is based on jdbi.

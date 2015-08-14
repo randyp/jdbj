@@ -1,5 +1,7 @@
 package jdbj;
 
+import jdbj.lambda.ResultSetMapper;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -35,6 +37,15 @@ public final class JDBJ {
     public static InsertQuery insertQueryString(String queryString) {
         final NamedParameterStatement statement = NamedParameterStatement.make(queryString);
         return new InsertQuery(statement);
+    }
+
+    /**
+     * @param queryString
+     * @return a phase 2 builder
+     */
+    public static <R> InsertReturnKeysQuery<R> insertQueryStringGetKeys(String queryString, ResultSetMapper<R> keyMapper) {
+        final NamedParameterStatement statement = NamedParameterStatement.make(queryString);
+        return new InsertReturnKeysQuery<>(statement, keyMapper);
     }
 
     JDBJ() {
