@@ -23,10 +23,6 @@ public class PositionalBindingsBuilder<E extends PositionalBindingsBuilder<E>> {
     private final PositionalBindings bindings;
     private final PositionalBindingsBuilderFactory<E> factory;
 
-    PositionalBindingsBuilder(NamedParameterStatement statement, PositionalBindingsBuilderFactory<E> factory) {
-        this(statement, PositionalBindings.empty(), factory);
-    }
-
     PositionalBindingsBuilder(NamedParameterStatement statement, PositionalBindings bindings, PositionalBindingsBuilderFactory<E> factory){
         this.statement = statement;
         this.bindings = bindings;
