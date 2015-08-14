@@ -1,0 +1,44 @@
+package jdbj;
+
+
+import jdbj.lambda.ResultSetToResult;
+
+import javax.annotation.concurrent.Immutable;
+import java.sql.*;
+
+/**
+ * Phase 3 Builder
+ * @param <R>
+ */
+@Immutable
+public final class ExecuteQuery<R> extends PositionalBindingsBuilder<ExecuteQuery<R>> {
+
+    private final ResultSetToResult<R> toResult;
+
+    ExecuteQuery(NamedParameterStatement statement, ResultSetToResult<R> toResult) {
+        this(statement, PositionalBindings.empty(), toResult);
+    }
+
+    public ExecuteQuery(NamedParameterStatement statement, PositionalBindings bindings, ResultSetToResult<R> toResult) {
+        super(statement, bindings, (s, b) -> new ExecuteQuery<>(s, b, toResult));
+        this.toResult = toResult;
+    }
+
+    /**
+     * phase 4 method
+     * @param connection
+     * @return R
+     * @throws SQLException
+     */
+    public R execute(Connection connection) throws SQLException {
+        checkAllBindingsPresent();
+
+        try(PreparedStatement ps = connection.prepareStatement(buildSql())){
+            bindToStatement(ps);
+            try(ResultSet rs = ps.executeQuery()){
+                return toResult.from(rs);
+            }
+        }
+    }
+
+}

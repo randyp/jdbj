@@ -8,7 +8,7 @@ Other jdbc convenience libraries follow the "create statement, bind parameters, 
 #### Example Main
 
 ``` java
-package oof.jdbc;
+package jdbj;
 
 import org.h2.jdbcx.JdbcConnectionPool;
 
@@ -79,7 +79,7 @@ public class PrototypeMain {
 #### Example DAO (connection as construction parameter)
 
 ``` java
-package oof.jdbc;
+package jdbj;
 
 import java.sql.Connection;
 import java.sql.SQLException;
