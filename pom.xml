@@ -198,7 +198,7 @@
                 <configuration>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <useReleaseProfile>false</useReleaseProfile>
-                    <releaseProfiles>gpg,release</releaseProfiles>
+                    <releaseProfiles>gpg</releaseProfiles>
                     <goals>deploy</goals>
                 </configuration>
             </plugin>
