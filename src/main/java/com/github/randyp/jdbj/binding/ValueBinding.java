@@ -14,6 +14,10 @@ public final class ValueBinding implements PositionalBinding {
         this.binding = binding;
     }
 
+    public Binding getBinding() {
+        return binding;
+    }
+
     @Override
     public int bind(PreparedStatement ps, int parameterIndex) throws SQLException {
         final PreparedColumn preparedColumn = new PreparedColumn(ps, parameterIndex);

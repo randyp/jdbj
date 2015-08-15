@@ -1,9 +1,11 @@
 package com.github.randyp.jdbj;
 
+import com.github.randyp.jdbj.lambda.Binding;
 import org.junit.ClassRule;
 import org.junit.Test;
 
 import java.sql.Connection;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -117,4 +119,32 @@ public class ExecuteQueryTest {
         assertNotNull(result);
     }
 
+    @Test
+     public void defaultValues() throws Exception {
+        final ExecuteQuery<List<String>> query = JDBJ.query("SELECT * FROM INFORMATION_SCHEMA.TABLES ORDER BY id LIMIT :limit")
+                .map(rs -> rs.getString("TABLE_NAME"))
+                .toList()
+                .bindDefault(":limit", pc -> pc.setInt(5));
+
+        try (Connection connection = db.getConnection()) {
+            assertEquals(5, query.execute(connection).size());
+            assertEquals(10, query.bindInt(":limit", 10).execute(connection).size());
+        }
+    }
+
+    @Test
+    public void defaultValuesLists() throws Exception {
+        final Binding t29 = pc -> pc.setInt(-29);
+        final Binding t28 = pc -> pc.setInt(-28);
+
+        final ExecuteQuery<List<String>> query = JDBJ.query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE id in :ids")
+                .map(rs -> rs.getString("TABLE_NAME"))
+                .toList()
+                .bindDefaultList(":ids", Collections.singletonList(t29));
+
+        try (Connection connection = db.getConnection()) {
+            assertEquals(1, query.execute(connection).size());
+            assertEquals(2, query.bindList(":ids", Arrays.asList(t29, t28)).execute(connection).size());
+        }
+    }
 }

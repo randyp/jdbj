@@ -5,6 +5,8 @@ import com.github.randyp.jdbj.lambda.Binding;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public final class ListBinding implements PositionalBinding {
@@ -12,7 +14,11 @@ public final class ListBinding implements PositionalBinding {
     private final List<Binding> bindings;
 
     public ListBinding(List<Binding> bindings) {
-        this.bindings = bindings;
+        this.bindings = Collections.unmodifiableList(new ArrayList<>(bindings));
+    }
+
+    public List<Binding> getBindings() {
+        return bindings;
     }
 
     @Override
