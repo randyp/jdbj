@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/randyp/jdbj.svg?branch=master)](https://travis-ci.org/randyp/jdbj)
 [![Coverage Status](https://coveralls.io/repos/randyp/jdbj/badge.svg?branch=master&service=github)](https://coveralls.io/github/randyp/jdbj?branch=master)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.github.randyp/jdbj/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.github.randyp/jdbj/)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.randyp/jdbj/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.randyp/jdbj/)
 
 jdbj is a jdbc fluent interface for capturing query intent long before query execution
 
