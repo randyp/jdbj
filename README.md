@@ -124,3 +124,10 @@ public class StudentDAO {
 
 #### Credits
 To the [jdbi team](http://jdbi.org/) for authoring jdbi. Much of jdbj is based on jdbi.
+
+#### Release
+```
+mvn release:clean release:prepare
+mvn release:perform
+git push
+```
