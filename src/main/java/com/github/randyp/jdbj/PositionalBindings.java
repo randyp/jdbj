@@ -32,7 +32,7 @@ public class PositionalBindings implements ValueBindings {
     }
 
     @Override
-    public PositionalBindings addValueBinding(String name, Binding binding) {
+    public PositionalBindings valueBinding(String name, Binding binding) {
         if (binding == null) {
             throw new IllegalArgumentException("binding cannot be null");
         }
@@ -47,7 +47,7 @@ public class PositionalBindings implements ValueBindings {
         return new PositionalBindings(newValueBindings, listBindings);
     }
 
-    public PositionalBindings addListBinding(String name, List<Binding> bindings) {
+    public PositionalBindings listBinding(String name, List<Binding> bindings) {
         if (name == null) {
             throw new IllegalArgumentException("name cannot be null");
         }

@@ -40,7 +40,7 @@ public class PositionalBindingsBuilder<E extends PositionalBindingsBuilder<E>> i
             throw new IllegalArgumentException("\""+name+"\" is not a named parameter");
         }
 
-        return factory.make(statement, bindings.addValueBinding(name, binding));
+        return factory.make(statement, bindings.valueBinding(name, binding));
     }
 
     @Override
@@ -49,6 +49,6 @@ public class PositionalBindingsBuilder<E extends PositionalBindingsBuilder<E>> i
             throw new IllegalArgumentException("\""+name+"\" is not a named parameter");
         }
 
-        return factory.make(statement, this.bindings.addListBinding(name, bindings));
+        return factory.make(statement, this.bindings.listBinding(name, bindings));
     }
 }

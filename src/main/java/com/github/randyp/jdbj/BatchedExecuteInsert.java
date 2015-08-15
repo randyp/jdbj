@@ -72,7 +72,7 @@ public class BatchedExecuteInsert<R> {
             if(batch == null){
                 throw new IllegalStateException("batch already ended, use BatchedInsertQuery#startBatch to create a new batch");
             }
-            return new Batch(batch.addValueBinding(name, binding));
+            return new Batch(batch.valueBinding(name, binding));
         }
 
         public BatchedExecuteInsert<R> endBatch(){

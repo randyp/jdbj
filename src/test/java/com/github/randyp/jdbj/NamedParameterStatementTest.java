@@ -50,7 +50,7 @@ public class NamedParameterStatementTest {
         @Test
         public void valueBinding() throws Exception {
             final NamedParameterStatement statement = NamedParameterStatement.make("select id from agent_secret WHERE status = :status");
-            final PositionalBindings bindings = PositionalBindings.empty().addValueBinding(":status", pc -> pc.setString("ACTIVE"));
+            final PositionalBindings bindings = PositionalBindings.empty().valueBinding(":status", pc -> pc.setString("ACTIVE"));
 
             assertEquals("select id from agent_secret WHERE status = ?", statement.jdbcSql(bindings));
         }
@@ -58,7 +58,7 @@ public class NamedParameterStatementTest {
         @Test
          public void listBinding_empty() throws Exception {
             final NamedParameterStatement statement = NamedParameterStatement.make("select id from agent_secret WHERE status in :statuses");
-            final PositionalBindings bindings = PositionalBindings.empty().addListBinding(":statuses", new ArrayList<>());
+            final PositionalBindings bindings = PositionalBindings.empty().listBinding(":statuses", new ArrayList<>());
 
             assertEquals("select id from agent_secret WHERE status in ()", statement.jdbcSql(bindings));
         }
@@ -66,7 +66,7 @@ public class NamedParameterStatementTest {
         @Test
         public void listBinding_singleton() throws Exception {
             final NamedParameterStatement statement = NamedParameterStatement.make("select id from agent_secret WHERE status in :statuses");
-            final PositionalBindings bindings = PositionalBindings.empty().addListBinding(":statuses", Collections.singletonList(pc -> pc.setString("ACTIVE")));
+            final PositionalBindings bindings = PositionalBindings.empty().listBinding(":statuses", Collections.singletonList(pc -> pc.setString("ACTIVE")));
 
             assertEquals("select id from agent_secret WHERE status in (?)", statement.jdbcSql(bindings));
         }
@@ -74,7 +74,7 @@ public class NamedParameterStatementTest {
         @Test
         public void listBinding() throws Exception {
             final NamedParameterStatement statement = NamedParameterStatement.make("select id from agent_secret WHERE status in :statuses");
-            final PositionalBindings bindings = PositionalBindings.empty().addListBinding(":statuses", Arrays.asList(pc -> pc.setString("ACTIVE"), pc->pc.setString("MIA")));
+            final PositionalBindings bindings = PositionalBindings.empty().listBinding(":statuses", Arrays.asList(pc -> pc.setString("ACTIVE"), pc -> pc.setString("MIA")));
 
             assertEquals("select id from agent_secret WHERE status in (?,?)", statement.jdbcSql(bindings));
         }
@@ -95,14 +95,14 @@ public class NamedParameterStatementTest {
         @Test(expected = IllegalArgumentException.class)
         public void preparedStatementNull() throws Exception {
             final NamedParameterStatement statement = NamedParameterStatement.make("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE id = :id");
-            final PositionalBindings bindings = PositionalBindings.empty().addValueBinding(":id", pc -> pc.setInt(-29));
+            final PositionalBindings bindings = PositionalBindings.empty().valueBinding(":id", pc -> pc.setInt(-29));
             statement.bind(null, bindings);
         }
 
         @Test(expected = IllegalArgumentException.class)
         public void bindingsNull() throws Exception {
             final NamedParameterStatement statement = NamedParameterStatement.make("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE id = :id");
-            final PositionalBindings bindings = PositionalBindings.empty().addValueBinding(":id", pc -> pc.setInt(-29));
+            final PositionalBindings bindings = PositionalBindings.empty().valueBinding(":id", pc -> pc.setInt(-29));
             try(Connection connection = db.getConnection();
                 PreparedStatement ps = connection.prepareStatement(statement.jdbcSql(bindings))){
                 statement.bind(ps, null);
@@ -115,14 +115,14 @@ public class NamedParameterStatementTest {
         @Test
         public void presentAsValue() throws Exception {
             final NamedParameterStatement statement = NamedParameterStatement.make("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE id = :id");
-            final PositionalBindings bindings = PositionalBindings.empty().addValueBinding(":id", pc -> pc.setInt(-29));
+            final PositionalBindings bindings = PositionalBindings.empty().valueBinding(":id", pc -> pc.setInt(-29));
             statement.checkAllBindingsPresent(bindings);
         }
 
         @Test
         public void presentAsList() throws Exception {
             final NamedParameterStatement statement = NamedParameterStatement.make("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE id = :id");
-            final PositionalBindings bindings = PositionalBindings.empty().addListBinding(":id", Collections.singletonList(pc -> pc.setInt(-29)));
+            final PositionalBindings bindings = PositionalBindings.empty().listBinding(":id", Collections.singletonList(pc -> pc.setInt(-29)));
             statement.checkAllBindingsPresent(bindings);
         }
 

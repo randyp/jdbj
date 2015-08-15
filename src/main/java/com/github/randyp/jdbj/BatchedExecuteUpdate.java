@@ -60,7 +60,7 @@ public class BatchedExecuteUpdate {
             if(batch == null){
                 throw new IllegalStateException("batch already ended, use BatchedInsertQuery#startBatch to create a new batch");
             }
-            return new Batch(batch.addValueBinding(name, binding));
+            return new Batch(batch.valueBinding(name, binding));
         }
 
         public BatchedExecuteUpdate endBatch(){

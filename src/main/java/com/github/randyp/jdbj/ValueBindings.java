@@ -9,7 +9,7 @@ public interface ValueBindings {
 
     boolean containsBinding(String name);
 
-    PositionalBindings addValueBinding(String name, Binding binding);
+    PositionalBindings valueBinding(String name, Binding binding);
 
     PositionalBinding get(String namedParameter);
 
