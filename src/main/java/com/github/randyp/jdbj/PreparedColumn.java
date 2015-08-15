@@ -264,7 +264,6 @@ public class PreparedColumn {
         set=true;
     }
 
-
     public void setObject( Object x, SQLType targetSqlType) throws SQLException {
         ps.setObject(parameterIndex, x, targetSqlType);
         set=true;
