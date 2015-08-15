@@ -38,7 +38,7 @@ A full set of examples is being developed in [jdbj-examples](https://github.com/
 * Use PreparedColumn to hide PreparedStatement
 * Named Parameters only, no Positional Parameters
 * Fetch-forward, read-only cursors
-* no external dependencies (where did my guava go?)
+* No external dependencies (where did my guava go?)
 
 #### Credits
 To the [jdbi team](http://jdbi.org/) for authoring jdbi. Much of jdbj is based on jdbi.
