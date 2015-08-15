@@ -74,7 +74,7 @@ mvn release:clean release:prepare -B && mvn release:perform && git push
 #### 0.1.2 Todo
 * [ ] Default Bindings
 * [x] Better root level JDBJ namespacing, `JDBJ.resource("abc.sql").query()...`
-* [ ] Named Parameters in scripts
+* [x] Named Parameters in scripts
 * [x] Smaller, more numerous tests
 * [ ] More Test Coverage via Mockito to cover features not supported in H2
 

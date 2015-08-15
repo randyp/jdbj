@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Immutable
-public final class ExecuteScript {
+public final class ExecuteScript extends PositionalBindingsBuilder<ExecuteScript> {
 
     public static ExecuteScript from(String script) {
         final List<String> statements = new ArrayList<>();
@@ -38,23 +38,34 @@ public final class ExecuteScript {
         }
         statements.add(currentStatement.toString());
 
-        final List<String> fewerStatements = statements.stream()
+        final NamedParameterStatement scriptStatement = NamedParameterStatement.make(script);
+        final List<NamedParameterStatement> scriptStatements = statements.stream()
                 .filter(s -> !s.trim().isEmpty())
+                .map(NamedParameterStatement::make)
                 .collect(Collectors.toList());
-        return new ExecuteScript(fewerStatements);
+
+        return new ExecuteScript(scriptStatement, scriptStatements);
     }
 
-    private final List<String> statements;
+    private final List<NamedParameterStatement> statements;
 
-    ExecuteScript(List<String> statements) {
-        this.statements = new ArrayList<>(statements);
+
+    ExecuteScript(NamedParameterStatement script, List<NamedParameterStatement> statements) {
+        this(script, PositionalBindings.empty(), statements);
+    }
+
+    ExecuteScript(NamedParameterStatement script, PositionalBindings bindings, List<NamedParameterStatement> statements) {
+        super(script, bindings, (s,b) -> new ExecuteScript(s, b, statements));
+        this.statements = statements;
     }
 
     public boolean[] execute(Connection connection) throws SQLException {
+        checkAllBindingsPresent();
         boolean[] results = new boolean[statements.size()];
         for (int i = 0; i < statements.size(); i++) {
-            String statement = statements.get(i);
-            try (PreparedStatement ps = connection.prepareStatement(statement)) {
+            NamedParameterStatement statement = statements.get(i);
+            try (PreparedStatement ps = connection.prepareStatement(statement.jdbcSql(bindings))) {
+                statement.bind(ps, bindings);
                 results[i] = ps.execute();
             }
         }

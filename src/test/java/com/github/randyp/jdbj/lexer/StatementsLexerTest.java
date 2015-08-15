@@ -48,13 +48,13 @@ public class StatementsLexerTest {
 
     @Test
     public void quotedStrings() throws Exception {
-        final StatementsLexer lexer = new StatementsLexer(new ANTLRInputStream("select id, 'Mr aa;' || name from students; select 2"));
+        final StatementsLexer lexer = new StatementsLexer(new ANTLRInputStream("select :id, 'Mr aa;' || name from students; select 2"));
 
         //noinspection unchecked
         final List<Token> tokens = (List<Token>) lexer.getAllTokens();
         assertEquals(5, tokens.size());
 
-        assertToken(StatementsLexer.LITERAL, "select id, ", tokens.get(0));
+        assertToken(StatementsLexer.LITERAL, "select :id, ", tokens.get(0));
         assertToken(StatementsLexer.QUOTED_TEXT, "'Mr aa;'", tokens.get(1));
         assertToken(StatementsLexer.LITERAL, " || name from students", tokens.get(2));
         assertToken(StatementsLexer.STATEMENT_END, ";", tokens.get(3));
