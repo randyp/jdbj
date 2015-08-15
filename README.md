@@ -44,7 +44,10 @@ A full set of examples is being developed in [jdbj-examples](https://github.com/
 * No external dependencies (where did my guava go?)
 
 #### Credits
-To the [jdbi team](http://jdbi.org/) for authoring jdbi. Much of jdbj is based on jdbi.
+To the [jdbi team](http://jdbi.org/) for authoring jdbi, asm uch of jdbj is based on jdbi. Also:
+``` java
+System.out.println("jdb" + ((char) ('i' + 1)));
+```
 
 #### Release
 ``` sh
