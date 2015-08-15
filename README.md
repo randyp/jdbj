@@ -4,6 +4,25 @@
 
 jdbj is a jdbc fluent interface for capturing query intent long before query execution
 
+#### Features
+* Named Parameters (No Positional Parameters, ever)
+* List bindings (except for batch inserts)
+* Clean Java8 lambda interface for bindings, transactions
+* Defaults to fetch-forward read-only cursors
+* Queries as objects
+* Utilities for best practices (store query strings as resource)
+
+#### Usage
+Just click on the Maven Central badge above. Can download directly from there or just copy/paste the dependency code, which will look something like this...
+
+``` xml
+<dependency>
+    <groupId>com.github.randyp</groupId>
+    <artifactId>jdbj</artifactId>
+    <version>${project.version}</version>
+</dependency>
+```
+
 #### Why?
 Other jdbc convenience libraries follow the "create statement, bind parameters, execute query, map results" pattern that we inherited from older procedural code. For many web applications we've found a better pattern: "specify query, specify results mapper, bind parameters, execute query". We get to reuse steps 1-2 across most requests and only do the minimum amount of query building for each request.
 
@@ -123,12 +142,13 @@ public class StudentDAO {
 * hide the PreparedStatement as much as possible during the binding phase so that we can...
 * use named parameters only
 * assume that we are using read only, fetch forward cursors
+* no external dependencies (ahhh I want my guava!!!)
 
 #### Credits
 To the [jdbi team](http://jdbi.org/) for authoring jdbi. Much of jdbj is based on jdbi.
 
 #### Release
-```
+``` sh
 mvn release:clean release:prepare
 mvn release:perform
 git push
