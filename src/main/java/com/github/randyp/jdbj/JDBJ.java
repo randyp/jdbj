@@ -45,7 +45,7 @@ public final class JDBJ {
         return new UpdateQuery(statement);
     }
 
-    public static <R> InsertReturnKeysQuery<R> insertQueryGetKeys(String queryResource, ResultSetMapper<R> keyMapper) {
+    public static <R> InsertQuery<R> insertQueryGetKeys(String queryResource, ResultSetMapper<R> keyMapper) {
         return insertQueryStringGetKeys(readResource(queryResource), keyMapper);
     }
 
@@ -53,9 +53,9 @@ public final class JDBJ {
      * @param queryString
      * @return a phase 2 builder
      */
-    public static <R> InsertReturnKeysQuery<R> insertQueryStringGetKeys(String queryString, ResultSetMapper<R> keyMapper) {
+    public static <R> InsertQuery<R> insertQueryStringGetKeys(String queryString, ResultSetMapper<R> keyMapper) {
         final NamedParameterStatement statement = NamedParameterStatement.make(queryString);
-        return new InsertReturnKeysQuery<>(statement, keyMapper);
+        return new InsertQuery<>(statement, keyMapper);
     }
 
     public static void transaction(DataSource dataSource, ConnectionRunnable runnable) throws SQLException {

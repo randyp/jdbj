@@ -222,7 +222,7 @@ public class JDBJTest {
         }
     }
 
-    public static class BatchUpdate {
+    public static class BatchedUpdate {
 
         @ClassRule
         public static TestRule create_table = Student.createTableRule;
@@ -297,7 +297,7 @@ public class JDBJTest {
         }
     }
 
-    public static class InsertReturnKeys {
+    public static class Insert {
 
         @ClassRule
         public static TestRule create_table = Student.createTableRule;
@@ -313,7 +313,7 @@ public class JDBJTest {
         @Test
         public void insertOne() throws Exception {
             final NewStudent newStudent = new NewStudent("Ada", "Dada", new BigDecimal("3.1"));
-            final InsertReturnKeysQuery<Long> insertQuery = JDBJ.insertQueryGetKeys(Student.insert, rs -> rs.getLong(1))
+            final InsertQuery<Long> insertQuery = JDBJ.insertQueryGetKeys(Student.insert, rs -> rs.getLong(1))
                     .bindString(":first_name", newStudent.firstName)
                     .bindString(":last_name", newStudent.lastName)
                     .bindBigDecimal(":gpa", newStudent.gpa);
@@ -329,7 +329,7 @@ public class JDBJTest {
         }
     }
 
-    public static class BatchedInsertReturnKeys {
+    public static class BatchesInsert {
 
         @ClassRule
         public static TestRule create_table = Student.createTableRule;
@@ -348,7 +348,7 @@ public class JDBJTest {
             final NewStudent newStudent = new NewStudent("Ada10", "Dada10", new BigDecimal("3.1"));
 
             //noinspection deprecation
-            BatchedInsertReturnKeysQuery<Long> insertQuery = JDBJ.insertQueryGetKeys(Student.insert, rs -> rs.getLong(1))
+            BatchedInsertQuery<Long> insertQuery = JDBJ.insertQueryGetKeys(Student.insert, rs -> rs.getLong(1))
                     .asBatch()
                     .startBatch()
                     .bindString(":first_name", newStudent.firstName)
@@ -369,7 +369,7 @@ public class JDBJTest {
         @Test(expected = IllegalStateException.class)
         public void noBatchesAdded() throws Exception {
             //noinspection deprecation
-            BatchedInsertReturnKeysQuery<Long> insertQuery = JDBJ.insertQueryGetKeys(Student.insert, rs -> rs.getLong(1)).asBatch();
+            BatchedInsertQuery<Long> insertQuery = JDBJ.insertQueryGetKeys(Student.insert, rs -> rs.getLong(1)).asBatch();
 
             try (Connection connection = db.getConnection()) {
                 insertQuery.execute(connection);
@@ -392,7 +392,7 @@ public class JDBJTest {
             final NewStudent student = new NewStudent("Ada10", "Dada10", new BigDecimal("3.1"));
 
             //noinspection deprecation
-            final BatchedInsertReturnKeysQuery<Long>.Batch batch = JDBJ.insertQueryGetKeys(Student.insert, rs -> rs.getLong(1)).asBatch()
+            final BatchedInsertQuery<Long>.Batch batch = JDBJ.insertQueryGetKeys(Student.insert, rs -> rs.getLong(1)).asBatch()
                     .startBatch()
                     .bindString(":first_name", student.firstName)
                     .bindString(":last_name", student.lastName)

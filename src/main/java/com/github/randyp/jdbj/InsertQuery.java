@@ -11,22 +11,22 @@ import java.util.List;
  * Phase 2 Builder
  */
 @Immutable
-public final class InsertReturnKeysQuery<R> extends PositionalBindingsBuilder<InsertReturnKeysQuery<R>> {
+public final class InsertQuery<R> extends PositionalBindingsBuilder<InsertQuery<R>> {
 
     private final ResultSetMapper<R> keysMapper;
 
-    InsertReturnKeysQuery(NamedParameterStatement statement, ResultSetMapper<R> keysMapper) {
+    InsertQuery(NamedParameterStatement statement, ResultSetMapper<R> keysMapper) {
         this(statement, PositionalBindings.empty(), keysMapper);
 
     }
 
-    InsertReturnKeysQuery(NamedParameterStatement statement, PositionalBindings bindings, ResultSetMapper<R> keysMapper) {
-        super(statement, bindings, (s, b)-> new InsertReturnKeysQuery<>(s, b, keysMapper));
+    InsertQuery(NamedParameterStatement statement, PositionalBindings bindings, ResultSetMapper<R> keysMapper) {
+        super(statement, bindings, (s, b)-> new InsertQuery<>(s, b, keysMapper));
         this.keysMapper = keysMapper;
     }
 
-    public BatchedInsertReturnKeysQuery<R> asBatch(){
-        return new BatchedInsertReturnKeysQuery<>(statement, keysMapper);
+    public BatchedInsertQuery<R> asBatch(){
+        return new BatchedInsertQuery<>(statement, keysMapper);
     }
 
     public List<R> execute(Connection connection) throws SQLException {

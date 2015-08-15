@@ -15,14 +15,14 @@ import java.util.List;
  * Usually (Oracle, H2) only the keys from the last batch will be returned.
  */
 @Deprecated //no plans to remove, just wanted you to read the above documentation...
-public class BatchedInsertReturnKeysQuery<R> {
+public class BatchedInsertQuery<R> {
 
     private final List<ValueBindings> batches = new ArrayList<>();
     private final NamedParameterStatement statement;
     private final ResultSetMapper<R> keysMapper;
 
 
-    BatchedInsertReturnKeysQuery(NamedParameterStatement statement, ResultSetMapper<R> keysMapper) {
+    BatchedInsertQuery(NamedParameterStatement statement, ResultSetMapper<R> keysMapper) {
         this.statement = statement;
         this.keysMapper = keysMapper;
     }
@@ -75,11 +75,11 @@ public class BatchedInsertReturnKeysQuery<R> {
             return new Batch(batch.addValueBinding(name, binding));
         }
 
-        public BatchedInsertReturnKeysQuery<R> endBatch(){
+        public BatchedInsertQuery<R> endBatch(){
             statement.checkAllBindingsPresent(batch);
             batches.add(batch);
             batch = null;
-            return BatchedInsertReturnKeysQuery.this;
+            return BatchedInsertQuery.this;
         }
     }
 }
