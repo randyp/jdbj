@@ -23,6 +23,9 @@ Just click on the Maven Central badge above. Can download from there or grab the
 </dependency>
 ```
 
+#### Versioning
+jdbj is not following any semantic versioning scheme yet, and will not until version 1, which we'll release once if we have a user base.
+
 #### Why?
 Other jdbc convenience libraries follow the "create statement, bind parameters, execute query, map results" pattern that we inherited from older procedural code. For many web applications we've found a better pattern: "specify query, specify results mapper, bind parameters, execute query". We get to reuse steps 1-2 across most requests and only do the minimum amount of query building for each request.
 
