@@ -25,13 +25,6 @@ public final class ExecuteQuery<R> extends PositionalBindingsBuilder<ExecuteQuer
         this.toResult = toResult;
     }
 
-    /**
-     * phase 4 method
-     *
-     * @param connection
-     * @return R
-     * @throws SQLException
-     */
     public R execute(Connection connection) throws SQLException {
         checkAllBindingsPresent();
 

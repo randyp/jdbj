@@ -26,13 +26,6 @@ public final class ExecuteQueryRunnable extends PositionalBindingsBuilder<Execut
         this.runnable = runnable;
     }
 
-    /**
-     * phase 4 method
-     *
-     * @param connection
-     * @return
-     * @throws SQLException
-     */
     public void execute(Connection connection) throws SQLException {
         checkAllBindingsPresent();
 

@@ -30,15 +30,6 @@ public final class StreamQuery<R> extends PositionalBindingsBuilder<StreamQuery<
         this.mapper = mapper;
     }
 
-    /**
-     * Phase 4 method
-     * <p>
-     * Be sure to close the stream!!!
-     *
-     * @param connection
-     * @return java.util.Stream of mapped results
-     * @throws SQLException
-     */
     public Stream<R> execute(Connection connection) throws SQLException {
         checkAllBindingsPresent();
 

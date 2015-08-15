@@ -17,12 +17,6 @@ public final class ReturnsQuery {
         this.statement = statement;
     }
 
-    /**
-     *
-     * @param mapper
-     * @param <R>
-     * @return phase 2 builder which maps individual results to elements
-     */
     public <R> MapQuery<R> map(ResultSetMapper<R> mapper){
         return new MapQuery<>(statement, mapper);
     }
