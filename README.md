@@ -136,13 +136,13 @@ public class StudentDAO {
 
 
 #### Guiding Principles
-* no *connection handles* - just use the Connection as an argument to execute methods immutable objects
-* where possible, bubble up the SQLException (not possible in Stream.tryAdvance)
-* use immutable builders to capture the query intent long before query execution
-* hide the PreparedStatement as much as possible during the binding phase so that we can...
-* use named parameters only
-* assume that we are using read only, fetch forward cursors
-* no external dependencies (ahhh I want my guava!!!)
+* no *connection handles* - just use the Connection as an argument to execute methods on immutable objects
+* bubble up the SQLException where possible, not possible in Stream.tryAdvance
+* immutable builders to capture the query intent, BatchedInsert Builders are mutable
+* use PreparedColumn to hide PreparedStatement
+* Named parameters only, no positional parameters
+* fetch forward, read only cursors
+* no external dependencies (where did my guava go?)
 
 #### Credits
 To the [jdbi team](http://jdbi.org/) for authoring jdbi. Much of jdbj is based on jdbi.
