@@ -2,7 +2,20 @@
 [![Coverage Status](https://coveralls.io/repos/randyp/jdbj/badge.svg?branch=master&service=github)](https://coveralls.io/github/randyp/jdbj?branch=master)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.randyp/jdbj/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.randyp/jdbj/)
 
-jdbj is a jdbc fluent interface for capturing query intent long before query execution
+jdbj is a jdbc fluent interface for capturing query intent long before query execution. Looks like this:
+``` java
+final MapQuery<Student> studentsByIds = JDBJ.queryString("student_by_ids.sql")
+    .map(Student::from);
+
+//do something else for a while
+
+try(Connection connection = db.getConnection) {
+    final List<Student> students = studentsByIds
+            .toList()
+            .bindLongs(":ids", 1L, 2L, 3L, 11L, 12L, 14L)
+            .execute(connection);
+}
+```
 
 #### Features
 * Named Parameters (No Positional Parameters, ever)
@@ -11,6 +24,12 @@ jdbj is a jdbc fluent interface for capturing query intent long before query exe
 * Defaults to fetch-forward read-only cursors
 * Queries as objects
 * Utilities for best practices (store query strings as resource)
+
+#### Examples
+A full set of examples is being developed in [jdbj-examples](https://github.com/randyp/jdbj-examples), but here are some in this repository.
+
+* [Example Main](src/test/java/com/github/randyp/jdbj/example/InformationSchemaMain.java)
+* [Example DAO (connection as construction parameter)](src/test/java/com/github/randyp/jdbj/example/StudentDAO.java)
 
 #### Usage
 Just click on the Maven Central badge above. Can download from there or grab the dependency tag for the desired version. Will look something like this...
@@ -28,11 +47,6 @@ jdbj is not following any semantic versioning scheme yet, and will not until ver
 
 #### Why?
 Other jdbc convenience libraries follow the "create statement, bind parameters, execute query, map results" pattern that we inherited from older procedural code. For many web applications we've found a better pattern: "specify query, specify results mapper, bind parameters, execute query". We get to reuse steps 1-2 across most requests and only do the minimum amount of query building for each request.
-
-#### Examples
-A full set of examples is being developed in [jdbj-examples](https://github.com/randyp/jdbj-examples), but here are some in this repository.
-* [Example Main](src/test/java/com/github/randyp/jdbj/example/InformationSchemaMain.java)
-* [Example DAO (connection as construction parameter)](src/test/java/com/github/randyp/jdbj/example/StudentDAO.java)
 
 #### Guiding Principles
 * No *connection handles* - just use the Connection as an argument
