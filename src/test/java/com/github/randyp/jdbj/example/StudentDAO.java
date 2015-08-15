@@ -1,4 +1,7 @@
-package com.github.randyp.jdbj;
+package com.github.randyp.jdbj.example;
+
+import com.github.randyp.jdbj.JDBJ;
+import com.github.randyp.jdbj.MapQuery;
 
 import java.sql.Connection;
 import java.sql.SQLException;

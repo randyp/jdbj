@@ -1,4 +1,4 @@
-package com.github.randyp.jdbj;
+package com.github.randyp.jdbj.example;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

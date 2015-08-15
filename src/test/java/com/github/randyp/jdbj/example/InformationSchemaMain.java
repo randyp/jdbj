@@ -1,4 +1,4 @@
-package com.github.randyp.jdbj;
+package com.github.randyp.jdbj.example;
 
 import com.github.randyp.jdbj.JDBJ;
 import com.github.randyp.jdbj.MapQuery;
@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class PrototypeMain {
+public class InformationSchemaMain {
 
     private static final MapQuery<Table> QueryReadyToGo = JDBJ
             .queryString("SELECT ID, TABLE_SCHEMA, TABLE_NAME from information_schema.tables " +
