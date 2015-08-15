@@ -4,7 +4,7 @@
 
 jdbj is a jdbc fluent interface for capturing query intent long before query execution. Looks like this:
 ``` java
-final MapQuery<Student> studentsByIds = JDBJ.queryString("student_by_ids.sql")
+final MapQuery<Student> studentsByIds = JDBJ.query("student_by_ids.sql")
     .map(Student::from);
 
 //do something else for a while
