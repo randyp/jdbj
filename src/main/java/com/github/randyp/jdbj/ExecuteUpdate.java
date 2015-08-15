@@ -16,7 +16,7 @@ public final class ExecuteUpdate extends PositionalBindingsBuilder<ExecuteUpdate
     }
 
     ExecuteUpdate(NamedParameterStatement statement, PositionalBindings bindings) {
-        super(statement, bindings, (ExecuteUpdate::new));
+        super(statement, bindings, ExecuteUpdate::new);
     }
 
     public BatchedExecuteUpdate asBatch(){

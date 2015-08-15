@@ -403,6 +403,46 @@ public class JDBJTest {
         }
     }
 
+    public static class Execute {
+        @ClassRule
+        public static TestRule create_table = Student.createTableRule;
+
+        @After
+        public void tearDown() throws Exception {
+            try (Connection connection = db.getConnection();
+                 PreparedStatement ps = connection.prepareStatement("DELETE FROM student")) {
+                ps.execute();
+            }
+        }
+
+        //can only test with one batch, as keys are only available from last batch in H2
+        @Test
+        public void insertBatch() throws Exception {
+            final Student expected = new Student(10, "Ada10", "Dada10", new BigDecimal("3.1"));
+            final List<Student> actual;
+            try (Connection connection = db.getConnection()) {
+                JDBJ.execute("student_insert_ada10.sql")
+                        .execute(connection);
+
+                actual = Student.selectAll.execute(connection);
+            }
+            assertEquals(Collections.singletonList(expected), actual);
+        }
+
+        @Test(expected = IllegalStateException.class)
+        public void missingBindings() throws Exception {
+            final NewStudent student = new NewStudent("Ada10", "Dada10", new BigDecimal("3.1"));
+
+            try(Connection connection = db.getConnection()){
+                JDBJ.execute(NewStudent.insert)
+                        .bindString(":first_name", student.firstName)
+                        .bindString(":last_name", student.lastName)
+                        .execute(connection);
+            }
+        }
+
+    }
+
     public static class Transaction {
 
         @ClassRule

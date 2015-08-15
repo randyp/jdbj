@@ -15,18 +15,10 @@ import java.sql.SQLException;
 
 public final class JDBJ {
 
-    /**
-     * @param queryResource
-     * @return a phase 2 builder
-     */
     public static ReturnsQuery query(String queryResource) {
         return queryString(readResource(queryResource));
     }
 
-    /**
-     * @param queryString
-     * @return a phase 2 builder
-     */
     public static ReturnsQuery queryString(String queryString) {
         final NamedParameterStatement statement = NamedParameterStatement.make(queryString);
         return new ReturnsQuery(statement);
@@ -36,10 +28,6 @@ public final class JDBJ {
         return updateQueryString(readResource(queryResource));
     }
 
-    /**
-     * @param queryString
-     * @return a phase 2 builder
-     */
     public static ExecuteUpdate updateQueryString(String queryString) {
         final NamedParameterStatement statement = NamedParameterStatement.make(queryString);
         return new ExecuteUpdate(statement);
@@ -49,10 +37,15 @@ public final class JDBJ {
         return insertQueryStringGetKeys(readResource(queryResource), keyMapper);
     }
 
-    /**
-     * @param queryString
-     * @return a phase 2 builder
-     */
+    public static Execute executeString(String queryString) {
+        final NamedParameterStatement statement = NamedParameterStatement.make(queryString);
+        return new Execute(statement);
+    }
+
+    public static Execute execute(String queryResource) {
+        return executeString(readResource(queryResource));
+    }
+
     public static <R> InsertQuery<R> insertQueryStringGetKeys(String queryString, ResultSetMapper<R> keyMapper) {
         final NamedParameterStatement statement = NamedParameterStatement.make(queryString);
         return new InsertQuery<>(statement, keyMapper);
