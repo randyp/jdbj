@@ -2,62 +2,20 @@ package com.github.randyp.jdbj;
 
 import com.github.randyp.jdbj.lambda.ConnectionCallable;
 import com.github.randyp.jdbj.lambda.ConnectionRunnable;
+import com.github.randyp.jdbj.lambda.IOSupplier;
 import com.github.randyp.jdbj.lambda.ResultSetMapper;
 
 import javax.annotation.Nullable;
 import javax.sql.DataSource;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.sql.Connection;
 import java.sql.SQLException;
 
 public final class JDBJ {
-
-    public static ReturnsQuery query(String queryResource) {
-        return queryString(readResource(queryResource));
-    }
-
-    public static ReturnsQuery queryString(String queryString) {
-        final NamedParameterStatement statement = NamedParameterStatement.make(queryString);
-        return new ReturnsQuery(statement);
-    }
-
-    public static ExecuteUpdate insertQuery(String queryResource) {
-        return updateQueryString(readResource(queryResource));
-    }
-
-    public static ExecuteUpdate updateQueryString(String queryString) {
-        final NamedParameterStatement statement = NamedParameterStatement.make(queryString);
-        return new ExecuteUpdate(statement);
-    }
-
-    public static <R> InsertQuery<R> insertQueryGetKeys(String queryResource, ResultSetMapper<R> keyMapper) {
-        return insertQueryStringGetKeys(readResource(queryResource), keyMapper);
-    }
-
-    public static <R> InsertQuery<R> insertQueryStringGetKeys(String queryString, ResultSetMapper<R> keyMapper) {
-        final NamedParameterStatement statement = NamedParameterStatement.make(queryString);
-        return new InsertQuery<>(statement, keyMapper);
-    }
-
-    public static Execute executeString(String queryString) {
-        final NamedParameterStatement statement = NamedParameterStatement.make(queryString);
-        return new Execute(statement);
-    }
-
-    public static ExecuteScript script(String scriptResource) {
-        return scriptString(readResource(scriptResource));
-    }
-
-    public static ExecuteScript scriptString(String scriptString) {
-        return ExecuteScript.from(scriptString);
-    }
-
-    public static Execute execute(String queryResource) {
-        return executeString(readResource(queryResource));
-    }
 
     public static void transaction(DataSource dataSource, ConnectionRunnable runnable) throws SQLException {
         returningTransactionOptionalIsolation(dataSource, null, c -> {
@@ -81,17 +39,17 @@ public final class JDBJ {
         return returningTransactionOptionalIsolation(dataSource, transactionIsolation, callable);
     }
 
-    private static <R> R returningTransactionOptionalIsolation(DataSource dataSource, @Nullable Integer transactionIsolation, ConnectionCallable<R> callable) throws SQLException{
+    private static <R> R returningTransactionOptionalIsolation(DataSource dataSource, @Nullable Integer transactionIsolation, ConnectionCallable<R> callable) throws SQLException {
 
         Connection connection = null;
         Integer oldTransactionIsolation = null;
         try {
             connection = dataSource.getConnection();
 
-            if(!connection.getAutoCommit()){
+            if (!connection.getAutoCommit()) {
                 throw new IllegalStateException("autocommit is already turned off, which means rollback point is not start of transaction");
             }
-            if(transactionIsolation != null){
+            if (transactionIsolation != null) {
                 oldTransactionIsolation = connection.getTransactionIsolation();
                 connection.setTransactionIsolation(transactionIsolation);
             }
@@ -101,9 +59,9 @@ public final class JDBJ {
             R result = callable.call(connection);
             connection.commit();
             return result;
-        } catch (SQLException e ) {
+        } catch (SQLException e) {
             try {
-                if(connection != null){
+                if (connection != null) {
                     connection.rollback();
                 }
             } catch (SQLException re) {
@@ -111,13 +69,13 @@ public final class JDBJ {
             }
             throw e;
         } finally {
-            if(connection != null){
+            if (connection != null) {
                 try {
                     connection.setAutoCommit(true);
                 } catch (SQLException e) {
                     //ignore
                 }
-                if(oldTransactionIsolation != null){
+                if (oldTransactionIsolation != null) {
                     try {
                         connection.setTransactionIsolation(oldTransactionIsolation);
                     } catch (SQLException e) {
@@ -133,19 +91,13 @@ public final class JDBJ {
         }
     }
 
-    JDBJ() {
-
+    public static JDBJBuilder string(String string) {
+        return new JDBJBuilder(string);
     }
 
-    private static String readResource(String queryResource) {
-        final URL url = JDBJ.class.getClassLoader().getResource(queryResource);
-        if (url == null) {
-            throw new IllegalArgumentException("resource not found: " + queryResource);
-        }
+    public static JDBJBuilder reader(IOSupplier<Reader> supplier) {
         final StringBuilder queryString = new StringBuilder();
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()))) {
-
-
+        try (BufferedReader br = new BufferedReader(supplier.get())) {
             String line;
             while ((line = br.readLine()) != null) {
                 queryString.append(line).append('\n');
@@ -153,7 +105,46 @@ public final class JDBJ {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return queryString.toString();
+        return new JDBJBuilder(queryString.toString());
+    }
+
+    public static JDBJBuilder stream(IOSupplier<InputStream> supplier) {
+        return reader(()->new InputStreamReader(supplier.get()));
+    }
+
+    public static JDBJBuilder path(Path path) {
+        return stream(()-> Files.newInputStream(path, StandardOpenOption.READ));
+    }
+
+    public static JDBJBuilder resource(String resourceName) {
+        final URL url = JDBJ.class.getClassLoader().getResource(resourceName);
+        if (url == null) {
+            throw new IllegalArgumentException("resource not found: " + resourceName);
+        }
+        return stream(url::openStream);
+    }
+
+    public static ReturnsQuery query(String query) {
+        return string(query).query();
+    }
+
+    public static ExecuteUpdate update(String query) {
+        return string(query).update();
+    }
+
+    public static <R> ExecuteInsert<R> insert(String query, ResultSetMapper<R> keyMapper) {
+        return string(query).insert(keyMapper);
+    }
+
+    public static ExecuteStatement statement(String query) {
+        return string(query).statement();
+    }
+
+    public static ExecuteScript script(String script) {
+        return string(script).script();
+    }
+
+    JDBJ() {
     }
 }
 

@@ -21,8 +21,8 @@ public final class ExecuteScript {
 
         final StatementsLexer lexer = new StatementsLexer(new ANTLRInputStream(script));
         Token token = lexer.nextToken();
-        while(token.getType() != StatementsLexer.EOF){
-            switch (token.getType()){
+        while (token.getType() != StatementsLexer.EOF) {
+            switch (token.getType()) {
                 case StatementsLexer.STATEMENT_END:
                     statements.add(currentStatement.toString());
                     currentStatement = new StringBuilder();
@@ -30,10 +30,9 @@ public final class ExecuteScript {
                 case StatementsLexer.LITERAL:
                 case StatementsLexer.QUOTED_TEXT:
                 case StatementsLexer.DOUBLE_QUOTED_TEXT:
+                default:
                     currentStatement.append(token.getText());
                     break;
-                default:
-                    throw new IllegalStateException("unhandled token: " + token);
             }
             token = lexer.nextToken();
         }

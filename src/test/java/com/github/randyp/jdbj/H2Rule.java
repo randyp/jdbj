@@ -1,5 +1,6 @@
 package com.github.randyp.jdbj;
 
+import org.junit.rules.ExternalResource;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
@@ -11,12 +12,11 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.logging.Logger;
 
-public class H2Rule implements TestRule, DataSource {
+public class H2Rule extends ExternalResource implements DataSource {
 
-    private H2DB db;
+    protected H2DB db;
 
     public H2Rule() {
-        this.db = new H2DB(this.toString());
     }
 
     @Override
@@ -65,23 +65,25 @@ public class H2Rule implements TestRule, DataSource {
     }
 
     @Override
-    public Statement apply(Statement statement, Description description) {
-        return new Statement() {
-            @Override
-            public void evaluate() throws Throwable {
-                try (H2DB db = new H2DB(H2Rule.this.toString())) {
-                    H2Rule.this.db = db;
-                    statement.evaluate();
-                }finally {
-                    db = null;
-                }
+    protected void before() throws Throwable {
+        this.db = new H2DB(H2Rule.this.toString());
+    }
+
+    @Override
+    protected void after() {
+        if (db != null) {
+            try {
+                db.close();
+            } catch (Exception e) {
+                //ignore
             }
-        };
+        }
+        db = null;
     }
 
     private DataSource getDb() {
-        if(db == null){
-            throw new IllegalStateException("trying to access db outside of evaluate... did you remember @ClassRule/@TestRule?");
+        if (db == null) {
+            throw new IllegalStateException("trying to access db outside of evaluate... did you remember @ClassRule/@Rule?");
         }
         return db;
     }

@@ -9,14 +9,14 @@ import java.sql.SQLException;
  * Phase 2 Builder
  */
 @Immutable
-public final class Execute extends PositionalBindingsBuilder<Execute> {
+public final class ExecuteStatement extends PositionalBindingsBuilder<ExecuteStatement> {
 
-    Execute(NamedParameterStatement statement) {
+    ExecuteStatement(NamedParameterStatement statement) {
         this(statement, PositionalBindings.empty());
     }
 
-    Execute(NamedParameterStatement statement, PositionalBindings bindings) {
-        super(statement, bindings, Execute::new);
+    ExecuteStatement(NamedParameterStatement statement, PositionalBindings bindings) {
+        super(statement, bindings, ExecuteStatement::new);
     }
 
     public boolean execute(Connection connection) throws SQLException {

@@ -8,15 +8,13 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public class InformationSchemaMain {
 
 
-    private static final MapQuery<Table> QueryReadyToGo = JDBJ
-            .queryString("SELECT ID, TABLE_SCHEMA, TABLE_NAME from information_schema.tables " +
-                    "WHERE TABLE_SCHEMA = :table_schema")
+    private static final MapQuery<Table> QueryReadyToGo = JDBJ.string("SELECT ID, TABLE_SCHEMA, TABLE_NAME from information_schema.tables " +
+            "WHERE TABLE_SCHEMA = :table_schema").query()
             .map(Table::from);
 
     public static void main(String[] args) throws Exception {

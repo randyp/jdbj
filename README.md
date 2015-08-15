@@ -71,11 +71,20 @@ System.out.println("jdb" + ((char) ('i' + 1)));
 mvn release:clean release:prepare -B && mvn release:perform && git push
 ```
 
-#### 1.2 Todo
+#### 0.1.2 Todo
 * [ ] Default Bindings
-* [ ] better root level JDBJ namespacing, `JDBJ.resource("abc.sql").query()...`
+* [x] Better root level JDBJ namespacing, `JDBJ.resource("abc.sql").query()...`
 * [ ] Named Parameters in scripts
+* [x] Smaller, more numerous tests
+* [ ] More Test Coverage via Mockito to cover features not supported in H2
 
-#### 1.3 Todo
+#### 0.1.3 Todo
+* [ ] Extensibility
+
+#### 0.1.4 Todo
+* [ ] Scooby Dooby Doo
+
+#### 0.1.5 Todo
+* [ ] Java Doc
 * [ ] Examples
 

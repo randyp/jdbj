@@ -1075,7 +1075,7 @@ public class PositionalBindingsBuilderTest {
         @Test
         public void value() throws Exception {
             try (Connection connection = db.getConnection()) {
-                final Ref expected = JDBJ.queryString("SELECT (SELECT * FROM INFORMATION_SCHEMA.TABLES LIMIT 1) AS ref")
+                final Ref expected = JDBJ.string("SELECT (SELECT * FROM INFORMATION_SCHEMA.TABLES LIMIT 1) AS ref").query()
                         .map(rs -> rs.getRef(1))
                         .first()
                         .execute(connection);
