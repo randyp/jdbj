@@ -55,6 +55,7 @@ Other jdbc convenience libraries follow the "create statement, bind parameters, 
 * Use PreparedColumn to hide PreparedStatement
 * Named Parameters only, no Positional Parameters
 * Fetch-forward, read-only cursors
+* No type guessing - you specified the type when you called `java something.bindLong(":id", 10)`
 * No external dependencies (where did my guava go?)
 
 #### Credits
