@@ -13,13 +13,13 @@ jdbj is a jdbc fluent interface for capturing query intent long before query exe
 * Utilities for best practices (store query strings as resource)
 
 #### Usage
-Just click on the Maven Central badge above. Can download directly from there or just copy/paste the dependency code, which will look something like this...
+Just click on the Maven Central badge above. Can download from there or grab the dependency tag for the desired version. Will look something like this...
 
 ``` xml
 <dependency>
     <groupId>com.github.randyp</groupId>
     <artifactId>jdbj</artifactId>
-    <version>${project.version}</version>
+    <version>${jdbj.version}</version>
 </dependency>
 ```
 
