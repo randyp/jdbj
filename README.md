@@ -23,7 +23,7 @@ try(Connection connection = db.getConnection) {
 * Clean Java8 lambda interface for bindings, transactions
 * Defaults to fetch-forward read-only cursors
 * Queries as objects
-* Utilities for best practices (store query strings as resource)
+* Utilities for best practices (store query strings as resources)
 
 #### Examples
 A full set of examples is being developed in [jdbj-examples](https://github.com/randyp/jdbj-examples), but here are some in this repository.
