@@ -10,15 +10,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Worth noting: BatchedInsertQuery is Mutable
+ * Worth noting: BatchedUpdateQuery is Mutable
  */
-public class BatchedInsertQuery {
+public class BatchedUpdateQuery {
 
     private final List<ValueBindings> batches = new ArrayList<>();
     private final NamedParameterStatement statement;
 
 
-    BatchedInsertQuery(NamedParameterStatement statement) {
+    BatchedUpdateQuery(NamedParameterStatement statement) {
         this.statement = statement;
 
     }
@@ -63,11 +63,11 @@ public class BatchedInsertQuery {
             return new Batch(batch.addValueBinding(name, binding));
         }
 
-        public BatchedInsertQuery endBatch(){
+        public BatchedUpdateQuery endBatch(){
             statement.checkAllBindingsPresent(batch);
             batches.add(batch);
             batch = null;
-            return BatchedInsertQuery.this;
+            return BatchedUpdateQuery.this;
         }
     }
 }

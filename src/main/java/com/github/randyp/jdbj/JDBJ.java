@@ -32,17 +32,17 @@ public final class JDBJ {
         return new ReturnsQuery(statement);
     }
 
-    public static InsertQuery insertQuery(String queryResource) {
-        return insertQueryString(readResource(queryResource));
+    public static UpdateQuery insertQuery(String queryResource) {
+        return updateQueryString(readResource(queryResource));
     }
 
     /**
      * @param queryString
      * @return a phase 2 builder
      */
-    public static InsertQuery insertQueryString(String queryString) {
+    public static UpdateQuery updateQueryString(String queryString) {
         final NamedParameterStatement statement = NamedParameterStatement.make(queryString);
-        return new InsertQuery(statement);
+        return new UpdateQuery(statement);
     }
 
     public static <R> InsertReturnKeysQuery<R> insertQueryGetKeys(String queryResource, ResultSetMapper<R> keyMapper) {

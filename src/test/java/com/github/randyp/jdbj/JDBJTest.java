@@ -183,7 +183,7 @@ public class JDBJTest {
         }
     }
 
-    public static class Insert {
+    public static class Update {
 
         @ClassRule
         public static TestRule create_table = Student.createTableRule;
@@ -198,16 +198,16 @@ public class JDBJTest {
 
         @Test(expected = IllegalStateException.class)
         public void insertQueryNotEnoughBindings() throws Exception {
-            final InsertQuery insertQuery = JDBJ.insertQuery(Student.insert_id);
+            final UpdateQuery updateQuery = JDBJ.insertQuery(Student.insert_id);
             try (Connection connection = db.getConnection()) {
-                insertQuery.execute(connection);
+                updateQuery.execute(connection);
             }
         }
 
         @Test
         public void insertOne() throws Exception {
             final Student expected = new Student(10L, "Ada", "Dada", new BigDecimal("3.1"));
-            final InsertQuery insertQuery = JDBJ.insertQuery(Student.insert_id)
+            final UpdateQuery updateQuery = JDBJ.insertQuery(Student.insert_id)
                     .bindLong(":id", expected.id)
                     .bindString(":first_name", expected.firstName)
                     .bindString(":last_name", expected.lastName)
@@ -215,14 +215,14 @@ public class JDBJTest {
 
             final List<Student> actual;
             try (Connection connection = db.getConnection()) {
-                assertEquals(1, insertQuery.execute(connection));
+                assertEquals(1, updateQuery.execute(connection));
                 actual = Student.selectAll.execute(connection);
             }
             assertEquals(Collections.singletonList(expected), actual);
         }
     }
 
-    public static class BatchInsert {
+    public static class BatchUpdate {
 
         @ClassRule
         public static TestRule create_table = Student.createTableRule;
@@ -242,7 +242,7 @@ public class JDBJTest {
                     new Student(11L, "Ada11", "Dada11", new BigDecimal("3.2"))
             );
 
-            BatchedInsertQuery insertQuery = JDBJ.insertQuery(Student.insert_id).asBatch();
+            BatchedUpdateQuery insertQuery = JDBJ.insertQuery(Student.insert_id).asBatch();
             for (Student student : expected) {
                 insertQuery.startBatch()
                         .bindLong(":id", student.id)
@@ -262,7 +262,7 @@ public class JDBJTest {
 
         @Test(expected = IllegalStateException.class)
         public void noBatchesAdded() throws Exception {
-            BatchedInsertQuery insertQuery = JDBJ.insertQuery(Student.insert_id).asBatch();
+            BatchedUpdateQuery insertQuery = JDBJ.insertQuery(Student.insert_id).asBatch();
 
             try (Connection connection = db.getConnection()) {
                 insertQuery.execute(connection);
@@ -285,7 +285,7 @@ public class JDBJTest {
         public void batchAlreadyEnded() throws Exception {
             final Student student = new Student(10L, "Ada10", "Dada10", new BigDecimal("3.1"));
 
-            final BatchedInsertQuery.Batch batch = JDBJ.insertQuery(Student.insert_id).asBatch()
+            final BatchedUpdateQuery.Batch batch = JDBJ.insertQuery(Student.insert_id).asBatch()
                     .startBatch()
                     .bindLong(":id", student.id)
                     .bindString(":first_name", student.firstName)
@@ -418,7 +418,7 @@ public class JDBJTest {
 
         final Student student = new Student(10L, "Ada", "Dada", new BigDecimal("3.1"));
 
-        final InsertQuery insertQuery = JDBJ.insertQuery(Student.insert_id)
+        final UpdateQuery updateQuery = JDBJ.insertQuery(Student.insert_id)
                 .bindLong(":id", student.id)
                 .bindString(":first_name", student.firstName)
                 .bindString(":last_name", student.lastName)
@@ -426,7 +426,7 @@ public class JDBJTest {
 
         @Test
         public void committed() throws Exception {
-            JDBJ.transaction(db, connection -> assertEquals(1, insertQuery.execute(connection)));
+            JDBJ.transaction(db, connection -> assertEquals(1, updateQuery.execute(connection)));
 
             final List<Student> actual;
             try (Connection connection = db.getConnection()) {
@@ -439,7 +439,7 @@ public class JDBJTest {
         @Test
         public void returning() throws Exception {
             final List<Student> actual = JDBJ.returningTransaction(db, connection -> {
-                assertEquals(1, insertQuery.execute(connection));
+                assertEquals(1, updateQuery.execute(connection));
                 return Student.selectAll.execute(connection);
             });
 
@@ -449,7 +449,7 @@ public class JDBJTest {
         @Test
         public void returningWithIsolation() throws Exception {
             final List<Student> actual = JDBJ.returningTransaction(db, Connection.TRANSACTION_READ_COMMITTED, connection -> {
-                assertEquals(1, insertQuery.execute(connection));
+                assertEquals(1, updateQuery.execute(connection));
                 return Student.selectAll.execute(connection);
             });
 
@@ -460,7 +460,7 @@ public class JDBJTest {
         public void rollback() throws Exception {
             try {
                 JDBJ.transaction(db, connection -> {
-                    assertEquals(1, insertQuery.execute(connection));
+                    assertEquals(1, updateQuery.execute(connection));
                     throw new SQLException("did I do that?");
                 });
                 fail("should have throw steve urkel exception");
@@ -483,7 +483,7 @@ public class JDBJTest {
                 assertTrue(connection.getAutoCommit());
                 JDBJ.transaction(fakeDataSource, c -> {
                     assertFalse(c.getAutoCommit());
-                    assertEquals(1, insertQuery.execute(c));
+                    assertEquals(1, updateQuery.execute(c));
                 });
                 assertTrue(connection.getAutoCommit());
             }
@@ -499,7 +499,7 @@ public class JDBJTest {
 
                 JDBJ.transaction(fakeDataSource, Connection.TRANSACTION_READ_COMMITTED, c -> {
                     assertEquals(Connection.TRANSACTION_READ_COMMITTED, c.getTransactionIsolation());
-                    assertEquals(1, insertQuery.execute(c));
+                    assertEquals(1, updateQuery.execute(c));
                 });
                 assertEquals(originalIsolation, connection.getTransactionIsolation());
             }
@@ -515,7 +515,7 @@ public class JDBJTest {
 
                 JDBJ.transaction(fakeDataSource, c -> {
                     assertEquals(Connection.TRANSACTION_READ_UNCOMMITTED, c.getTransactionIsolation());
-                    assertEquals(1, insertQuery.execute(c));
+                    assertEquals(1, updateQuery.execute(c));
                 });
                 assertEquals(originalIsolation, connection.getTransactionIsolation());
             }
@@ -527,7 +527,7 @@ public class JDBJTest {
             try (Connection connection = db.getConnection()) {
                 DataSource fakeDataSource = new FakeDataSource<>(() -> connection);
                 connection.setAutoCommit(false);
-                JDBJ.transaction(fakeDataSource, c -> assertEquals(1, insertQuery.execute(c)));
+                JDBJ.transaction(fakeDataSource, c -> assertEquals(1, updateQuery.execute(c)));
             }
         }
 
@@ -548,7 +548,7 @@ public class JDBJTest {
                         connection.close();
                     }
                 });
-                JDBJ.transaction(fakeDataSource, c -> assertEquals(1, insertQuery.execute(c)));
+                JDBJ.transaction(fakeDataSource, c -> assertEquals(1, updateQuery.execute(c)));
                 assertTrue(connection.isClosed());
             }
         }
@@ -572,7 +572,7 @@ public class JDBJTest {
                         connection.close();
                     }
                 });
-                JDBJ.transaction(fakeDataSource, Connection.TRANSACTION_READ_COMMITTED, c -> assertEquals(1, insertQuery.execute(c)));
+                JDBJ.transaction(fakeDataSource, Connection.TRANSACTION_READ_COMMITTED, c -> assertEquals(1, updateQuery.execute(c)));
                 assertTrue(connection.isClosed());
             }
         }
@@ -587,7 +587,7 @@ public class JDBJTest {
                         throw new SQLException("should be ignored");
                     }
                 });
-                JDBJ.transaction(fakeDataSource, c -> assertEquals(1, insertQuery.execute(c)));
+                JDBJ.transaction(fakeDataSource, c -> assertEquals(1, updateQuery.execute(c)));
                 assertTrue(connection.isClosed());
             }
         }
@@ -610,7 +610,7 @@ public class JDBJTest {
                 });
                 try {
                     JDBJ.transaction(fakeDataSource, c -> {
-                        assertEquals(1, insertQuery.execute(c));
+                        assertEquals(1, updateQuery.execute(c));
                         throw new SQLException("did I do that?");
                     });
                     fail("should have throw steve urkel exception");

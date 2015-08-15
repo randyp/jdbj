@@ -9,18 +9,18 @@ import java.sql.SQLException;
  * Phase 2 Builder
  */
 @Immutable
-public final class InsertQuery extends PositionalBindingsBuilder<InsertQuery> {
+public final class UpdateQuery extends PositionalBindingsBuilder<UpdateQuery> {
 
-    InsertQuery(NamedParameterStatement statement) {
+    UpdateQuery(NamedParameterStatement statement) {
         this(statement, PositionalBindings.empty());
     }
 
-    InsertQuery(NamedParameterStatement statement, PositionalBindings bindings) {
-        super(statement, bindings, (InsertQuery::new));
+    UpdateQuery(NamedParameterStatement statement, PositionalBindings bindings) {
+        super(statement, bindings, (UpdateQuery::new));
     }
 
-    public BatchedInsertQuery asBatch(){
-        return new BatchedInsertQuery(statement);
+    public BatchedUpdateQuery asBatch(){
+        return new BatchedUpdateQuery(statement);
     }
 
     public int execute(Connection connection) throws SQLException {
