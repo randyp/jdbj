@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public interface ListBindingsBuilder<E> extends DefaultValueBindingsBuilder<E> {
+public interface DefaultListBindingsBuilder<E> extends ListBindingsBuilder<E> {
 
-    E bindList(String name, List<Binding> bindings);
+    E bindDefaultList(String name, List<Binding> bindings);
 
-    default E bindLongs(String name, long... xs){
+    default E bindDefaultLongs(String name, long... xs){
         if (xs == null) {
             throw new IllegalArgumentException("xs cannot be null - consider using bindArray");
         }
@@ -21,22 +21,22 @@ public interface ListBindingsBuilder<E> extends DefaultValueBindingsBuilder<E> {
             bindings.add(pc -> pc.setLong(x));
         }
 
-        return bindList(name, bindings);
+        return bindDefaultList(name, bindings);
     }
 
-    default E bindStrings(String name, List<String> xs){
+    default E bindDefaultStrings(String name, List<String> xs){
         if (xs == null) {
             throw new IllegalArgumentException("xs cannot be null - consider using bindArray");
         }
         final Function<String, Binding> createBinding = x -> (Binding) preparedColumn -> preparedColumn.setString(x);
         final List<Binding> bindings = xs.stream().map(createBinding).collect(Collectors.toList());
-        return bindList(name, bindings);
+        return bindDefaultList(name, bindings);
     }
 
-    default E bindStrings(String name, String... xs){
+    default E bindDefaultStrings(String name, String... xs){
         if (xs == null) {
             throw new IllegalArgumentException("xs cannot be null - consider using bindArray");
         }
-        return bindStrings(name, Arrays.asList(xs));
+        return bindDefaultStrings(name, Arrays.asList(xs));
     }
 }

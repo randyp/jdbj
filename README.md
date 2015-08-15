@@ -72,8 +72,7 @@ mvn release:clean release:prepare -B && mvn release:perform && git push
 ```
 
 #### 0.1.2 Todo
-* [ ] Default Bindings
-* [ ] More Test Coverage via Mockito to cover features not supported in H2
+* [ ] More Test Coverage
 
 #### 0.1.3 Todo
 * [ ] Extensibility

@@ -134,17 +134,14 @@ public class ExecuteQueryTest {
 
     @Test
     public void defaultValuesLists() throws Exception {
-        final Binding t29 = pc -> pc.setInt(-29);
-        final Binding t28 = pc -> pc.setInt(-28);
-
         final ExecuteQuery<List<String>> query = JDBJ.query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE id in :ids")
                 .map(rs -> rs.getString("TABLE_NAME"))
                 .toList()
-                .bindDefaultList(":ids", Collections.singletonList(t29));
+                .bindDefaultLongs(":ids", -29L);
 
         try (Connection connection = db.getConnection()) {
             assertEquals(1, query.execute(connection).size());
-            assertEquals(2, query.bindList(":ids", Arrays.asList(t29, t28)).execute(connection).size());
+            assertEquals(2, query.bindLongs(":ids", -29L, -28L).execute(connection).size());
         }
     }
 }

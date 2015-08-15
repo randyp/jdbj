@@ -23,12 +23,12 @@ public class BatchedExecuteUpdate {
 
     }
 
-    public Batch startBatch(){
+    public Batch startBatch() {
         return new Batch();
     }
 
     public int[] execute(Connection connection) throws SQLException {
-        if(batches.isEmpty()){
+        if (batches.isEmpty()) {
             throw new IllegalStateException("no batches to insert");
         }
 
@@ -42,12 +42,11 @@ public class BatchedExecuteUpdate {
         }
     }
 
-    @Immutable
-    public class Batch implements ValueBindingsBuilder<Batch> {
+    public class Batch implements DefaultValueBindingsBuilder<Batch> {
 
         private ValueBindings batch;
 
-        Batch(){
+        Batch() {
             this(PositionalBindings.empty());
         }
 
@@ -57,17 +56,27 @@ public class BatchedExecuteUpdate {
 
         @Override
         public Batch bind(String name, Binding binding) {
-            if(batch == null){
-                throw new IllegalStateException("batch already ended, use BatchedInsertQuery#startBatch to create a new batch");
-            }
+            checkBatchNotEnded();
             return new Batch(batch.valueBinding(name, binding));
         }
 
-        public BatchedExecuteUpdate endBatch(){
+        @Override
+        public Batch bindDefault(String name, Binding binding) {
+            checkBatchNotEnded();
+            return new Batch(batch.defaultValueBinding(name, binding));
+        }
+
+        public BatchedExecuteUpdate endBatch() {
             statement.checkAllBindingsPresent(batch);
             batches.add(batch);
             batch = null;
             return BatchedExecuteUpdate.this;
+        }
+
+        private void checkBatchNotEnded() {
+            if (batch == null) {
+                throw new IllegalStateException("batch already ended, use BatchedInsertQuery#startBatch to create a new batch");
+            }
         }
     }
 }

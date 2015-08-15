@@ -54,8 +54,7 @@ public class BatchedExecuteInsert<R> {
         return keys;
     }
 
-    @Immutable
-    public class Batch implements ValueBindingsBuilder<Batch> {
+    public class Batch implements DefaultValueBindingsBuilder<Batch> {
 
         private ValueBindings batch;
 
@@ -69,10 +68,14 @@ public class BatchedExecuteInsert<R> {
 
         @Override
         public Batch bind(String name, Binding binding) {
-            if(batch == null){
-                throw new IllegalStateException("batch already ended, use BatchedInsertQuery#startBatch to create a new batch");
-            }
+            checkBatchNotEnded();
             return new Batch(batch.valueBinding(name, binding));
+        }
+
+        @Override
+        public Batch bindDefault(String name, Binding binding) {
+            checkBatchNotEnded();
+            return new Batch(batch.defaultValueBinding(name, binding));
         }
 
         @SuppressWarnings("deprecation")
@@ -81,6 +84,12 @@ public class BatchedExecuteInsert<R> {
             batches.add(batch);
             batch = null;
             return BatchedExecuteInsert.this;
+        }
+
+        private void checkBatchNotEnded() {
+            if(batch == null){
+                throw new IllegalStateException("batch already ended, use BatchedInsertQuery#startBatch to create a new batch");
+            }
         }
     }
 }
