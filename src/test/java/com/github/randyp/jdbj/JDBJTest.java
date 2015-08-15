@@ -329,7 +329,7 @@ public class JDBJTest {
         }
     }
 
-    public static class BatchesInsert {
+    public static class BatchedInsert {
 
         @ClassRule
         public static TestRule create_table = Student.createTableRule;
@@ -417,7 +417,7 @@ public class JDBJTest {
 
         //can only test with one batch, as keys are only available from last batch in H2
         @Test
-        public void insertBatch() throws Exception {
+        public void insertOne() throws Exception {
             final Student expected = new Student(10, "Ada10", "Dada10", new BigDecimal("3.1"));
             final List<Student> actual;
             try (Connection connection = db.getConnection()) {
@@ -440,7 +440,36 @@ public class JDBJTest {
                         .execute(connection);
             }
         }
+    }
 
+    public static class ExecuteScript {
+        @ClassRule
+        public static TestRule create_table = Student.createTableRule;
+
+        @After
+        public void tearDown() throws Exception {
+            try (Connection connection = db.getConnection();
+                 PreparedStatement ps = connection.prepareStatement("DELETE FROM student")) {
+                ps.execute();
+            }
+        }
+
+        //can only test with one batch, as keys are only available from last batch in H2
+        @Test
+        public void insertTwo() throws Exception {
+            final List<Student> expected = Arrays.asList(
+                    new Student(10, "Ada10", "Dada10", new BigDecimal("3.1")),
+                    new Student(11L, "Ada11", "Dada11", new BigDecimal("3.2"))
+            );
+
+            final List<Student> actual;
+            try (Connection connection = db.getConnection()) {
+                JDBJ.script("student_insert_ada10_ada11.sql")
+                        .execute(connection);
+                actual = Student.selectAll.execute(connection);
+            }
+            assertEquals(expected, actual);
+        }
     }
 
     public static class Transaction {

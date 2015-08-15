@@ -47,6 +47,14 @@ public final class JDBJ {
         return new Execute(statement);
     }
 
+    public static ExecuteScript script(String scriptResource) {
+        return scriptString(readResource(scriptResource));
+    }
+
+    public static ExecuteScript scriptString(String scriptString) {
+        return ExecuteScript.from(scriptString);
+    }
+
     public static Execute execute(String queryResource) {
         return executeString(readResource(queryResource));
     }

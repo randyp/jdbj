@@ -1,6 +1,5 @@
 package com.github.randyp.jdbj.lexer;
 
-import com.github.randyp.jdbj.lexer.NamedParameterStatementLexer;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.Token;
 import org.junit.Test;
