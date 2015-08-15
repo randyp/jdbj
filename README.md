@@ -2,7 +2,7 @@
 [![Coverage Status](https://coveralls.io/repos/randyp/jdbj/badge.svg?branch=master&service=github)](https://coveralls.io/github/randyp/jdbj?branch=master)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.randyp/jdbj/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.randyp/jdbj/)
 
-jdbj is a jdbc fluent interface for capturing query intent long before query execution. Looks like this:
+jdbj is an incredibly small jdbc fluent interface for capturing query intent before query execution. Looks like this:
 ``` java
 final MapQuery<Student> studentsByIds = JDBJ.query("student_by_ids.sql")
     .map(Student::from);
