@@ -1,0 +1,1 @@
+INSERT INTO student(first_name, last_name, gpa) VALUES(:first_name, :last_name, :gpa)

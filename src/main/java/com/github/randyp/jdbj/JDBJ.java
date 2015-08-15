@@ -16,15 +16,11 @@ import java.sql.SQLException;
 public final class JDBJ {
 
     /**
-     * @param resource
+     * @param queryResource
      * @return a phase 2 builder
      */
-    public static ReturnsQuery query(String resource) {
-        final URL url = JDBJ.class.getClassLoader().getResource(resource);
-        if (url == null) {
-            throw new IllegalArgumentException("resource not found: " + resource);
-        }
-        return queryString(readQueryResource(url));
+    public static ReturnsQuery query(String queryResource) {
+        return queryString(readResource(queryResource));
     }
 
     /**
@@ -36,6 +32,10 @@ public final class JDBJ {
         return new ReturnsQuery(statement);
     }
 
+    public static InsertQuery insertQuery(String queryResource) {
+        return insertQueryString(readResource(queryResource));
+    }
+
     /**
      * @param queryString
      * @return a phase 2 builder
@@ -43,6 +43,10 @@ public final class JDBJ {
     public static InsertQuery insertQueryString(String queryString) {
         final NamedParameterStatement statement = NamedParameterStatement.make(queryString);
         return new InsertQuery(statement);
+    }
+
+    public static <R> InsertReturnKeysQuery<R> insertQueryGetKeys(String queryResource, ResultSetMapper<R> keyMapper) {
+        return insertQueryStringGetKeys(readResource(queryResource), keyMapper);
     }
 
     /**
@@ -132,7 +136,11 @@ public final class JDBJ {
 
     }
 
-    private static String readQueryResource(URL url) {
+    private static String readResource(String queryResource) {
+        final URL url = JDBJ.class.getClassLoader().getResource(queryResource);
+        if (url == null) {
+            throw new IllegalArgumentException("resource not found: " + queryResource);
+        }
         final StringBuilder queryString = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()))) {
 
