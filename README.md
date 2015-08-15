@@ -2,7 +2,7 @@
 [![Coverage Status](https://coveralls.io/repos/randyp/jdbj/badge.svg?branch=master&service=github)](https://coveralls.io/github/randyp/jdbj?branch=master)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.randyp/jdbj/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.randyp/jdbj/)
 
-jdbj is an incredibly small jdbc fluent interface for capturing query intent before query execution. Looks like this:
+jdbj is an incredibly small jdbc fluent interface for capturing query intent before query execution. Sample code:
 ``` java
 final MapQuery<Student> studentsByIds = JDBJ.query("student_by_ids.sql")
     .map(Student::from);
@@ -43,12 +43,12 @@ Just click on the Maven Central badge above. Can download from there or grab the
 ```
 
 #### Versioning
-jdbj is not following any semantic versioning scheme yet, and will not until version 1, which we'll release once we have a user base.
+jdbj is not following any semantic versioning scheme yet, and will not until version 1, which we'll release once we have a user base. Expect us to break interfaces.
 
 #### Why?
 Other jdbc convenience libraries follow the "create statement, bind parameters, execute query, map results" pattern that we inherited from older procedural code. For many web applications we've found a better pattern: "specify query, specify results mapper, bind parameters, execute query". We get to reuse steps 1-2 across most requests and only do the minimum amount of query building for each request.
 
-In addition, many other convenience libraries try to hide the binding code behind annotations and reflection. A different pattern (not necessarily better) is to expose bindings against a class called PreparedColumn. PreparedColumn which has all the binding methods that PreparedStatement has, only without the parameter index. In this way we can hide the PreparedStatement without hiding the bindings and take full advantage of a strongly typed language.
+In addition, many other convenience libraries try to hide the binding code behind annotations and reflection. JDBJ takes a different approach, and exposes jdbc-similar bindings without giving you direct access to PreparedStatement. 
 
 #### Guiding Principles
 * No *connection handles* - just use the Connection as an argument
@@ -70,3 +70,12 @@ System.out.println("jdb" + ((char) ('i' + 1)));
 ``` sh
 mvn release:clean release:prepare -B && mvn release:perform && git push
 ```
+
+#### 1.2 Todo
+* [ ] Default Bindings
+* [ ] better root level JDBJ namespacing, `JDBJ.resource("abc.sql").query()...`
+* [ ] Named Parameters in scripts
+
+#### 1.3 Todo
+* [ ] Examples
+
