@@ -19,14 +19,6 @@ public class StudentDAO {
 
 
     public StudentDAO(Connection connection) {
-        final MapQuery<Student> studentsByIds = JDBJ.queryString("student_by_ids.sql")
-                .map(Student::from);
-        try(Connection connection = db.getConnection) {
-            final List<Student> students = studentsByIds
-                    .toList()
-                    .bindLongs(":ids", 1L, 2L, 3L, 11L, 12L, 14L)
-                    .execute(connection);
-        }
         this.connection = connection;
     }
 
