@@ -11,11 +11,6 @@ import java.util.Spliterator;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-/**
- * Phase 3 class
- *
- * @param <R>
- */
 @Immutable
 public final class StreamQuery<R> extends PositionalBindingsBuilder<StreamQuery<R>> {
 

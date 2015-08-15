@@ -19,28 +19,14 @@ public final class MapQuery<R> {
         this.mapper = mapper;
     }
 
-    /**
-     *
-     * @param remap
-     * @param <R2>
-     * @return phase 2 builder
-     */
     public <R2> MapQuery<R2> remap(Function<R, R2> remap){
         return new MapQuery<>(statement, rs -> remap.apply(mapper.map(rs)));
     }
 
-    /**
-     *
-     * @return phase 3 builder
-     */
     public StreamQuery<R> stream() {
         return new StreamQuery<>(statement, mapper);
     }
 
-    /**
-     *
-     * @return phase 3 builder
-     */
     public ExecuteQuery<List<R>> toList(){
         return new ExecuteQuery<>(statement, rs -> {
             final List<R> results = new ArrayList<>();

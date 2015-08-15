@@ -5,10 +5,6 @@ branches:
   only:
     - master
 sudo: false
-addons:
-  apt:
-    packages:
-      - gpg2
 install: mvn -DskipTests=true -Dbasepom.check.skip-all=true -B install
 script: mvn -B verify
 after_success:

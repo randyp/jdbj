@@ -6,11 +6,6 @@ import com.github.randyp.jdbj.lambda.ResultSetToResult;
 import javax.annotation.concurrent.Immutable;
 import java.sql.*;
 
-/**
- * Phase 3 Builder
- *
- * @param <R>
- */
 @Immutable
 public final class ExecuteQuery<R> extends PositionalBindingsBuilder<ExecuteQuery<R>> {
 
