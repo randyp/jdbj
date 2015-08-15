@@ -25,6 +25,7 @@ public final class ExecuteInsert<R> extends PositionalBindingsBuilder<ExecuteIns
         this.keysMapper = keysMapper;
     }
 
+    @SuppressWarnings("deprecation")
     public BatchedExecuteInsert<R> asBatch(){
         return new BatchedExecuteInsert<>(statement, keysMapper);
     }
