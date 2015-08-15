@@ -37,6 +37,11 @@ public final class JDBJ {
         return insertQueryStringGetKeys(readResource(queryResource), keyMapper);
     }
 
+    public static <R> InsertQuery<R> insertQueryStringGetKeys(String queryString, ResultSetMapper<R> keyMapper) {
+        final NamedParameterStatement statement = NamedParameterStatement.make(queryString);
+        return new InsertQuery<>(statement, keyMapper);
+    }
+
     public static Execute executeString(String queryString) {
         final NamedParameterStatement statement = NamedParameterStatement.make(queryString);
         return new Execute(statement);
@@ -44,11 +49,6 @@ public final class JDBJ {
 
     public static Execute execute(String queryResource) {
         return executeString(readResource(queryResource));
-    }
-
-    public static <R> InsertQuery<R> insertQueryStringGetKeys(String queryString, ResultSetMapper<R> keyMapper) {
-        final NamedParameterStatement statement = NamedParameterStatement.make(queryString);
-        return new InsertQuery<>(statement, keyMapper);
     }
 
     public static void transaction(DataSource dataSource, ConnectionRunnable runnable) throws SQLException {
