@@ -61,7 +61,7 @@ In addition, many other convenience libraries try to hide the binding code behin
 * No external dependencies (where did my guava go?)
 
 #### Credits
-To the [jdbi team](http://jdbi.org/) for authoring jdbi, asm uch of jdbj is based on jdbi. Also:
+To the [jdbi team](http://jdbi.org/) for authoring jdbi, as much of jdbj is based on jdbi. Also:
 ``` java
 System.out.println("jdb" + ((char) ('i' + 1)));
 ```
