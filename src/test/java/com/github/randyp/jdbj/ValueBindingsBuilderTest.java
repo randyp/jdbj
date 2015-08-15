@@ -134,7 +134,7 @@ public class ValueBindingsBuilderTest {
         }
     }
 
-    public static class bigdecimal {
+    public static class Big_Decimal {
         @Test
         public void value() throws Exception {
             final BigDecimal expected = new BigDecimal("1.234");

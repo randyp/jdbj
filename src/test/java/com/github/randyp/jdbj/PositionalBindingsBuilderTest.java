@@ -2,21 +2,18 @@ package com.github.randyp.jdbj;
 
 import com.github.randyp.jdbj.lambda.ResultSetMapper;
 import org.junit.ClassRule;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.Reader;
-import java.io.StringReader;
-import java.math.BigDecimal;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.sql.*;
-import java.sql.Date;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.Assert.*;
 

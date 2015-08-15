@@ -29,7 +29,7 @@ public class ExecuteScriptTest extends StudentTest {
     }
 
     @Test
-    public void insertTwoParameterizedIds() throws Exception {
+    public void insertTwoParameters() throws Exception {
         final List<Student> expected = Arrays.asList(
                 new Student(10, "Ada10", "Dada10", new BigDecimal("3.1")),
                 new Student(11L, "Ada11", "Dada11", new BigDecimal("3.2"))

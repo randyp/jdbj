@@ -1,9 +1,6 @@
 package com.github.randyp.jdbj;
 
 import org.junit.rules.ExternalResource;
-import org.junit.rules.TestRule;
-import org.junit.runner.Description;
-import org.junit.runners.model.Statement;
 
 import javax.sql.DataSource;
 import java.io.PrintWriter;
