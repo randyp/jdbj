@@ -12,13 +12,13 @@ import java.util.List;
 /**
  * Worth noting: BatchedUpdateQuery is Mutable
  */
-public class BatchedUpdateQuery {
+public class BatchedExecuteUpdate {
 
     private final List<ValueBindings> batches = new ArrayList<>();
     private final NamedParameterStatement statement;
 
 
-    BatchedUpdateQuery(NamedParameterStatement statement) {
+    BatchedExecuteUpdate(NamedParameterStatement statement) {
         this.statement = statement;
 
     }
@@ -63,11 +63,11 @@ public class BatchedUpdateQuery {
             return new Batch(batch.addValueBinding(name, binding));
         }
 
-        public BatchedUpdateQuery endBatch(){
+        public BatchedExecuteUpdate endBatch(){
             statement.checkAllBindingsPresent(batch);
             batches.add(batch);
             batch = null;
-            return BatchedUpdateQuery.this;
+            return BatchedExecuteUpdate.this;
         }
     }
 }

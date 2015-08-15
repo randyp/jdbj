@@ -32,7 +32,7 @@ public final class JDBJ {
         return new ReturnsQuery(statement);
     }
 
-    public static UpdateQuery insertQuery(String queryResource) {
+    public static ExecuteUpdate insertQuery(String queryResource) {
         return updateQueryString(readResource(queryResource));
     }
 
@@ -40,9 +40,9 @@ public final class JDBJ {
      * @param queryString
      * @return a phase 2 builder
      */
-    public static UpdateQuery updateQueryString(String queryString) {
+    public static ExecuteUpdate updateQueryString(String queryString) {
         final NamedParameterStatement statement = NamedParameterStatement.make(queryString);
-        return new UpdateQuery(statement);
+        return new ExecuteUpdate(statement);
     }
 
     public static <R> InsertQuery<R> insertQueryGetKeys(String queryResource, ResultSetMapper<R> keyMapper) {
