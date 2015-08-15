@@ -32,12 +32,12 @@ A full set of examples is being developed in [jdbj-examples](https://github.com/
 * [Example DAO (connection as construction parameter)](src/test/java/com/github/randyp/jdbj/example/StudentDAO.java)
 
 #### Guiding Principles
-* no *connection handles* - just use the Connection as an argument to execute methods on immutable objects
-* bubble up the SQLException where possible, not possible in Stream.tryAdvance
-* immutable builders to capture the query intent, BatchedInsert Builders are mutable
-* use PreparedColumn to hide PreparedStatement
-* Named parameters only, no positional parameters
-* fetch forward, read only cursors
+* No *connection handles* - just use the Connection as an argument
+* Bubble up the SQLException, or wrap if not possible (eg. java.util.Stream#tryAdvance)
+* Immutable builders to capture the query intent, BatchedInsert Builders are mutable
+* Use PreparedColumn to hide PreparedStatement
+* Named Parameters only, no Positional Parameters
+* Fetch-forward, read-only cursors
 * no external dependencies (where did my guava go?)
 
 #### Credits
