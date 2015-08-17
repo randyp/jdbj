@@ -72,13 +72,14 @@ mvn release:clean release:prepare -B && mvn release:perform && git push
 ```
 
 #### 0.1.2 Todo
-* [ ] More Test Coverage
+* [ ] More Simple Test Coverage
 
 #### 0.1.3 Todo
+* [ ] Bind Optionals, checks that value is defaulted if not present
 * [ ] Extensibility
 
 #### 0.1.4 Todo
-* [ ] Scooby Dooby Doo
+* [ ] Mock coverage for jdbc's unsupported features
 
 #### 0.1.5 Todo
 * [ ] Java Doc
