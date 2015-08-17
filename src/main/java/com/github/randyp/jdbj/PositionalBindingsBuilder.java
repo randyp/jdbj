@@ -69,4 +69,17 @@ public class PositionalBindingsBuilder<E extends PositionalBindingsBuilder<E>> i
 
         return factory.make(statement, this.bindings.defaultListBinding(name, bindings));
     }
+
+    @Override
+    public E requireDefaultedBindingForOptional(String name) {
+        if(!bindings.containsDefaultedBinding(name)){
+            throw new IllegalArgumentException("default binding " + name + " not present. when binding optionals, you must have bound a default value eg: bindDefaultLong(\":limit\", 10); this ensures there will always be a binding and never a rebinding");
+        }
+        try {
+            //noinspection unchecked
+            return (E) this;
+        } catch (ClassCastException e) {
+            return factory.make(statement, bindings);
+        }
+    }
 }

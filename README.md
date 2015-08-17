@@ -77,6 +77,7 @@ mvn release:clean release:prepare -B && mvn release:perform && git push
 * [ ] Extensibility
 
 #### 0.1.4 Todo
+* [ ] More List bindings?
 * [ ] Allowed to bind defaults during Map query phase, is passed to phase 3 execute query
 * [ ] Mock coverage for jdbc's unsupported features
 

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public interface ListBindingsBuilder<E> extends DefaultValueBindingsBuilder<E> {
+public interface ListBindingsBuilder<E> extends DefaultValueBindingsBuilder<E>, OptionalValueBindingsBuilder<E> {
 
     E bindList(String name, List<Binding> bindings);
 

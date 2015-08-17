@@ -190,12 +190,12 @@ public interface ValueBindingsBuilder<E> {
         return bind(name, pc -> pc.setTime(x));
     }
 
-    default E bindTimestamp(String name, @Nullable Timestamp x) {
-        return bind(name, pc -> pc.setTimestamp(x));
-    }
-
     default E bindTime(String name, @Nullable Time x, Calendar cal) {
         return bind(name, pc -> pc.setTime(x, cal));
+    }
+
+    default E bindTimestamp(String name, @Nullable Timestamp x) {
+        return bind(name, pc -> pc.setTimestamp(x));
     }
 
     default E bindTimestamp(String name, @Nullable Timestamp x, Calendar cal) {
