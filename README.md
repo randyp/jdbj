@@ -71,9 +71,6 @@ System.out.println("jdb" + ((char) ('i' + 1)));
 mvn release:clean release:prepare -B && mvn release:perform && git push
 ```
 
-#### 0.1.2 Todo
-* [ ] More Simple Test Coverage
-
 #### 0.1.3 Todo
 * [ ] Bind Optionals, checks that value is defaulted if not present
 * [ ] Extensibility
