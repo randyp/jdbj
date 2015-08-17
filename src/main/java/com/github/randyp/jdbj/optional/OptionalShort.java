@@ -39,7 +39,7 @@ public final class OptionalShort {
     /**
      * Construct an empty instance.
      *
-     * @implNote generally only one empty instance, {@link OptionalShort#EMPTY},
+     *  generally only one empty instance, {@link OptionalShort#EMPTY},
      * should exist per VM.
      */
     private OptionalShort() {
@@ -51,7 +51,7 @@ public final class OptionalShort {
      * Returns an empty {@code OptionalShort} instance.  No value is present for this
      * OptionalShort.
      *
-     * @apiNote Though it may be tempting to do so, avoid testing if an object
+     * Though it may be tempting to do so, avoid testing if an object
      * is empty by comparing with {@code ==} against instances returned by
      * {@code Option.empty()}. There is no guarantee that it is a singleton.
      * Instead, use {@link #isPresent()}.
@@ -148,7 +148,7 @@ public final class OptionalShort {
      * Return the contained value, if present, otherwise throw an exception
      * to be created by the provided supplier.
      *
-     * @apiNote A method reference to the exception constructor with an empty
+     *  A method reference to the exception constructor with an empty
      * argument list can be used as the supplier. For example,
      * {@code IllegalStateException::new}
      *
@@ -215,7 +215,7 @@ public final class OptionalShort {
      * debugging. The exact presentation format is unspecified and may vary
      * between implementations and versions.
      *
-     * @implSpec If a value is present the result must include its string
+     *  If a value is present the result must include its string
      * representation in the result. Empty and present instances must be
      * unambiguously differentiable.
      *
