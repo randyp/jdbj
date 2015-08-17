@@ -85,3 +85,6 @@ mvn release:clean release:prepare -B && mvn release:perform && git push
 * [ ] Java Doc
 * [ ] Examples
 
+#### 0.1.6
+* [ ] Somehow remove most antlr classes we don't need from shading process...
+
