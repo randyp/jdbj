@@ -88,4 +88,5 @@ mvn release:clean release:prepare -B && mvn release:perform && git push
 
 #### 0.1.6
 * [ ] Somehow remove most antlr classes we don't need from shading process...
+* [ ] Wrap Batch sql exceptions
 
