@@ -32,8 +32,7 @@ public final class ExecuteQueryRunnable extends PositionalBindingsBuilder<Execut
         try (PreparedStatement ps = connection.prepareStatement(
                 buildSql(),
                 ResultSet.TYPE_FORWARD_ONLY,
-                ResultSet.CONCUR_READ_ONLY)
-        ) {
+                ResultSet.CONCUR_READ_ONLY)) {
             bindToStatement(ps);
             try (ResultSet rs = ps.executeQuery()) {
                 runnable.run(rs);

@@ -9,11 +9,11 @@ import java.util.function.Consumer;
 
 public class ResultSetSpliterator<R> implements Spliterator<R> {
 
-    private final ResultSet rs;
+    private final SmartResultSet rs;
     private final ResultSetMapper<R> mapper;
 
     public ResultSetSpliterator(ResultSet rs, ResultSetMapper<R> mapper) {
-        this.rs = rs;
+        this.rs = new SmartResultSet(rs);
         this.mapper = mapper;
     }
 

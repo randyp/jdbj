@@ -2,10 +2,10 @@ package com.github.randyp.jdbj.example;
 
 import com.github.randyp.jdbj.JDBJ;
 import com.github.randyp.jdbj.MapQuery;
+import com.github.randyp.jdbj.SmartResultSet;
 import org.h2.jdbcx.JdbcConnectionPool;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Stream;
@@ -42,7 +42,7 @@ public class InformationSchemaMain {
 
     public static class Table {
 
-        public static Table from(ResultSet rs) throws SQLException {
+        public static Table from(SmartResultSet rs) throws SQLException {
             return new Table(rs.getLong("id"), rs.getString("table_schema"), rs.getString("table_name"));
         }
 

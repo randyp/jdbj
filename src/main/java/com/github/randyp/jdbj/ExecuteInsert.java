@@ -38,7 +38,7 @@ public final class ExecuteInsert<R> extends PositionalBindingsBuilder<ExecuteIns
             bindToStatement(ps);
             ps.executeUpdate();
 
-            try(ResultSet generatedKeys = ps.getGeneratedKeys()){
+            try(SmartResultSet generatedKeys = new SmartResultSet(ps.getGeneratedKeys())){
                 while(generatedKeys.next()){
                     keys.add(keysMapper.map(generatedKeys));
                 }

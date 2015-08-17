@@ -8,7 +8,6 @@ import org.junit.runner.RunWith;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -126,7 +125,7 @@ public class ListBindingsBuilderTest {
             final R value;
             try (PreparedStatement ps = connection.prepareStatement(buildSql())) {
                 bindToStatement(ps);
-                try (ResultSet rs = ps.executeQuery()) {
+                try (SmartResultSet rs = new SmartResultSet(ps.executeQuery())) {
                     assertTrue(rs.next());
                     value = mapper.map(rs);
                     assertFalse(rs.next());

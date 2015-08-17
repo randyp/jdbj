@@ -44,7 +44,7 @@ public class BatchedExecuteInsert<R> {
                 ps.addBatch();
             }
             ps.executeBatch();
-            try(ResultSet generatedKeys = ps.getGeneratedKeys()){
+            try(SmartResultSet generatedKeys = new SmartResultSet(ps.getGeneratedKeys())){
                 while(generatedKeys.next()){
                     keys.add(keysMapper.map(generatedKeys));
                 }

@@ -1,7 +1,6 @@
 package com.github.randyp.jdbj;
 
 import java.math.BigDecimal;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -13,7 +12,7 @@ public class Student extends NewStudent {
             .map(Student::from)
             .toList();
 
-    public static Student from(ResultSet rs) throws SQLException {
+    public static Student from(SmartResultSet rs) throws SQLException {
         return new Student(rs.getLong("id"),
                 rs.getString("first_name"),
                 rs.getString("last_name"),

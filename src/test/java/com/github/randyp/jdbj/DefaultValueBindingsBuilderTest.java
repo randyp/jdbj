@@ -1256,7 +1256,7 @@ public class DefaultValueBindingsBuilderTest {
             final R value;
             try (PreparedStatement ps = connection.prepareStatement(buildSql())) {
                 bindToStatement(ps);
-                try (ResultSet rs = ps.executeQuery()) {
+                try (SmartResultSet rs = new SmartResultSet(ps.executeQuery())) {
                     assertTrue(rs.next());
                     value = mapper.map(rs);
                     assertFalse(rs.next());

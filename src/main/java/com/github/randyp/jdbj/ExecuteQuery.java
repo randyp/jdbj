@@ -29,7 +29,7 @@ public final class ExecuteQuery<R> extends PositionalBindingsBuilder<ExecuteQuer
                 ResultSet.CONCUR_READ_ONLY
         )) {
             bindToStatement(ps);
-            try (ResultSet rs = ps.executeQuery()) {
+            try (SmartResultSet rs = new SmartResultSet(ps.executeQuery())) {
                 return toResult.from(rs);
             }
         }
