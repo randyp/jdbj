@@ -73,7 +73,6 @@ mvn release:clean release:prepare -B && mvn release:perform && git push
 ```
 
 #### 0.1.3 Todo
-* [ ] Bind Optionals, checks that value is defaulted if not present
 * [ ] Extensibility
 
 #### 0.1.4 Todo

@@ -2,7 +2,6 @@ package com.github.randyp.jdbj;
 
 import com.github.randyp.jdbj.lambda.Binding;
 
-import javax.annotation.concurrent.Immutable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -42,7 +41,7 @@ public class BatchedExecuteUpdate {
         }
     }
 
-    public class Batch implements DefaultValueBindingsBuilder<Batch> {
+    public class Batch implements ValueBindingsBuilder<Batch> {
 
         private ValueBindings batch;
 
@@ -58,12 +57,6 @@ public class BatchedExecuteUpdate {
         public Batch bind(String name, Binding binding) {
             checkBatchNotEnded();
             return new Batch(batch.valueBinding(name, binding));
-        }
-
-        @Override
-        public Batch bindDefault(String name, Binding binding) {
-            checkBatchNotEnded();
-            return new Batch(batch.defaultValueBinding(name, binding));
         }
 
         public BatchedExecuteUpdate endBatch() {

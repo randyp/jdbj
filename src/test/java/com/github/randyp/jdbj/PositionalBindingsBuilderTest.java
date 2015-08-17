@@ -11,9 +11,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -93,76 +90,33 @@ public class PositionalBindingsBuilderTest {
         }
     }
 
-    public static class BindList {
-        @Test
-        public void valueInListNotSet() throws Exception {
-            final String selected;
-            try (Connection connection = db.getConnection()) {
-                selected = new TestBuilder()
-                        .bindList(":binding", Collections.singletonList(pc -> {
-                        }))
-                        .execute(connection, rs -> rs.getString(1));
-            }
-            assertNull(selected);
+    public static class BindDefault {
+
+        @Test(expected = IllegalArgumentException.class)
+        public void nullName() throws Exception {
+            new TestBuilder().bindDefault(null, pc->pc.setLong(1L));
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void nullBinding() throws Exception {
+            new TestBuilder().bindDefault(":binding", null);
         }
     }
 
-    public static class strings {
+    public static class RequireDefaulted {
+
+        @Test(expected = IllegalArgumentException.class)
+        public void notPresent() throws Exception {
+            new TestBuilder().requireDefaultedBindingForOptional(":binding");
+        }
+
         @Test
-        public void values() throws Exception {
-            final String[] expected = {"abc", "def"};
-
-            final Object[] selected;
-            try (Connection connection = db.getConnection()) {
-                selected = new TestBuilder()
-                        .bindStrings(":binding", Arrays.asList(expected))
-                        .execute(connection, rs -> (Object[]) rs.getObject(1));
-            }
-            assertArrayEquals(expected, selected);
+        public void present() throws Exception {
+            new TestBuilder()
+                    .bindDefaultLong(":binding", 1L)
+                    .requireDefaultedBindingForOptional(":binding");
         }
 
-        @Test(expected = IllegalArgumentException.class)
-        public void nullArray() throws Exception {
-            try (Connection connection = db.getConnection()) {
-                new TestBuilder()
-                        .bindStrings(":binding", (String[]) null)
-                        .execute(connection, rs -> rs.getObject(1));
-            }
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void nullList() throws Exception {
-            try (Connection connection = db.getConnection()) {
-                new TestBuilder()
-                        .bindStrings(":binding", (List<String>) null)
-                        .execute(connection, rs -> rs.getObject(1));
-            }
-        }
-    }
-
-    public static class longs {
-        @Test
-        public void values() throws Exception {
-            final long[] input = {152L, 51L};
-            final Long[] expected = {152L, 51L};
-
-            final Object[] selected;
-            try (Connection connection = db.getConnection()) {
-                selected = new TestBuilder()
-                        .bindLongs(":binding", input)
-                        .execute(connection, rs -> (Object[]) rs.getObject(1));
-            }
-            assertArrayEquals(expected, selected);
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void nullArray() throws Exception {
-            try (Connection connection = db.getConnection()) {
-                new TestBuilder()
-                        .bindLongs(":binding", (long[]) null)
-                        .execute(connection, rs -> rs.getObject(1));
-            }
-        }
     }
 
     private static class TestBuilder extends PositionalBindingsBuilder<TestBuilder> {

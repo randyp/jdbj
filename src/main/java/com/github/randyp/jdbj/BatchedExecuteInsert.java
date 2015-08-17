@@ -3,7 +3,6 @@ package com.github.randyp.jdbj;
 import com.github.randyp.jdbj.lambda.Binding;
 import com.github.randyp.jdbj.lambda.ResultSetMapper;
 
-import javax.annotation.concurrent.Immutable;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +53,7 @@ public class BatchedExecuteInsert<R> {
         return keys;
     }
 
-    public class Batch implements DefaultValueBindingsBuilder<Batch> {
+    public class Batch implements ValueBindingsBuilder<Batch> {
 
         private ValueBindings batch;
 
@@ -70,12 +69,6 @@ public class BatchedExecuteInsert<R> {
         public Batch bind(String name, Binding binding) {
             checkBatchNotEnded();
             return new Batch(batch.valueBinding(name, binding));
-        }
-
-        @Override
-        public Batch bindDefault(String name, Binding binding) {
-            checkBatchNotEnded();
-            return new Batch(batch.defaultValueBinding(name, binding));
         }
 
         @SuppressWarnings("deprecation")

@@ -24,6 +24,19 @@ public class PositionalBindingsTest {
         }
     }
 
+    public static class ContainsBinding {
+
+        @Test(expected = IllegalArgumentException.class)
+        public void nullNameDefault() throws Exception {
+            PositionalBindings.empty().containsDefaultedBinding(null);
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void nullNameHard() throws Exception {
+            PositionalBindings.empty().containsDefaultedBinding(null);
+        }
+    }
+
     public static class Value {
 
         @Test
@@ -164,6 +177,12 @@ public class PositionalBindingsTest {
             PositionalBindings.empty()
                     .listBinding(":id", new ArrayList<>())
                     .defaultListBinding(":id", new ArrayList<>());
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void defaultListNullName() throws Exception {
+            PositionalBindings.empty()
+                    .defaultListBinding(null, new ArrayList<>());
         }
     }
 
