@@ -4,14 +4,14 @@
 
 jdbj is an incredibly small jdbc fluent interface for capturing query intent before query execution. Sample code:
 ``` java
-final MapQuery<Student> studentsByIds = JDBJ.query("student_by_ids.sql")
-    .map(Student::from);
+final ExecuteQuery<List<Student>> studentsByIds = JDBJ.query("student_by_ids.sql")
+    .map(Student::from)
+    .toList()
+    .bindDefaultLong(":limit", 10L);
 
 //do something else for a while
-
 try(Connection connection = db.getConnection) {
     final List<Student> students = studentsByIds
-            .toList()
             .bindLongs(":ids", 1L, 2L, 3L, 11L, 12L, 14L)
             .execute(connection);
 }
@@ -76,9 +76,11 @@ mvn release:clean release:prepare -B && mvn release:perform && git push
 * [ ] Extensibility
 
 #### 0.1.4 Todo
+* [ ] Allowed to bind defaults during Map query phase, is passed to phase 3 execute query
 * [ ] Mock coverage for jdbc's unsupported features
 
 #### 0.1.5 Todo
+* [ ] Hacky-yet-compatible batch insert query
 * [ ] Java Doc
 * [ ] Examples
 

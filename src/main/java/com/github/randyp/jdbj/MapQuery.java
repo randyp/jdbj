@@ -6,6 +6,7 @@ import com.github.randyp.jdbj.lambda.ResultSetMapper;
 import javax.annotation.concurrent.Immutable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 @Immutable
@@ -38,11 +39,11 @@ public final class MapQuery<R> {
     }
 
 
-    public ExecuteQuery<R> first() {
+    public ExecuteQuery<Optional<R>> first() {
         return new ExecuteQuery<>(statement, rs -> {
-            R result = null;
+            Optional<R> result = Optional.empty();
             if(rs.next()){
-                result = mapper.map(rs);
+                result = Optional.ofNullable(mapper.map(rs));
             }
             return result;
         });

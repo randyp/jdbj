@@ -17,6 +17,7 @@ import java.nio.charset.Charset;
 import java.sql.*;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 
@@ -993,14 +994,15 @@ public class ValueBindingsBuilderTest {
         @Test
         public void value() throws Exception {
             try (Connection connection = db.getConnection()) {
-                final Ref expected = JDBJ.string("SELECT (SELECT * FROM INFORMATION_SCHEMA.TABLES LIMIT 1) AS ref").query()
+                final Optional<Ref> expected = JDBJ.string("SELECT (SELECT * FROM INFORMATION_SCHEMA.TABLES LIMIT 1) AS ref").query()
                         .map(rs -> rs.getRef(1))
                         .first()
                         .execute(connection);
+                assertTrue(expected.isPresent());
                 final Ref selected = new TestBuilder()
-                        .bindRef(":binding", expected)
+                        .bindRef(":binding", expected.get())
                         .execute(connection, rs -> rs.getRef(1));
-                assertEquals(expected, selected);
+                assertEquals(expected.get(), selected);
             }
         }
 
