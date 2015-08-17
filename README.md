@@ -31,6 +31,7 @@ A full set of examples is being developed in [jdbj-examples](https://github.com/
 
 * [Example Main](src/test/java/com/github/randyp/jdbj/example/InformationSchemaMain.java)
 * [Example DAO (connection as construction parameter)](src/test/java/com/github/randyp/jdbj/example/StudentDAO.java)
+* [Example DAO (binding/result set extension)](src/test/java/com/github/randyp/jdbj/example/extension/MessageDAO.java)
 
 #### Usage
 Just click on the Maven Central badge above. Can download from there or grab the dependency tag for the desired version. Will look something like this...
