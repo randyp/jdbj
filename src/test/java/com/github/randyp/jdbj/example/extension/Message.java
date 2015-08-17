@@ -11,7 +11,7 @@ public class Message extends NewMessage {
 
     public static Message from(SmartResultSet rs) throws SQLException {
         return new Message(
-                rs.getLong("id"),
+                rs.getLongPrimitive("id"),
                 rs.getString("content"),
                 getDateTime(rs, "time")
         );

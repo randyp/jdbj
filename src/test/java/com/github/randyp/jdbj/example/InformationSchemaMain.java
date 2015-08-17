@@ -43,7 +43,7 @@ public class InformationSchemaMain {
     public static class Table {
 
         public static Table from(SmartResultSet rs) throws SQLException {
-            return new Table(rs.getLong("id"), rs.getString("table_schema"), rs.getString("table_name"));
+            return new Table(rs.getLongPrimitive("id"), rs.getString("table_schema"), rs.getString("table_name"));
         }
 
         private final long id;

@@ -13,7 +13,7 @@ public class Student extends NewStudent {
             .toList();
 
     public static Student from(SmartResultSet rs) throws SQLException {
-        return new Student(rs.getLong("id"),
+        return new Student(rs.getLongPrimitive("id"),
                 rs.getString("first_name"),
                 rs.getString("last_name"),
                 rs.getBigDecimal("gpa"));
