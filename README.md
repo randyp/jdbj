@@ -74,7 +74,7 @@ mvn release:clean release:prepare -B && mvn release:perform && git push
 ```
 
 #### 0.1.3 Todo
-* [ ] Extensibility
+* [ ] Smart Result Set???
 
 #### 0.1.4 Todo
 * [ ] More List bindings?
