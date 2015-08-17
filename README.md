@@ -4,7 +4,8 @@
 
 jdbj is an incredibly small jdbc fluent interface for capturing query intent before query execution. Sample code:
 ``` java
-final ExecuteQuery<List<Student>> studentsByIds = JDBJ.query("student_by_ids.sql")
+final ExecuteQuery<List<Student>> studentsByIds = JDBJ.resource("student_by_ids.sql")
+    .query()
     .map(Student::from)
     .toList()
     .bindDefaultLong(":limit", 10L);
