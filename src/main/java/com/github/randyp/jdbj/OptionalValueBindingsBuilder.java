@@ -13,7 +13,7 @@ import java.sql.*;
 import java.sql.Date;
 import java.util.*;
 
-public interface OptionalValueBindingsBuilder<E> extends ValueBindingsBuilder<E> {
+public interface OptionalValueBindingsBuilder<E> extends DefaultValueBindingsBuilder<E> {
     
     E requireDefaultedBindingForOptional(String name);
 

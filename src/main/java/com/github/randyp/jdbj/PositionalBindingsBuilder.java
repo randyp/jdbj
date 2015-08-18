@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Immutable
-public class PositionalBindingsBuilder<E extends PositionalBindingsBuilder<E>> implements DefaultListBindingsBuilder<E> {
+public class PositionalBindingsBuilder<E extends PositionalBindingsBuilder<E>> implements DefaultListBindingsBuilder<E>, OptionalValueBindingsBuilder<E> {
 
     final NamedParameterStatement statement;
     final PositionalBindings bindings;
