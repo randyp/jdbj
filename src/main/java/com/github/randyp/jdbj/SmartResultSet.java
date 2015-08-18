@@ -29,7 +29,6 @@ public class SmartResultSet implements AutoCloseable {
         rs.close();
     }
 
-
     public Array getArray(int columnIndex) throws SQLException {
         return rs.getArray(columnIndex);
     }
@@ -71,39 +70,47 @@ public class SmartResultSet implements AutoCloseable {
     }
 
     public Boolean getBoolean(int columnIndex) throws SQLException {
-        return rs.getObject(columnIndex) == null ? null : rs.getBoolean(columnIndex);
+        final boolean toReturn = rs.getBoolean(columnIndex);
+        return rs.wasNull() ? null : toReturn ;
     }
 
     public Boolean getBoolean(String columnLabel) throws SQLException {
-        return isNull(columnLabel) ? null : rs.getBoolean(columnLabel);
+        final boolean toReturn = rs.getBoolean(columnLabel);
+        return rs.wasNull() ? null : toReturn ;
     }
 
     public boolean getBooleanPrimitive(int columnIndex) throws SQLException {
+        final boolean toReturn = rs.getBoolean(columnIndex);
         nullCheckForPrimitive(columnIndex);
-        return rs.getBoolean(columnIndex);
+        return toReturn;
     }
 
     public boolean getBooleanPrimitive(String columnLabel) throws SQLException {
+        final boolean toReturn = rs.getBoolean(columnLabel);
         nullCheckForPrimitive(columnLabel);
-        return rs.getBoolean(columnLabel);
+        return toReturn;
     }
 
     public Byte getByte(int columnIndex) throws SQLException {
-        return rs.getObject(columnIndex) == null ? null : rs.getByte(columnIndex);
+        final byte toReturn = rs.getByte(columnIndex);
+        return rs.wasNull() ? null : toReturn;
     }
 
     public Byte getByte(String columnLabel) throws SQLException {
-        return isNull(columnLabel) ? null : rs.getByte(columnLabel);
+        final byte toReturn = rs.getByte(columnLabel);
+        return rs.wasNull() ? null : toReturn;
     }
 
     public byte getBytePrimitive(int columnIndex) throws SQLException {
+        final byte toReturn = rs.getByte(columnIndex);
         nullCheckForPrimitive(columnIndex);
-        return rs.getByte(columnIndex);
+        return toReturn;
     }
 
     public byte getBytePrimitive(String columnLabel) throws SQLException {
+        final byte toReturn = rs.getByte(columnLabel);
         nullCheckForPrimitive(columnLabel);
-        return rs.getByte(columnLabel);
+        return toReturn;
     }
 
     public byte[] getBytes(int columnIndex) throws SQLException {
@@ -147,57 +154,57 @@ public class SmartResultSet implements AutoCloseable {
     }
 
     public Double getDouble(int columnIndex) throws SQLException {
-        return rs.getObject(columnIndex) == null ? null : rs.getDouble(columnIndex);
+        final double toReturn = rs.getDouble(columnIndex);
+        return rs.wasNull() ? null : toReturn;
     }
 
     public Double getDouble(String columnLabel) throws SQLException {
-        return isNull(columnLabel) ? null : rs.getDouble(columnLabel);
+        final double toReturn = rs.getDouble(columnLabel);
+        return rs.wasNull() ? null : toReturn;
     }
 
     public double getDoublePrimitive(int columnIndex) throws SQLException {
+        final double toReturn = rs.getDouble(columnIndex);
         nullCheckForPrimitive(columnIndex);
-        return rs.getDouble(columnIndex);
+        return toReturn;
     }
 
     public double getDoublePrimitive(String columnLabel) throws SQLException {
+        final double toReturn = rs.getDouble(columnLabel);
         nullCheckForPrimitive(columnLabel);
-        return rs.getDouble(columnLabel);
+        return toReturn;
     }
 
     public Float getFloat(int columnIndex) throws SQLException {
-        return rs.getObject(columnIndex) == null ? null : rs.getFloat(columnIndex);
+        final float toReturn = rs.getFloat(columnIndex);
+        return rs.wasNull() ? null : toReturn;
     }
 
     public Float getFloat(String columnLabel) throws SQLException {
-        return isNull(columnLabel) ? null : rs.getFloat(columnLabel);
+        final float toReturn = rs.getFloat(columnLabel);
+        return rs.wasNull() ? null : toReturn;
     }
 
     public float getFloatPrimitive(int columnIndex) throws SQLException {
+        final float toReturn = rs.getFloat(columnIndex);
         nullCheckForPrimitive(columnIndex);
-        return rs.getFloat(columnIndex);
+        return toReturn;
     }
 
     public float getFloatPrimitive(String columnLabel) throws SQLException {
+        final float toReturn = rs.getFloat(columnLabel);
         nullCheckForPrimitive(columnLabel);
-        return rs.getFloat(columnLabel);
+        return toReturn;
     }
 
     public Integer getInteger(int columnIndex) throws SQLException {
-        return isNull(columnIndex) ? null : rs.getInt(columnIndex);
+        final int toReturn = rs.getInt(columnIndex);
+        return rs.wasNull() ? null : toReturn;
     }
 
     public Integer getInteger(String columnLabel) throws SQLException {
-        return isNull(columnLabel) ? null : rs.getInt(columnLabel);
-    }
-
-    public int getInt(int columnIndex) throws SQLException {
-        nullCheckForPrimitive(columnIndex);
-        return rs.getInt(columnIndex);
-    }
-
-    public int getInt(String columnLabel) throws SQLException {
-        nullCheckForPrimitive(columnLabel);
-        return rs.getInt(columnLabel);
+        final int toReturn = rs.getInt(columnLabel);
+        return rs.wasNull() ? null : toReturn;
     }
 
     public int getIntegerPrimitive(int columnIndex) throws SQLException {
@@ -208,22 +215,38 @@ public class SmartResultSet implements AutoCloseable {
         return getInt(columnLabel);
     }
 
+    public int getInt(int columnIndex) throws SQLException {
+        final int toReturn = rs.getInt(columnIndex);
+        nullCheckForPrimitive(columnIndex);
+        return toReturn;
+    }
+
+    public int getInt(String columnLabel) throws SQLException {
+        final int toReturn = rs.getInt(columnLabel);
+        nullCheckForPrimitive(columnLabel);
+        return toReturn;
+    }
+
     public Long getLong(int columnIndex) throws SQLException {
-        return isNull(columnIndex) ? null : rs.getLong(columnIndex);
+        final long toReturn = rs.getLong(columnIndex);
+        return rs.wasNull() ? null : toReturn;
     }
 
     public Long getLong(String columnLabel) throws SQLException {
-        return isNull(columnLabel) ? null : rs.getLong(columnLabel);
+        final long toReturn = rs.getLong(columnLabel);
+        return rs.wasNull() ? null : toReturn;
     }
 
     public long getLongPrimitive(int columnIndex) throws SQLException {
+        final long toReturn = rs.getLong(columnIndex);
         nullCheckForPrimitive(columnIndex);
-        return rs.getLong(columnIndex);
+        return toReturn;
     }
 
     public long getLongPrimitive(String columnLabel) throws SQLException {
+        final long toReturn = rs.getLong(columnLabel);
         nullCheckForPrimitive(columnLabel);
-        return rs.getLong(columnLabel);
+        return toReturn;
     }
 
     public Reader getNCharacterStream(int columnIndex) throws SQLException {
@@ -282,30 +305,26 @@ public class SmartResultSet implements AutoCloseable {
         return rs.getRef(columnLabel);
     }
 
-    public RowId getRowId(int columnIndex) throws SQLException {
-        return rs.getRowId(columnIndex);
-    }
-
-    public RowId getRowId(String columnLabel) throws SQLException {
-        return rs.getRowId(columnLabel);
-    }
-
     public Short getShort(int columnIndex) throws SQLException {
-        return isNull(columnIndex) ? null : rs.getShort(columnIndex);
+        final short toReturn = rs.getShort(columnIndex);
+        return rs.wasNull() ? null : toReturn;
     }
 
     public Short getShort(String columnLabel) throws SQLException {
-        return isNull(columnLabel) ? null : rs.getShort(columnLabel);
+        final short toReturn = rs.getShort(columnLabel);
+        return rs.wasNull() ? null : toReturn;
     }
 
     public short getShortPrimitive(int columnIndex) throws SQLException {
+        final short toReturn = rs.getShort(columnIndex);
         nullCheckForPrimitive(columnIndex);
-        return rs.getShort(columnIndex);
+        return toReturn;
     }
 
     public short getShortPrimitive(String columnLabel) throws SQLException {
+        final short toReturn = rs.getShort(columnLabel);
         nullCheckForPrimitive(columnLabel);
-        return rs.getShort(columnLabel);
+        return toReturn;
     }
 
     public String getString(int columnIndex) throws SQLException {
@@ -372,22 +391,14 @@ public class SmartResultSet implements AutoCloseable {
         return rs.getMetaData();
     }
 
-    public boolean isNull(String columnLabel) throws SQLException {
-        return rs.getObject(columnLabel) == null;
-    }
-
-    public boolean isNull(int columnIndex) throws SQLException {
-        return rs.getObject(columnIndex) == null;
-    }
-
     private void nullCheckForPrimitive(int columnIndex) throws SQLException {
-        if(rs.getObject(columnIndex) == null){
+        if (rs.getObject(columnIndex) == null){
             throw new SQLException("tried to get primitive for column " + columnIndex + " but was null");
         }
     }
 
     private void nullCheckForPrimitive(String columnLabel) throws SQLException {
-        if(isNull(columnLabel)){
+        if(rs.wasNull()){
             throw new SQLException("tried to get primitive for column \"" + columnLabel + "\" but was null");
         }
     }
