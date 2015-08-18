@@ -74,7 +74,7 @@ public interface ValueBindingsBuilder<E> {
         return bind(name, pc -> pc.setBytePrimitive(x));
     }
 
-    default E bindBytes(String name, byte[] x) {
+    default E bindByteArray(String name, byte[] x) {
         return bind(name, pc -> pc.setBytes(x));
     }
 

@@ -87,9 +87,9 @@ public interface OptionalValueBindingsBuilder<E> extends DefaultValueBindingsBui
         return x.isPresent() ? bindBytePrimitive(name, x.getAsByte()) : required;
     }
 
-    default E bindOptionalBytes(String name, Optional<byte[]> x) {
+    default E bindOptionalByteArray(String name, Optional<byte[]> x) {
         final E required = requireDefaultedBindingForOptional(name);
-        return x.isPresent() ? bindBytes(name, x.get()) : required;
+        return x.isPresent() ? bindByteArray(name, x.get()) : required;
     }
 
     default E bindOptionalCharacterStream(String name, Optional<Reader> reader) {

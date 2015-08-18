@@ -74,7 +74,7 @@ public interface DefaultValueBindingsBuilder<E> extends ValueBindingsBuilder<E> 
         return bindDefault(name, pc -> pc.setBytePrimitive(x));
     }
 
-    default E bindDefaultBytes(String name, byte[] x) {
+    default E bindDefaultByteArray(String name, byte[] x) {
         return bindDefault(name, pc -> pc.setBytes(x));
     }
 

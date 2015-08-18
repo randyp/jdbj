@@ -443,7 +443,7 @@ public class DefaultValueBindingsBuilderTest {
             final String selected;
             try (Connection connection = db.getConnection()) {
                 selected = new TestBuilder()
-                        .bindDefaultBytes(":binding", expected.getBytes())
+                        .bindDefaultByteArray(":binding", expected.getBytes())
                         .execute(connection, rs -> new String(rs.getBytes(1)));
             }
             assertEquals(expected, selected);

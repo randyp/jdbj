@@ -490,8 +490,8 @@ public class OptionalValueBindingsBuilderTest {
             final String selected;
             try (Connection connection = db.getConnection()) {
                 selected = new TestBuilder()
-                        .bindDefaultBytes(":binding", null)
-                        .bindOptionalBytes(":binding", Optional.of(expected.getBytes()))
+                        .bindDefaultByteArray(":binding", null)
+                        .bindOptionalByteArray(":binding", Optional.of(expected.getBytes()))
                         .execute(connection, rs -> new String(rs.getBytes(1)));
             }
             assertEquals(expected, selected);
@@ -504,7 +504,7 @@ public class OptionalValueBindingsBuilderTest {
             final String selected;
             try (Connection connection = db.getConnection()) {
                 selected = new TestBuilder()
-                        .bindDefaultBytes(":binding", expected.getBytes())
+                        .bindDefaultByteArray(":binding", expected.getBytes())
                         .bindOptionalBinaryStream(":binding", Optional.empty())
                         .execute(connection, rs -> {
                             final byte[] bytes = rs.getBytes(1);
