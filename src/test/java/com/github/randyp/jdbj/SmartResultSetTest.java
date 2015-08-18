@@ -24,6 +24,52 @@ public class SmartResultSetTest {
     public static final H2Rule db = new H2Rule();
 
     @Ignore //not supported in h2
+    public static class GetArray {
+        @Test
+        public void index() throws Exception {
+            final Long[] expected = new Long[]{1L, 2L, 3L};
+            final Binding binding = pc -> pc.setArray(pc.createArrayOf("bigint", expected));
+            final ResultSetAssertions assertions = rs -> {
+                final Long[] actual = rs.getArray(1);
+                assertArrayEquals(expected, actual);
+            };
+            assertResults(binding, assertions);
+        }
+
+        @Test
+        public void label() throws Exception {
+            final Long[] expected = new Long[]{1L, 2L, 3L};
+            final Binding binding = pc -> pc.setArray(pc.createArrayOf("bigint", expected));
+            final ResultSetAssertions assertions = rs -> {
+                final Long[] actual = rs.getArray(1);
+                assertArrayEquals(expected, actual);
+            };
+            assertResults(binding, assertions);
+        }
+
+        @Test
+        public void indexNull() throws Exception {
+            final Binding binding = pc -> pc.setArray(null);
+            final ResultSetAssertions assertions = rs -> {
+                final Long[] actual = rs.getArray(1);
+                assertNull(actual);
+            };
+            assertResults(binding, assertions);
+        }
+
+        @Test
+        public void labelNull() throws Exception {
+            final Binding binding = pc -> pc.setArray(null);
+            final ResultSetAssertions assertions = rs -> {
+                final Long[] actual = rs.getArray(1);
+                assertNull(actual);
+            };
+            assertResults(binding, assertions);
+        }
+    }
+
+
+    @Ignore //not supported in h2
     public static class GetSQLArray {
         @Test
         public void index() throws Exception {
