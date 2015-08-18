@@ -31,7 +31,7 @@ public class ValueBindingsBuilderTest {
             NamedParameterStatement.make("SELECT :binding as bound");
 
     @Ignore //not supported in h2
-    public static class array { //lower case so we don't capture java.sql.Array class
+    public static class BindArray { //lower case so we don't capture java.sql.Array class
 
         @Test
         public void bind() throws Exception {
@@ -61,7 +61,7 @@ public class ValueBindingsBuilderTest {
         }
     }
 
-    public static class AsciiStream {
+    public static class BindAsciiStream {
         @Test
         public void inputStream() throws Exception {
             final String expected = "abcde";
@@ -135,7 +135,7 @@ public class ValueBindingsBuilderTest {
         }
     }
 
-    public static class Big_Decimal {
+    public static class BindBigDecimal {
         @Test
         public void value() throws Exception {
             final BigDecimal expected = new BigDecimal("1.234");
@@ -161,7 +161,7 @@ public class ValueBindingsBuilderTest {
         }
     }
 
-    public static class BinaryStream {
+    public static class BindBinaryStream {
 
         @Test
         public void inputStream() throws Exception {
@@ -245,7 +245,7 @@ public class ValueBindingsBuilderTest {
         }
     }
 
-    public static class blob {
+    public static class BindBlob {
 
         @Test
         public void value() throws Exception {
@@ -331,16 +331,52 @@ public class ValueBindingsBuilderTest {
         }
     }
 
-    public static class Bool {
+    public static class BindBoolean {
 
         @Test
         public void False() throws Exception {
 
+            final Boolean selected;
+            try (Connection connection = db.getConnection()) {
+                selected = new TestBuilder()
+                        .bindBoolean(":binding", Boolean.FALSE)
+                        .execute(connection, rs -> rs.getBoolean(1));
+            }
+            assertFalse(selected);
+        }
+
+        @Test
+        public void True() throws Exception {
+            final Boolean selected;
+            try (Connection connection = db.getConnection()) {
+                selected = new TestBuilder()
+                        .bindBoolean(":binding", Boolean.TRUE)
+                        .execute(connection, rs -> rs.getBoolean(1));
+            }
+            assertTrue(selected);
+        }
+
+        @Test
+        public void Null() throws Exception {
+            final Boolean selected;
+            try (Connection connection = db.getConnection()) {
+                selected = new TestBuilder()
+                        .bindBoolean(":binding", null)
+                        .execute(connection, rs -> rs.getBoolean(1));
+            }
+            assertNull(selected);
+        }
+    }
+
+    public static class BindBooleanPrimitive {
+
+        @Test
+        public void False() throws Exception {
             final boolean selected;
             try (Connection connection = db.getConnection()) {
                 selected = new TestBuilder()
-                        .bindBoolean(":binding", false)
-                        .execute(connection, rs -> rs.getBoolean(1));
+                        .bindBooleanPrimitive(":binding", false)
+                        .execute(connection, rs -> rs.getBooleanPrimitive(1));
             }
             assertFalse(selected);
         }
@@ -350,19 +386,19 @@ public class ValueBindingsBuilderTest {
             final boolean selected;
             try (Connection connection = db.getConnection()) {
                 selected = new TestBuilder()
-                        .bindBoolean(":binding", true)
-                        .execute(connection, rs -> rs.getBoolean(1));
+                        .bindBooleanPrimitive(":binding", true)
+                        .execute(connection, rs -> rs.getBooleanPrimitive(1));
             }
             assertTrue(selected);
         }
     }
 
-    public static class Byte {
+    public static class BindByte {
 
         @Test
         public void value() throws Exception {
-            final byte expected = 6;
-            final byte selected;
+            final Byte expected = 6;
+            final Byte selected;
             try (Connection connection = db.getConnection()) {
                 selected = new TestBuilder()
                         .bindByte(":binding", expected)
@@ -370,9 +406,35 @@ public class ValueBindingsBuilderTest {
             }
             assertEquals(expected, selected, 0.0);
         }
+
+        @Test
+        public void Null() throws Exception {
+            final Byte selected;
+            try (Connection connection = db.getConnection()) {
+                selected = new TestBuilder()
+                        .bindByte(":binding", null)
+                        .execute(connection, rs -> rs.getByte(1));
+            }
+            assertNull(selected);
+        }
     }
 
-    public static class Bytes {
+    public static class BindBytePrimitive {
+
+        @Test
+        public void value() throws Exception {
+            final byte expected = 6;
+            final byte selected;
+            try (Connection connection = db.getConnection()) {
+                selected = new TestBuilder()
+                        .bindBytePrimitive(":binding", expected)
+                        .execute(connection, rs -> rs.getBytePrimitive(1));
+            }
+            assertEquals(expected, selected);
+        }
+    }
+
+    public static class BindBytes {
 
         @Test
         public void value() throws Exception {
@@ -402,7 +464,7 @@ public class ValueBindingsBuilderTest {
         }
     }
 
-    public static class CharacterStream {
+    public static class BindCharacterStream {
         @Test
         public void reader() throws Exception {
             final String expected = "abcde";
@@ -476,7 +538,7 @@ public class ValueBindingsBuilderTest {
         }
     }
 
-    public static class clob {
+    public static class BindClob {
 
         @Test
         public void value() throws Exception {
@@ -562,7 +624,7 @@ public class ValueBindingsBuilderTest {
         }
     }
 
-    public static class date extends HasExpectedTime {
+    public static class BindDate extends HasExpectedTime {
 
         @Test
         public void value() throws Exception {
@@ -617,13 +679,39 @@ public class ValueBindingsBuilderTest {
     public static class BindDouble {
         @Test
         public void value() throws Exception {
+            final Double expected = 1.2;
+
+            final Double selected;
+            try (Connection connection = db.getConnection()) {
+                selected = new TestBuilder()
+                        .bindDouble(":binding", expected)
+                        .execute(connection, rs -> rs.getDouble(1));
+            }
+            assertEquals(expected, selected, 0.0);
+        }
+
+        @Test
+        public void Null() throws Exception {
+            final Double selected;
+            try (Connection connection = db.getConnection()) {
+                selected = new TestBuilder()
+                        .bindDouble(":binding", null)
+                        .execute(connection, rs -> rs.getDouble(1));
+            }
+            assertNull(selected);
+        }
+    }
+
+    public static class BindDoublePrimitive {
+        @Test
+        public void value() throws Exception {
             final double expected = 1.2;
 
             final double selected;
             try (Connection connection = db.getConnection()) {
                 selected = new TestBuilder()
-                        .bindDouble(":binding", expected)
-                        .execute(connection, rs -> rs.getDouble(1));
+                        .bindDoublePrimitive(":binding", expected)
+                        .execute(connection, rs -> rs.getDoublePrimitive(1));
             }
             assertEquals(expected, selected, 0.0);
         }
@@ -632,15 +720,82 @@ public class ValueBindingsBuilderTest {
     public static class BindFloat {
         @Test
         public void value() throws Exception {
-            final float expected = 1.2f;
+            final Float expected = 1.2f;
 
-            final float selected;
+            final Float selected;
             try (Connection connection = db.getConnection()) {
                 selected = new TestBuilder()
                         .bindFloat(":binding", expected)
                         .execute(connection, rs -> rs.getFloat(1));
             }
             assertEquals(expected, selected, 0.0);
+        }
+
+        @Test
+        public void Null() throws Exception {
+            final Float selected;
+            try (Connection connection = db.getConnection()) {
+                selected = new TestBuilder()
+                        .bindFloat(":binding", null)
+                        .execute(connection, rs -> rs.getFloat(1));
+            }
+            assertNull(selected);
+        }
+    }
+
+    public static class BindFloatPrimitive {
+        @Test
+        public void value() throws Exception {
+            final float expected = 1.2f;
+
+            final float selected;
+            try (Connection connection = db.getConnection()) {
+                selected = new TestBuilder()
+                        .bindFloatPrimitive(":binding", expected)
+                        .execute(connection, rs -> rs.getFloatPrimitive(1));
+            }
+            assertEquals(expected, selected, 0.0);
+        }
+    }
+
+    public static class BindInteger {
+        @Test
+        public void value() throws Exception {
+            final Integer expected = 12;
+
+            final Integer selected;
+            try (Connection connection = db.getConnection()) {
+                selected = new TestBuilder()
+                        .bindInteger(":binding", expected)
+                        .execute(connection, rs -> rs.getInteger(1));
+            }
+            assertEquals(expected, selected);
+        }
+
+        @Test
+        public void Null() throws Exception {
+            final Integer selected;
+            try (Connection connection = db.getConnection()) {
+                selected = new TestBuilder()
+                        .bindInteger(":binding", null)
+                        .execute(connection, rs -> rs.getInteger(1));
+            }
+            assertNull(selected);
+        }
+    }
+
+    public static class BindIntegerPrimitive {
+        @Test
+        public void value() throws Exception {
+            final int expected = 12;
+
+            final int selected;
+            try (Connection connection = db.getConnection()) {
+                selected = new TestBuilder()
+                        .bindIntegerPrimitive(":binding", expected)
+                        .execute(connection, rs -> rs.getIntegerPrimitive(1));
+            }
+            assertEquals(expected, selected);
         }
     }
 
@@ -659,12 +814,12 @@ public class ValueBindingsBuilderTest {
         }
     }
 
-    public static class lng {
+    public static class BindLong {
         @Test
         public void value() throws Exception {
-            final long expected = 12L;
+            final Long expected = 12L;
 
-            final long selected;
+            final Long selected;
             try (Connection connection = db.getConnection()) {
                 selected = new TestBuilder()
                         .bindLong(":binding", expected)
@@ -672,9 +827,35 @@ public class ValueBindingsBuilderTest {
             }
             assertEquals(expected, selected);
         }
+
+        @Test
+        public void Null() throws Exception {
+            final Long selected;
+            try (Connection connection = db.getConnection()) {
+                selected = new TestBuilder()
+                        .bindLong(":binding", null)
+                        .execute(connection, rs -> rs.getLong(1));
+            }
+            assertNull(selected);
+        }
     }
 
-    public static class NCharacterStream {
+    public static class BindLongPrimitive {
+        @Test
+        public void value() throws Exception {
+            final long expected = 12L;
+
+            final long selected;
+            try (Connection connection = db.getConnection()) {
+                selected = new TestBuilder()
+                        .bindLongPrimitive(":binding", expected)
+                        .execute(connection, rs -> rs.getLongPrimitive(1));
+            }
+            assertEquals(expected, selected);
+        }
+    }
+
+    public static class BindNCharacterStream {
 
         @Test
         public void reader() throws Exception {
@@ -725,7 +906,7 @@ public class ValueBindingsBuilderTest {
         }
     }
 
-    public static class nclob {
+    public static class BindNClob {
 
         @Test
         public void value() throws Exception {
@@ -802,7 +983,7 @@ public class ValueBindingsBuilderTest {
         }
     }
 
-    public static class nstring {
+    public static class BindNString {
 
         @Test
         public void value() throws Exception {
@@ -829,7 +1010,7 @@ public class ValueBindingsBuilderTest {
         }
     }
 
-    public static class Null {
+    public static class BindNull {
         @Test
         public void type() throws Exception {
             final String selected;
@@ -853,7 +1034,7 @@ public class ValueBindingsBuilderTest {
         }
     }
 
-    public static class object {
+    public static class BindObject {
 
         @Test
         public void value() throws Exception {
@@ -981,7 +1162,7 @@ public class ValueBindingsBuilderTest {
     }
 
     @Ignore //not supported in h2
-    public static class ref {
+    public static class BindRef {
 
         @Test
         public void value() throws Exception {
@@ -1009,12 +1190,12 @@ public class ValueBindingsBuilderTest {
         }
     }
 
-    public static class Short {
+    public static class BindShort {
         @Test
         public void value() throws Exception {
-            final short expected = 12;
+            final Short expected = 12;
 
-            final short selected;
+            final Short selected;
             try (Connection connection = db.getConnection()) {
                 selected = new TestBuilder()
                         .bindShort(":binding", expected)
@@ -1022,9 +1203,35 @@ public class ValueBindingsBuilderTest {
             }
             assertEquals(expected, selected);
         }
+
+        @Test
+        public void Null() throws Exception {
+            final Short selected;
+            try (Connection connection = db.getConnection()) {
+                selected = new TestBuilder()
+                        .bindShort(":binding", null)
+                        .execute(connection, rs -> rs.getShort(1));
+            }
+            assertNull(selected);
+        }
     }
 
-    public static class string {
+    public static class BindShortPrimitive {
+        @Test
+        public void value() throws Exception {
+            final short expected = 12;
+
+            final short selected;
+            try (Connection connection = db.getConnection()) {
+                selected = new TestBuilder()
+                        .bindShortPrimitive(":binding", expected)
+                        .execute(connection, rs -> rs.getShortPrimitive(1));
+            }
+            assertEquals(expected, selected);
+        }
+    }
+
+    public static class BindString {
 
         @Test
         public void value() throws Exception {
@@ -1052,7 +1259,7 @@ public class ValueBindingsBuilderTest {
     }
 
     @Ignore //not supported in h2
-    public static class sqlxml {
+    public static class BindSQLXML {
 
         @Test
         public void value() throws Exception {
@@ -1084,11 +1291,11 @@ public class ValueBindingsBuilderTest {
         }
     }
 
-    public static class time {
+    public static class BindTime {
 
         private final long expectedTime;
 
-        public time() {
+        public BindTime() {
             final Calendar instance = GregorianCalendar.getInstance();
             instance.set(1970, Calendar.JANUARY, 1, 12, 11, 10);
             this.expectedTime = 1000 * (instance.getTimeInMillis() / 1000);
@@ -1144,7 +1351,7 @@ public class ValueBindingsBuilderTest {
 
     }
 
-    public static class timestamp extends HasExpectedTime {
+    public static class BindTimestamp extends HasExpectedTime {
 
         @Test
         public void value() throws Exception {
@@ -1197,7 +1404,7 @@ public class ValueBindingsBuilderTest {
     }
 
     @Ignore //not supported in h2
-    public static class url {
+    public static class BindURL {
 
         @Test
         public void value() throws Exception {
