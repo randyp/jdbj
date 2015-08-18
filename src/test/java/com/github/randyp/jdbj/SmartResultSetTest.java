@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 
 import java.io.*;
 import java.math.BigDecimal;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.sql.*;
 import java.sql.Date;
@@ -22,7 +23,7 @@ public class SmartResultSetTest {
     @ClassRule
     public static final H2Rule db = new H2Rule();
 
-    @Ignore
+    @Ignore //not supported in h2
     public static class GetArray {
         @Test
         public void index() throws Exception {
@@ -860,7 +861,7 @@ public class SmartResultSetTest {
         }
     }
 
-    @Ignore
+    @Ignore //not supported in h2
     public static class GetObjectByMap {
 
         private final Map<String, Class<?>> typeMap = new HashMap<>();
@@ -886,7 +887,7 @@ public class SmartResultSetTest {
         }
     }
 
-    @Ignore
+    @Ignore //not supported in h2
     public static class GetObjectByClass {
 
         @Test
@@ -906,7 +907,7 @@ public class SmartResultSetTest {
         }
     }
 
-    @Ignore
+    @Ignore //not supported in h2
     public static class GetRef {
 
         @Test
@@ -1016,6 +1017,42 @@ public class SmartResultSetTest {
         }
     }
 
+    @Ignore //not supported in h2
+    public static class GetSQLXml {
+
+        @Test
+        public void value() throws Exception {
+            final String expected = "<a></a>";
+            final Binding binding = pc -> {
+                final SQLXML sqlxml = pc.createSQLXML();
+                sqlxml.setString(expected);
+                pc.setSQLXML(sqlxml);
+            };
+            final ResultSetAssertions assertions = rs -> {
+                final SQLXML sqlxml = rs.getSQLXML(1);
+                assertNotNull(sqlxml);
+                assertEquals(expected, sqlxml.getString());
+            };
+            assertResults(binding, assertions);
+        }
+
+        @Test
+        public void valueNull() throws Exception {
+            final String expected = "<a></a>";
+            final Binding binding = pc -> {
+                final SQLXML sqlxml = pc.createSQLXML();
+                sqlxml.setString(expected);
+                pc.setSQLXML(sqlxml);
+            };
+            final ResultSetAssertions assertions = rs -> {
+                final SQLXML sqlxml = rs.getSQLXML("bound");
+                assertNotNull(sqlxml);
+                assertEquals(expected, sqlxml.getString());
+            };
+            assertResults(binding, assertions);
+        }
+    }
+
     public static class GetString {
         @Test
         public void index() throws Exception {
@@ -1030,6 +1067,104 @@ public class SmartResultSetTest {
             final String expected = "abcde";
             final Binding binding = pc -> pc.setString(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getString("bound"));
+            assertResults(binding, assertions);
+        }
+    }
+
+    public static class GetTime {
+
+        private final long expectedTime;
+
+        public GetTime() {
+            final Calendar instance = GregorianCalendar.getInstance();
+            instance.set(1970, Calendar.JANUARY, 1, 12, 11, 10);
+            this.expectedTime = 1000 * (instance.getTimeInMillis() / 1000);
+        }
+
+        @Test
+        public void index() throws Exception {
+            final Time expected = new Time(expectedTime);
+            final Binding binding = pc -> pc.setTime(expected);
+            final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getTime(1));
+            assertResults(binding, assertions);
+        }
+
+        @Test
+        public void indexCalendar() throws Exception {
+            final Time expected = new Time(expectedTime);
+            final Binding binding = pc -> pc.setTime(expected, GregorianCalendar.getInstance());
+            final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getTime(1, GregorianCalendar.getInstance()));
+            assertResults(binding, assertions);
+        }
+
+        @Test
+        public void label() throws Exception {
+            final Time expected = new Time(expectedTime);
+            final Binding binding = pc -> pc.setTime(expected);
+            final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getTime("bound"));
+            assertResults(binding, assertions);
+        }
+
+        @Test
+        public void labelCalendar() throws Exception {
+            final Time expected = new Time(expectedTime);
+            final Binding binding = pc -> pc.setTime(expected, GregorianCalendar.getInstance());
+            final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getTime("bound", GregorianCalendar.getInstance()));
+            assertResults(binding, assertions);
+        }
+    }
+
+    public static class GetTimestamp extends HasExpectedTime {
+
+        @Test
+        public void index() throws Exception {
+            final Timestamp expected = new Timestamp(expectedTime);
+            final Binding binding = pc -> pc.setTimestamp(expected);
+            final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getTimestamp(1));
+            assertResults(binding, assertions);
+        }
+
+        @Test
+        public void indexCalendar() throws Exception {
+            final Timestamp expected = new Timestamp(expectedTime);
+            final Binding binding = pc -> pc.setTimestamp(expected, GregorianCalendar.getInstance());
+            final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getTimestamp(1, GregorianCalendar.getInstance()));
+            assertResults(binding, assertions);
+        }
+
+        @Test
+        public void label() throws Exception {
+            final Timestamp expected = new Timestamp(expectedTime);
+            final Binding binding = pc -> pc.setTimestamp(expected);
+            final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getTimestamp("bound"));
+            assertResults(binding, assertions);
+        }
+
+        @Test
+        public void labelCalendar() throws Exception {
+            final Timestamp expected = new Timestamp(expectedTime);
+            final Binding binding = pc -> pc.setTimestamp(expected, GregorianCalendar.getInstance());
+            final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getTimestamp("bound", GregorianCalendar.getInstance()));
+            assertResults(binding, assertions);
+        }
+    }
+
+    @Ignore //not supported in h2
+    public static class GetURL {
+
+        @Test
+        public void index() throws Exception {
+            final URL expected = new URL("http", "google.com", 8080, "/");
+            final Binding binding = pc -> pc.setURL(expected);
+            final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getURL(1));
+            assertResults(binding, assertions);
+        }
+
+        @Test
+        public void label() throws Exception {
+            final URL expected = new URL("http", "google.com", 8080, "/");
+            final Binding binding = pc -> pc.setURL(expected);
+            final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getURL("bound"));
             assertResults(binding, assertions);
         }
     }

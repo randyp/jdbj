@@ -562,15 +562,7 @@ public class ValueBindingsBuilderTest {
         }
     }
 
-    public static class date {
-
-        private final long expectedTime;
-
-        public date() {
-            final Calendar instance = GregorianCalendar.getInstance();
-            instance.set(2015, Calendar.JANUARY, 1, 0, 0, 0);
-            this.expectedTime = 1000 * (instance.getTimeInMillis() / 1000);
-        }
+    public static class date extends HasExpectedTime {
 
         @Test
         public void value() throws Exception {
@@ -1152,15 +1144,7 @@ public class ValueBindingsBuilderTest {
 
     }
 
-    public static class timestamp {
-
-        private final long expectedTime;
-
-        public timestamp() {
-            final Calendar instance = GregorianCalendar.getInstance();
-            instance.set(2015, Calendar.JANUARY, 1, 0, 0, 0);
-            this.expectedTime = 1000 * (instance.getTimeInMillis() / 1000);
-        }
+    public static class timestamp extends HasExpectedTime {
 
         @Test
         public void value() throws Exception {
