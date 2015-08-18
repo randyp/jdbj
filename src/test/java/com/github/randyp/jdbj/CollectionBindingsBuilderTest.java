@@ -237,7 +237,6 @@ public class CollectionBindingsBuilderTest {
         @Test(expected = IllegalArgumentException.class)
         public void nullList() throws Exception {
             new TestBuilder().bindIntegers(":binding", (List<Integer>) null);
-
         }
     }
 
@@ -268,6 +267,15 @@ public class CollectionBindingsBuilderTest {
             try (Connection connection = db.getConnection()) {
                 new TestBuilder()
                         .bindLongs(":binding", (long[]) null)
+                        .execute(connection, rs -> rs.getObject(1));
+            }
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void nullList() throws Exception {
+            try (Connection connection = db.getConnection()) {
+                new TestBuilder()
+                        .bindLongs(":binding", (List<Long>) null)
                         .execute(connection, rs -> rs.getObject(1));
             }
         }
