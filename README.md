@@ -21,6 +21,7 @@ try(Connection connection = db.getConnection) {
 #### Features
 * Named Parameters (No Positional Parameters, ever)
 * List bindings (not during batch execution)
+* Nullable binding and Null-Safe fetching of (Boolean|Byte|Double|Float|Integer|Long|Short)
 * Java8 lambda interface for bindings, transactions
 * Fetch-forward read-only cursors, always
 * Queries as objects
