@@ -50,12 +50,12 @@ public class ExecuteQueryRunnableTest {
         final int[] count = {0};
         final ExecuteQueryRunnable query = JDBJ.string("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA in :schemas")
                 .query()
+                .bindStrings(":schemas", "INFORMATION_SCHEMA")
                 .runnable(rs -> {
                     while (rs.next()) {
                         count[0]++;
                     }
-                })
-                .bindStrings(":schemas", "INFORMATION_SCHEMA");
+                });
 
         try (Connection connection = db.getConnection()) {
             query.execute(connection);
