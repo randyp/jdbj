@@ -412,7 +412,7 @@ public class SmartResultSet implements AutoCloseable {
 
     private void nullCheckForPrimitive(String columnLabel) throws SQLException {
         if(isNull(columnLabel)){
-            throw new SQLException("tried to get primitive for column " + columnLabel + " but was null");
+            throw new SQLException("tried to get primitive for column \"" + columnLabel + "\" but was null");
         }
     }
 }

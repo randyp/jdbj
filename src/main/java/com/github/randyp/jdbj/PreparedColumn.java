@@ -18,6 +18,30 @@ public class PreparedColumn {
         this.parameterIndex = parameterIndex;
     }
 
+    public Array createArrayOf(String typeName, Object[] elements) throws SQLException {
+        return ps.getConnection().createArrayOf(typeName, elements);
+    }
+
+    public Struct createStruct(String typeName, Object[] attributes) throws SQLException {
+        return ps.getConnection().createStruct(typeName, attributes);
+    }
+
+    public Clob createClob() throws SQLException {
+        return ps.getConnection().createClob();
+    }
+
+    public Blob createBlob() throws SQLException {
+        return ps.getConnection().createBlob();
+    }
+
+    public NClob createNClob() throws SQLException {
+        return ps.getConnection().createNClob();
+    }
+
+    public SQLXML createSQLXML() throws SQLException {
+        return ps.getConnection().createSQLXML();
+    }
+
     public boolean isSet(){
         return set;
     }
