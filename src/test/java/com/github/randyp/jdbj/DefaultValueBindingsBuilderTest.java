@@ -1261,7 +1261,7 @@ public class DefaultValueBindingsBuilderTest {
         }
 
         @Test
-        public void valueNull() throws Exception {;
+        public void valueNull() throws Exception {
             try (Connection connection = db.getConnection()) {
                 final URL selected = new TestBuilder()
                         .bindDefaultURL(":binding", null)
