@@ -76,9 +76,9 @@ mvn release:clean release:prepare -B && mvn release:perform && git push
 
 #### 0.1.4 Todo
 * [ ] smarter result set (get array)
-* [ ] More List bindings?
+* [x] More List bindings?
 * [ ] Allowed to bind defaults during Map query phase, is passed to phase 3 execute query
-* [ ] Mock coverage for jdbc's unsupported features
+* [ ] Postgres Integration Tests?
 
 #### 0.1.5 Todo
 * [ ] Hacky-yet-compatible batch insert query
