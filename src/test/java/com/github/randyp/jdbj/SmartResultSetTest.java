@@ -925,7 +925,7 @@ public class SmartResultSetTest {
         @Test
         public void index() throws Exception {
             final Short expected = 12;
-            final Binding binding = pc -> pc.setLong(expected);
+            final Binding binding = pc -> pc.setShort(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getShort(1));
             assertResults(binding, assertions);
         }
@@ -940,7 +940,7 @@ public class SmartResultSetTest {
         @Test
         public void label() throws Exception {
             final Short expected = 12;
-            final Binding binding = pc -> pc.setLong(expected);
+            final Binding binding = pc -> pc.setShort(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getShort("bound"));
             assertResults(binding, assertions);
         }

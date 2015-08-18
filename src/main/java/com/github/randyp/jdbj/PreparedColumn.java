@@ -101,12 +101,30 @@ public class PreparedColumn {
         set=true;
     }
 
-    public void setBoolean( boolean x) throws SQLException {
+    public void setBoolean( Boolean x) throws SQLException {
+        if(x == null){
+            ps.setNull(parameterIndex, Types.BOOLEAN);
+        }else {
+            ps.setBoolean(parameterIndex, x);
+        }
+        set=true;
+    }
+
+    public void setBooleanPrimitive( boolean x) throws SQLException {
         ps.setBoolean(parameterIndex, x);
         set=true;
     }
 
-    public void setByte( byte x) throws SQLException {
+    public void setByte( Byte x) throws SQLException {
+        if(x == null){
+            ps.setObject(parameterIndex, null);
+        }else {
+            ps.setByte(parameterIndex, x);
+        }
+        set=true;
+    }
+
+    public void setBytePrimitive( byte x) throws SQLException {
         ps.setByte(parameterIndex, x);
         set=true;
     }
@@ -156,14 +174,45 @@ public class PreparedColumn {
         set=true;
     }
 
-    public void setDouble( double x) throws SQLException {
+    public void setDouble( Double x) throws SQLException {
+        if(x == null){
+            ps.setNull(parameterIndex, Types.DOUBLE);
+        }else{
+            ps.setDouble(parameterIndex, x);
+        }
+        set=true;
+    }
+
+    public void setDoublePrimitive( double x) throws SQLException {
         ps.setDouble(parameterIndex, x);
         set=true;
     }
 
-    public void setFloat( float x) throws SQLException {
+    public void setFloat( Float x) throws SQLException {
+        if(x == null){
+            ps.setNull(parameterIndex, Types.FLOAT);
+        }else{
+            ps.setFloat(parameterIndex, x);
+        }
+        set=true;
+    }
+
+    public void setFloatPrimitive( float x) throws SQLException {
         ps.setFloat(parameterIndex, x);
         set=true;
+    }
+
+    public void setInteger( Integer x) throws SQLException {
+        if(x == null){
+            ps.setNull(parameterIndex, Types.INTEGER);
+        }else{
+            ps.setInt(parameterIndex, x);
+        }
+        set=true;
+    }
+
+    public void setIntegerPrimitive( int x) throws SQLException {
+        setInt(x);
     }
 
     public void setInt( int x) throws SQLException {
@@ -171,7 +220,16 @@ public class PreparedColumn {
         set=true;
     }
 
-    public void setLong( long x) throws SQLException {
+    public void setLong( Long x) throws SQLException {
+        if(x == null){
+            ps.setNull(parameterIndex, Types.BIGINT);
+        }else{
+            ps.setLong(parameterIndex, x);
+        }
+        set=true;
+    }
+
+    public void setLongPrimitive( long x) throws SQLException {
         ps.setLong(parameterIndex, x);
         set=true;
     }
@@ -246,7 +304,16 @@ public class PreparedColumn {
         set=true;
     }
 
-    public void setShort( short x) throws SQLException {
+    public void setShort( Short x) throws SQLException {
+        if(x == null){
+            ps.setNull(parameterIndex, Types.SMALLINT);
+        }else{
+            ps.setShort(parameterIndex, x);
+        }
+        set=true;
+    }
+
+    public void setShortPrimitive( short x) throws SQLException {
         ps.setShort(parameterIndex, x);
         set=true;
     }

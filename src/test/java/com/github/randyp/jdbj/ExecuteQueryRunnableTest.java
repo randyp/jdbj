@@ -36,7 +36,7 @@ public class ExecuteQueryRunnableTest {
                         count[0]++;
                     }
                 })
-                .bindLong(":id", -28);
+                .bindLong(":id", -28L);
 
         try (Connection connection = db.getConnection()) {
             query.execute(connection);

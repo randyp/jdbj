@@ -58,12 +58,20 @@ public interface ValueBindingsBuilder<E> {
         return bind(name, pc -> pc.setBlob(inputStream, length));
     }
 
-    default E bindBoolean(String name, boolean x) {
+    default E bindBoolean(String name, Boolean x) {
         return bind(name, pc -> pc.setBoolean(x));
     }
 
-    default E bindByte(String name, byte x) {
+    default E bindBooleanPrimitive(String name, boolean x) {
+        return bind(name, pc -> pc.setBooleanPrimitive(x));
+    }
+
+    default E bindByte(String name, Byte x) {
         return bind(name, pc -> pc.setByte(x));
+    }
+
+    default E bindBytePrimitive(String name, byte x) {
+        return bind(name, pc -> pc.setBytePrimitive(x));
     }
 
     default E bindBytes(String name, byte[] x) {
@@ -102,20 +110,40 @@ public interface ValueBindingsBuilder<E> {
         return bind(name, pc -> pc.setDate(x, cal));
     }
 
-    default E bindDouble(String name, double x) {
+    default E bindDouble(String name, Double x) {
         return bind(name, pc -> pc.setDouble(x));
     }
 
-    default E bindFloat(String name, float x) {
+    default E bindDoublePrimitive(String name, double x) {
+        return bind(name, pc -> pc.setDoublePrimitive(x));
+    }
+
+    default E bindFloat(String name, Float x) {
         return bind(name, pc -> pc.setFloat(x));
+    }
+
+    default E bindFloatPrimitive(String name, float x) {
+        return bind(name, pc -> pc.setFloatPrimitive(x));
+    }
+
+    default E bindInteger(String name, Integer x) {
+        return bind(name, pc -> pc.setInteger(x));
+    }
+
+    default E bindIntegerPrimitive(String name, int x) {
+        return bind(name, pc -> pc.setIntegerPrimitive(x));
     }
 
     default E bindInt(String name, int x) {
         return bind(name, pc -> pc.setInt(x));
     }
 
-    default E bindLong(String name, long x) {
+    default E bindLong(String name, Long x) {
         return bind(name, pc -> pc.setLong(x));
+    }
+
+    default E bindLongPrimitive(String name, long x) {
+        return bind(name, pc -> pc.setLongPrimitive(x));
     }
 
     default E bindNCharacterStream(String name, @Nullable Reader value) {
@@ -174,8 +202,12 @@ public interface ValueBindingsBuilder<E> {
         return bind(name, pc -> pc.setRef(x));
     }
 
-    default E bindShort(String name, short x) {
+    default E bindShort(String name, Short x) {
         return bind(name, pc -> pc.setShort(x));
+    }
+
+    default E bindShortPrimitive(String name, short x) {
+        return bind(name, pc -> pc.setShortPrimitive(x));
     }
 
     default E bindSQLXML(String name, @Nullable SQLXML xmlObject) {

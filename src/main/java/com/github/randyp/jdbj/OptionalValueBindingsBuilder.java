@@ -67,14 +67,24 @@ public interface OptionalValueBindingsBuilder<E> extends ValueBindingsBuilder<E>
         return inputStream.isPresent() ? bindBlob(name, inputStream.get(), length) : required;
     }
 
+    default E bindOptionalBoolean(String name, Optional<Boolean> x) {
+        final E required = requireDefaultedBindingForOptional(name);
+        return x.isPresent() ? bindBooleanPrimitive(name, x.get()) : required;
+    }
+
     default E bindOptionalBoolean(String name, OptionalBoolean x) {
         final E required = requireDefaultedBindingForOptional(name);
-        return x.isPresent() ? bindBoolean(name, x.getAsBoolean()) : required;
+        return x.isPresent() ? bindBooleanPrimitive(name, x.getAsBoolean()) : required;
+    }
+
+    default E bindOptionalByte(String name, Optional<Byte> x) {
+        final E required = requireDefaultedBindingForOptional(name);
+        return x.isPresent() ? bindBytePrimitive(name, x.get()) : required;
     }
 
     default E bindOptionalByte(String name, OptionalByte x) {
         final E required = requireDefaultedBindingForOptional(name);
-        return x.isPresent() ? bindByte(name, x.getAsByte()) : required;
+        return x.isPresent() ? bindBytePrimitive(name, x.getAsByte()) : required;
     }
 
     default E bindOptionalBytes(String name, Optional<byte[]> x) {
@@ -117,24 +127,54 @@ public interface OptionalValueBindingsBuilder<E> extends ValueBindingsBuilder<E>
         return x.isPresent() ? bindDate(name, x.get(), cal) : required;
     }
 
+    default E bindOptionalDouble(String name, Optional<Double> x) {
+        final E required = requireDefaultedBindingForOptional(name);
+        return x.isPresent() ? bindDoublePrimitive(name, x.get()) : required;
+    }
+
     default E bindOptionalDouble(String name, OptionalDouble x) {
         final E required = requireDefaultedBindingForOptional(name);
-        return x.isPresent() ? bindDouble(name, x.getAsDouble()) : required;
+        return x.isPresent() ? bindDoublePrimitive(name, x.getAsDouble()) : required;
+    }
+
+    default E bindOptionalFloat(String name, Optional<Float> x) {
+        final E required = requireDefaultedBindingForOptional(name);
+        return x.isPresent() ? bindFloatPrimitive(name, x.get()) : required;
     }
 
     default E bindOptionalFloat(String name, OptionalFloat x) {
         final E required = requireDefaultedBindingForOptional(name);
-        return x.isPresent() ? bindFloat(name, x.getAsFloat()) : required;
+        return x.isPresent() ? bindFloatPrimitive(name, x.getAsFloat()) : required;
+    }
+
+    default E bindOptionalInteger(String name, Optional<Integer> x) {
+        final E required = requireDefaultedBindingForOptional(name);
+        return x.isPresent() ? bindIntegerPrimitive(name, x.get()) : required;
+    }
+
+    default E bindOptionalInteger(String name, OptionalInt x) {
+        final E required = requireDefaultedBindingForOptional(name);
+        return x.isPresent() ? bindIntegerPrimitive(name, x.getAsInt()) : required;
+    }
+
+    default E bindOptionalInt(String name, Optional<Integer> x) {
+        final E required = requireDefaultedBindingForOptional(name);
+        return x.isPresent() ? bindIntegerPrimitive(name, x.get()) : required;
     }
 
     default E bindOptionalInt(String name, OptionalInt x) {
         final E required = requireDefaultedBindingForOptional(name);
-        return x.isPresent() ? bindInt(name, x.getAsInt()) : required;
+        return x.isPresent() ? bindIntegerPrimitive(name, x.getAsInt()) : required;
+    }
+
+    default E bindOptionalLong(String name, Optional<Long> x) {
+        final E required = requireDefaultedBindingForOptional(name);
+        return x.isPresent() ? bindLongPrimitive(name, x.get()) : required;
     }
 
     default E bindOptionalLong(String name, OptionalLong x) {
         final E required = requireDefaultedBindingForOptional(name);
-        return x.isPresent() ? bindLong(name, x.getAsLong()) : required;
+        return x.isPresent() ? bindLongPrimitive(name, x.getAsLong()) : required;
     }
 
     default E bindOptionalNCharacterStream(String name, Optional<Reader> reader) {
@@ -192,9 +232,14 @@ public interface OptionalValueBindingsBuilder<E> extends ValueBindingsBuilder<E>
         return x.isPresent() ? bindRef(name, x.get()) : required;
     }
 
+    default E bindOptionalShort(String name, Optional<Short> x) {
+        final E required = requireDefaultedBindingForOptional(name);
+        return x.isPresent() ? bindShortPrimitive(name, x.get()) : required;
+    }
+
     default E bindOptionalShort(String name, OptionalShort x) {
         final E required = requireDefaultedBindingForOptional(name);
-        return x.isPresent() ? bindShort(name, x.getAsShort()) : required;
+        return x.isPresent() ? bindShortPrimitive(name, x.getAsShort()) : required;
     }
 
     default E bindOptionalSQLXML(String name, Optional<SQLXML> xmlObject) {

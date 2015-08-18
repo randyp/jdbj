@@ -21,7 +21,7 @@ public class StudentDAO {
             .query()
             .map(Student::from)
             .toList()
-            .bindDefaultLong(":limit", 10);
+            .bindDefaultLong(":limit", 10L);
 
     public List<Student> all(Optional<Long> limit) throws SQLException {
         ExecuteQuery<List<Student>> all = StudentDAO.all;
