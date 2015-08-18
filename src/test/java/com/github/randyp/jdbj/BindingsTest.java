@@ -37,7 +37,7 @@ public class BindingsTest {
 
     @Test
     public void listBinding() throws Exception {
-        final PositionalBindings bindings = PositionalBindings.empty().listBinding(":status", Collections.singletonList(pc -> pc.setString("ACTIVE")));
+        final PositionalBindings bindings = PositionalBindings.empty().collectionBinding(":status", Collections.singletonList(pc -> pc.setString("ACTIVE")));
 
         assertTrue(bindings.containsBinding(":status"));
         final PositionalBinding positionalBinding = bindings.get(":status");
@@ -55,7 +55,7 @@ public class BindingsTest {
     public void rebindList() throws Exception {
         PositionalBindings.empty()
                 .valueBinding(":status", pc -> pc.setString("ACTIVE"))
-                .listBinding(":status", new ArrayList<>());
+                .collectionBinding(":status", new ArrayList<>());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -70,16 +70,16 @@ public class BindingsTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void bindListNullName() throws Exception {
-        PositionalBindings.empty().listBinding(null, new ArrayList<>());
+        PositionalBindings.empty().collectionBinding(null, new ArrayList<>());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void bindListNullList() throws Exception {
-        PositionalBindings.empty().listBinding(":a", null);
+        PositionalBindings.empty().collectionBinding(":a", null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void bindListNullInList() throws Exception {
-        PositionalBindings.empty().listBinding(":a", Arrays.asList(pc -> pc.setInt(1), null));
+        PositionalBindings.empty().collectionBinding(":a", Arrays.asList(pc -> pc.setInt(1), null));
     }
 }

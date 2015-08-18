@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public abstract class DefaultListBindingsBuilder<E> extends ListBindingsBuilder<E> {
+public abstract class DefaultCollectionBindingsBuilder<E> extends CollectionBindingsBuilder<E> {
 
     public abstract E bindDefaultList(String name, List<Binding> bindings);
 

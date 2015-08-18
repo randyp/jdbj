@@ -30,19 +30,19 @@ public class PositionalBindingsBuilderTest {
 
         @Test(expected = IllegalArgumentException.class)
         public void list() throws Exception {
-            new TestBuilder().bindList(":not_the_mama", new ArrayList<>());
+            new TestBuilder().bindCollection(":not_the_mama", new ArrayList<>());
         }
     }
 
     public static class CheckBinding {
         @Test
         public void value() throws Exception {
-            new TestBuilder().bindList(":binding", new ArrayList<>()).checkAllBindingsPresent();
+            new TestBuilder().bindCollection(":binding", new ArrayList<>()).checkAllBindingsPresent();
         }
 
         @Test
         public void list() throws Exception {
-            new TestBuilder().bindList(":binding", new ArrayList<>()).checkAllBindingsPresent();
+            new TestBuilder().bindCollection(":binding", new ArrayList<>()).checkAllBindingsPresent();
         }
 
         @Test(expected = IllegalStateException.class)

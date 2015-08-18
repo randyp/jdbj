@@ -16,7 +16,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 @RunWith(Enclosed.class)
-public class ListBindingsBuilderTest {
+public class DefaultCollectionBindingsBuilderTest {
 
     @ClassRule
     public static final H2Rule db = new H2Rule();
@@ -24,21 +24,19 @@ public class ListBindingsBuilderTest {
     private static final NamedParameterStatement statement =
             NamedParameterStatement.make("SELECT :binding as bound");
 
-    public static class BindList {
+    public static class DefaultBindList {
         @Test(expected = IllegalArgumentException.class)
         public void nullName() throws Exception {
-            new TestBuilder()
-                    .bindDefaultList(null, Collections.singletonList(pc -> pc.setInt(1)));
+            new TestBuilder().bindDefaultList(null, Collections.singletonList(pc -> pc.setInt(1)));
         }
 
         @Test(expected = IllegalArgumentException.class)
         public void nulList() throws Exception {
-            new TestBuilder()
-                    .bindDefaultList(":binding", null);
+            new TestBuilder().bindDefaultList(":binding", null);
         }
     }
 
-    public static class strings {
+    public static class DefaultStrings {
         @Test
         public void values() throws Exception {
             final String[] expected = {"abc", "def"};
@@ -46,7 +44,7 @@ public class ListBindingsBuilderTest {
             final Object[] selected;
             try (Connection connection = db.getConnection()) {
                 selected = new TestBuilder()
-                        .bindStrings(":binding", Arrays.asList(expected))
+                        .bindDefaultStrings(":binding", Arrays.asList(expected))
                         .execute(connection, rs -> (Object[]) rs.getObject(1));
             }
             assertArrayEquals(expected, selected);
@@ -59,7 +57,7 @@ public class ListBindingsBuilderTest {
             final Object[] selected;
             try (Connection connection = db.getConnection()) {
                 selected = new TestBuilder()
-                        .bindStrings(":binding", expected)
+                        .bindDefaultStrings(":binding", expected)
                         .execute(connection, rs -> (Object[]) rs.getObject(1));
             }
             assertArrayEquals(expected, selected);
@@ -69,7 +67,7 @@ public class ListBindingsBuilderTest {
         public void nullArray() throws Exception {
             try (Connection connection = db.getConnection()) {
                 new TestBuilder()
-                        .bindStrings(":binding", (String[]) null)
+                        .bindDefaultStrings(":binding", (String[]) null)
                         .execute(connection, rs -> rs.getObject(1));
             }
         }
@@ -78,13 +76,13 @@ public class ListBindingsBuilderTest {
         public void nullList() throws Exception {
             try (Connection connection = db.getConnection()) {
                 new TestBuilder()
-                        .bindStrings(":binding", (List<String>) null)
+                        .bindDefaultStrings(":binding", (List<String>) null)
                         .execute(connection, rs -> rs.getObject(1));
             }
         }
     }
 
-    public static class longs {
+    public static class DefaultLongs {
         @Test
         public void values() throws Exception {
             final long[] input = {152L, 51L};
@@ -93,7 +91,7 @@ public class ListBindingsBuilderTest {
             final Object[] selected;
             try (Connection connection = db.getConnection()) {
                 selected = new TestBuilder()
-                        .bindLongs(":binding", input)
+                        .bindDefaultLongs(":binding", input)
                         .execute(connection, rs -> (Object[]) rs.getObject(1));
             }
             assertArrayEquals(expected, selected);
@@ -103,7 +101,7 @@ public class ListBindingsBuilderTest {
         public void nullArray() throws Exception {
             try (Connection connection = db.getConnection()) {
                 new TestBuilder()
-                        .bindLongs(":binding", (long[]) null)
+                        .bindDefaultLongs(":binding", (long[]) null)
                         .execute(connection, rs -> rs.getObject(1));
             }
         }
@@ -112,7 +110,7 @@ public class ListBindingsBuilderTest {
     private static class TestBuilder extends PositionalBindingsBuilder<TestBuilder> {
 
         TestBuilder() {
-            this(ListBindingsBuilderTest.statement, PositionalBindings.empty());
+            this(DefaultCollectionBindingsBuilderTest.statement, PositionalBindings.empty());
         }
 
         TestBuilder(NamedParameterStatement statement, PositionalBindings bindings) {

@@ -58,7 +58,7 @@ public class NamedParameterStatementTest {
         @Test
          public void listBinding_empty() throws Exception {
             final NamedParameterStatement statement = NamedParameterStatement.make("select id from agent_secret WHERE status in :statuses");
-            final PositionalBindings bindings = PositionalBindings.empty().listBinding(":statuses", new ArrayList<>());
+            final PositionalBindings bindings = PositionalBindings.empty().collectionBinding(":statuses", new ArrayList<>());
 
             assertEquals("select id from agent_secret WHERE status in ()", statement.jdbcSql(bindings));
         }
@@ -66,7 +66,7 @@ public class NamedParameterStatementTest {
         @Test
         public void listBinding_singleton() throws Exception {
             final NamedParameterStatement statement = NamedParameterStatement.make("select id from agent_secret WHERE status in :statuses");
-            final PositionalBindings bindings = PositionalBindings.empty().listBinding(":statuses", Collections.singletonList(pc -> pc.setString("ACTIVE")));
+            final PositionalBindings bindings = PositionalBindings.empty().collectionBinding(":statuses", Collections.singletonList(pc -> pc.setString("ACTIVE")));
 
             assertEquals("select id from agent_secret WHERE status in (?)", statement.jdbcSql(bindings));
         }
@@ -74,7 +74,7 @@ public class NamedParameterStatementTest {
         @Test
         public void listBinding() throws Exception {
             final NamedParameterStatement statement = NamedParameterStatement.make("select id from agent_secret WHERE status in :statuses");
-            final PositionalBindings bindings = PositionalBindings.empty().listBinding(":statuses", Arrays.asList(pc -> pc.setString("ACTIVE"), pc -> pc.setString("MIA")));
+            final PositionalBindings bindings = PositionalBindings.empty().collectionBinding(":statuses", Arrays.asList(pc -> pc.setString("ACTIVE"), pc -> pc.setString("MIA")));
 
             assertEquals("select id from agent_secret WHERE status in (?,?)", statement.jdbcSql(bindings));
         }
@@ -122,7 +122,7 @@ public class NamedParameterStatementTest {
         @Test
         public void presentAsList() throws Exception {
             final NamedParameterStatement statement = NamedParameterStatement.make("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE id = :id");
-            final PositionalBindings bindings = PositionalBindings.empty().listBinding(":id", Collections.singletonList(pc -> pc.setInt(-29)));
+            final PositionalBindings bindings = PositionalBindings.empty().collectionBinding(":id", Collections.singletonList(pc -> pc.setInt(-29)));
             statement.checkAllBindingsPresent(bindings);
         }
 

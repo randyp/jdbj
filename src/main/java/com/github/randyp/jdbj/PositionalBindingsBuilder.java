@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Immutable
-public class PositionalBindingsBuilder<E extends PositionalBindingsBuilder<E>> extends DefaultListBindingsBuilder<E> implements OptionalValueBindingsBuilder<E> {
+public class PositionalBindingsBuilder<E extends PositionalBindingsBuilder<E>> extends DefaultCollectionBindingsBuilder<E> implements OptionalValueBindingsBuilder<E> {
 
     final NamedParameterStatement statement;
     final PositionalBindings bindings;
@@ -53,12 +53,12 @@ public class PositionalBindingsBuilder<E extends PositionalBindingsBuilder<E>> e
     }
 
     @Override
-    public E bindList(String name, List<Binding> bindings) {
+    public E bindCollection(String name, List<Binding> bindings) {
         if(!statement.containsParameter(name)){
             throw new IllegalArgumentException("\""+name+"\" is not a named parameter");
         }
 
-        return factory.make(statement, this.bindings.listBinding(name, bindings));
+        return factory.make(statement, this.bindings.collectionBinding(name, bindings));
     }
 
     @Override
@@ -67,7 +67,7 @@ public class PositionalBindingsBuilder<E extends PositionalBindingsBuilder<E>> e
             throw new IllegalArgumentException("\""+name+"\" is not a named parameter");
         }
 
-        return factory.make(statement, this.bindings.defaultListBinding(name, bindings));
+        return factory.make(statement, this.bindings.defaultCollectionBinding(name, bindings));
     }
 
     @Override

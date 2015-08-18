@@ -94,7 +94,7 @@ public class PositionalBindings implements ValueBindings {
         return new PositionalBindings(newDefaultValueBindings, defaultListBindings, valueBindings, listBindings);
     }
 
-    public PositionalBindings listBinding(String name, List<Binding> bindings) {
+    public PositionalBindings collectionBinding(String name, List<Binding> bindings) {
         if (name == null) {
             throw new IllegalArgumentException("name cannot be null");
         }
@@ -115,7 +115,7 @@ public class PositionalBindings implements ValueBindings {
         );
     }
 
-    public PositionalBindings defaultListBinding(String name, List<Binding> bindings) {
+    public PositionalBindings defaultCollectionBinding(String name, List<Binding> bindings) {
         if (name == null) {
             throw new IllegalArgumentException("name cannot be null");
         }

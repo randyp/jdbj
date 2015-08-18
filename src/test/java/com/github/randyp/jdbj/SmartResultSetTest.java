@@ -396,7 +396,7 @@ public class SmartResultSetTest {
         }
     }
 
-    public static class GetDate extends HasExpectedTime {
+    public static class GetDate extends HasExpectedTimeSinceEpoch {
 
         @Test
         public void index() throws Exception {
@@ -1096,7 +1096,7 @@ public class SmartResultSetTest {
         }
     }
 
-    public static class GetTimestamp extends HasExpectedTime {
+    public static class GetTimestamp extends HasExpectedTimeSinceEpoch {
 
         @Test
         public void index() throws Exception {
