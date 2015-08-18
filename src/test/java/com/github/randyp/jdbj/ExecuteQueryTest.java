@@ -86,8 +86,8 @@ public class ExecuteQueryTest {
         //noinspection RedundantArrayCreation
         final StreamQuery<String> query = JDBJ.query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE id in :ids")
                 .map(rs -> rs.getString("TABLE_NAME"))
-                .toStream()
-                .bindLongs(":ids", new long[]{-28L});
+                .bindLongs(":ids", new long[]{-28L})
+                .toStream();
 
         final Optional<String> result;
         try (Connection connection = db.getConnection()) {
@@ -105,8 +105,8 @@ public class ExecuteQueryTest {
         final ExecuteQuery<Optional<String>> query = JDBJ.resource("tables_by_schema.sql")
                 .query()
                 .map(rs -> rs.getString("TABLE_NAME"))
-                .first()
-                .bindString(":table_schema", "INFORMATION_SCHEMA");
+                .bindString(":table_schema", "INFORMATION_SCHEMA")
+                .first();
 
         final Optional<String> result;
         try (Connection connection = db.getConnection()) {
@@ -119,9 +119,9 @@ public class ExecuteQueryTest {
     @Test
      public void defaultValues() throws Exception {
         final ExecuteQuery<List<String>> query = JDBJ.query("SELECT * FROM INFORMATION_SCHEMA.TABLES ORDER BY id LIMIT :limit")
+                .bindDefault(":limit", pc -> pc.setInt(5))
                 .map(rs -> rs.getString("TABLE_NAME"))
-                .toList()
-                .bindDefault(":limit", pc -> pc.setInt(5));
+                .toList();
 
         try (Connection connection = db.getConnection()) {
             assertEquals(5, query.execute(connection).size());
