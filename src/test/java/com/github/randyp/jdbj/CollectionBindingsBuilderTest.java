@@ -27,13 +27,13 @@ public class CollectionBindingsBuilderTest {
         @Test(expected = IllegalArgumentException.class)
         public void nullName() throws Exception {
             new TestBuilder()
-                    .bindCollection(null, Collections.singletonList(pc -> pc.setInt(1)));
+                    .bindList(null, Collections.singletonList(pc -> pc.setInt(1)));
         }
 
         @Test(expected = IllegalArgumentException.class)
         public void nulList() throws Exception {
             new TestBuilder()
-                    .bindCollection(":binding", null);
+                    .bindList(":binding", null);
         }
     }
 

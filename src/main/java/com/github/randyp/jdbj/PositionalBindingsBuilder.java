@@ -53,7 +53,7 @@ public class PositionalBindingsBuilder<E extends PositionalBindingsBuilder<E>> e
     }
 
     @Override
-    public E bindCollection(String name, List<Binding> bindings) {
+    public E bindList(String name, List<Binding> bindings) {
         if(!statement.containsParameter(name)){
             throw new IllegalArgumentException("\""+name+"\" is not a named parameter");
         }
