@@ -9,16 +9,18 @@ import javax.annotation.concurrent.Immutable;
  * Phase 2 Builder
  */
 @Immutable
-public final class ReturnsQuery {
+public final class ReturnsQuery extends PositionalBindingsBuilder<ReturnsQuery> {
 
-    final NamedParameterStatement statement;
+    ReturnsQuery(NamedParameterStatement statement) {
+        this(statement, PositionalBindings.empty());
+    }
 
-    public ReturnsQuery(NamedParameterStatement statement) {
-        this.statement = statement;
+    ReturnsQuery(NamedParameterStatement statement, PositionalBindings bindings) {
+        super(statement, bindings, ReturnsQuery::new);
     }
 
     public <R> MapQuery<R> map(ResultSetMapper<R> mapper){
-        return new MapQuery<>(statement, mapper);
+        return new MapQuery<>(statement, bindings, mapper);
     }
 
     public ExecuteQueryRunnable runnable(ResultSetRunnable runnable){

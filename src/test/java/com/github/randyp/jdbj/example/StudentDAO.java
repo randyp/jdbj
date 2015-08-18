@@ -48,7 +48,7 @@ public class StudentDAO {
     }
 
     public Stream<Student> streamByIds(long[] ids) throws SQLException {
-        return by_ids.stream().bindLongs(":ids", ids).execute(connection); //close me when done!!!
+        return by_ids.toStream().bindLongs(":ids", ids).execute(connection); //close me when done!!!
     }
 
     private static final ExecuteInsert<Long> insert = JDBJ.resource("student_insert.sql")

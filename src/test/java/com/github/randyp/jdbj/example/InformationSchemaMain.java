@@ -28,7 +28,7 @@ public class InformationSchemaMain {
 
 
             //or use streams, but be sure to close stream
-            try (Stream<Table> stream = QueryReadyToGo.stream()
+            try (Stream<Table> stream = QueryReadyToGo.toStream()
                     .bindString(":table_schema", "INFORMATION_SCHEMA")
                     .execute(connection)) {
 

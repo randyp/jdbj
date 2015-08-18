@@ -86,7 +86,7 @@ public class ExecuteQueryTest {
         //noinspection RedundantArrayCreation
         final StreamQuery<String> query = JDBJ.query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE id in :ids")
                 .map(rs -> rs.getString("TABLE_NAME"))
-                .stream()
+                .toStream()
                 .bindLongs(":ids", new long[]{-28L});
 
         final Optional<String> result;
