@@ -34,7 +34,7 @@ public class OptionalValueBindingsBuilderTest {
             NamedParameterStatement.make("SELECT :binding as bound");
 
     @Ignore //not supported in h2
-    public static class array { //lower case so we don't capture java.sql.Array class
+    public static class BindArray { //lower case so we don't capture java.sql.Array class
 
         @Test
         public void bind() throws Exception {
@@ -68,7 +68,7 @@ public class OptionalValueBindingsBuilderTest {
         }
     }
 
-    public static class AsciiStream {
+    public static class BindAsciiStream {
         @Test
         public void inputStream() throws Exception {
             final String expected = "abcde";
@@ -154,7 +154,7 @@ public class OptionalValueBindingsBuilderTest {
         }
     }
 
-    public static class Big_Decimal {
+    public static class BindBigDecimal {
         @Test
         public void value() throws Exception {
             final BigDecimal expected = new BigDecimal("1.234");
@@ -184,7 +184,7 @@ public class OptionalValueBindingsBuilderTest {
         }
     }
 
-    public static class BinaryStream {
+    public static class BindBinaryStream {
 
         @Test
         public void inputStream() throws Exception {
@@ -280,7 +280,7 @@ public class OptionalValueBindingsBuilderTest {
         }
     }
 
-    public static class blob {
+    public static class BindBlob {
         @Test
         public void inputStream() throws Exception {
             final String expected = "abcde";
@@ -344,7 +344,46 @@ public class OptionalValueBindingsBuilderTest {
         }
     }
 
-    public static class Bool {
+    public static class BindBoolean {
+
+        @Test
+        public void False() throws Exception {
+            final Boolean selected;
+            try (Connection connection = db.getConnection()) {
+                selected = new TestBuilder()
+                        .bindDefaultBoolean(":binding", true)
+                        .bindOptionalBoolean(":binding", Optional.of(false))
+                        .execute(connection, rs -> rs.getBoolean(1));
+            }
+            assertFalse(selected);
+        }
+
+        @Test
+        public void True() throws Exception {
+            final Boolean selected;
+            try (Connection connection = db.getConnection()) {
+                selected = new TestBuilder()
+                        .bindDefaultBoolean(":binding", false)
+                        .bindOptionalBoolean(":binding", Optional.of(true))
+                        .execute(connection, rs -> rs.getBoolean(1));
+            }
+            assertTrue(selected);
+        }
+
+        @Test
+        public void notPresent() throws Exception {
+            final Boolean selected;
+            try (Connection connection = db.getConnection()) {
+                selected = new TestBuilder()
+                        .bindDefaultBoolean(":binding", true)
+                        .bindOptionalBoolean(":binding", Optional.empty())
+                        .execute(connection, rs -> rs.getBoolean(1));
+            }
+            assertTrue(selected);
+        }
+    }
+
+    public static class BindBooleanPrimitive {
 
         @Test
         public void False() throws Exception {
@@ -352,9 +391,9 @@ public class OptionalValueBindingsBuilderTest {
             final boolean selected;
             try (Connection connection = db.getConnection()) {
                 selected = new TestBuilder()
-                        .bindDefaultBoolean(":binding", true)
+                        .bindDefaultBooleanPrimitive(":binding", true)
                         .bindOptionalBoolean(":binding", OptionalBoolean.of(false))
-                        .execute(connection, rs -> rs.getBoolean(1));
+                        .execute(connection, rs -> rs.getBooleanPrimitive(1));
             }
             assertFalse(selected);
         }
@@ -364,9 +403,9 @@ public class OptionalValueBindingsBuilderTest {
             final boolean selected;
             try (Connection connection = db.getConnection()) {
                 selected = new TestBuilder()
-                        .bindDefaultBoolean(":binding", false)
+                        .bindDefaultBooleanPrimitive(":binding", false)
                         .bindOptionalBoolean(":binding", OptionalBoolean.of(true))
-                        .execute(connection, rs -> rs.getBoolean(1));
+                        .execute(connection, rs -> rs.getBooleanPrimitive(1));
             }
             assertTrue(selected);
         }
@@ -376,15 +415,44 @@ public class OptionalValueBindingsBuilderTest {
             final boolean selected;
             try (Connection connection = db.getConnection()) {
                 selected = new TestBuilder()
-                        .bindDefaultBoolean(":binding", true)
+                        .bindDefaultBooleanPrimitive(":binding", true)
                         .bindOptionalBoolean(":binding", OptionalBoolean.empty())
-                        .execute(connection, rs -> rs.getBoolean(1));
+                        .execute(connection, rs -> rs.getBooleanPrimitive(1));
             }
             assertTrue(selected);
         }
     }
 
-    public static class Byte {
+    public static class BindByte {
+
+        @Test
+        public void present() throws Exception {
+            final Byte expected = 6;
+            final Byte selected;
+            try (Connection connection = db.getConnection()) {
+                selected = new TestBuilder()
+                        .bindDefaultByte(":binding", (byte) 7)
+                        .bindOptionalByte(":binding", Optional.of(expected))
+                        .execute(connection, rs -> rs.getByte(1));
+            }
+            assertEquals(expected, selected, 0.0);
+        }
+
+        @Test
+        public void notPresent() throws Exception {
+            final Byte expected = 6;
+            final Byte selected;
+            try (Connection connection = db.getConnection()) {
+                selected = new TestBuilder()
+                        .bindDefaultByte(":binding", expected)
+                        .bindOptionalByte(":binding", Optional.empty())
+                        .execute(connection, rs -> rs.getByte(1));
+            }
+            assertEquals(expected, selected, 0.0);
+        }
+    }
+
+    public static class BindBytePrimitive {
 
         @Test
         public void present() throws Exception {
@@ -392,9 +460,9 @@ public class OptionalValueBindingsBuilderTest {
             final byte selected;
             try (Connection connection = db.getConnection()) {
                 selected = new TestBuilder()
-                        .bindDefaultByte(":binding", (byte) 7)
+                        .bindDefaultBytePrimtive(":binding", (byte) 7)
                         .bindOptionalByte(":binding", OptionalByte.of(expected))
-                        .execute(connection, rs -> rs.getByte(1));
+                        .execute(connection, rs -> rs.getBytePrimitive(1));
             }
             assertEquals(expected, selected, 0.0);
         }
@@ -405,15 +473,15 @@ public class OptionalValueBindingsBuilderTest {
             final byte selected;
             try (Connection connection = db.getConnection()) {
                 selected = new TestBuilder()
-                        .bindDefaultByte(":binding", expected)
+                        .bindDefaultBytePrimtive(":binding", expected)
                         .bindOptionalByte(":binding", OptionalByte.empty())
-                        .execute(connection, rs -> rs.getByte(1));
+                        .execute(connection, rs -> rs.getBytePrimitive(1));
             }
             assertEquals(expected, selected, 0.0);
         }
     }
 
-    public static class Bytes {
+    public static class BindBytes {
 
         @Test
         public void value() throws Exception {
@@ -447,7 +515,7 @@ public class OptionalValueBindingsBuilderTest {
         }
     }
 
-    public static class CharacterStream {
+    public static class BindCharacterStream {
         @Test
         public void reader() throws Exception {
             final String expected = "abcde";
@@ -533,7 +601,7 @@ public class OptionalValueBindingsBuilderTest {
         }
     }
 
-    public static class clob {
+    public static class BindClob {
 
         @Test
         public void reader() throws Exception {
@@ -598,15 +666,7 @@ public class OptionalValueBindingsBuilderTest {
         }
     }
 
-    public static class date {
-
-        private final long expectedTime;
-
-        public date() {
-            final Calendar instance = GregorianCalendar.getInstance();
-            instance.set(2015, Calendar.JANUARY, 1, 0, 0, 0);
-            this.expectedTime = 1000 * (instance.getTimeInMillis() / 1000);
-        }
+    public static class BindDate extends HasExpectedTime{
 
         @Test
         public void value() throws Exception {
@@ -669,14 +729,44 @@ public class OptionalValueBindingsBuilderTest {
     public static class BindDouble {
         @Test
         public void value() throws Exception {
+            final Double expected = 1.2;
+
+            final Double selected;
+            try (Connection connection = db.getConnection()) {
+                selected = new TestBuilder()
+                        .bindDefaultDouble(":binding", Double.MIN_VALUE)
+                        .bindOptionalDouble(":binding", Optional.of(expected))
+                        .execute(connection, rs -> rs.getDouble(1));
+            }
+            assertEquals(expected, selected, 0.0);
+        }
+
+        @Test
+        public void notPresent() throws Exception {
+            final Double expected = 1.2;
+
+            final Double selected;
+            try (Connection connection = db.getConnection()) {
+                selected = new TestBuilder()
+                        .bindDefaultDouble(":binding", expected)
+                        .bindOptionalDouble(":binding", Optional.empty())
+                        .execute(connection, rs -> rs.getDouble(1));
+            }
+            assertEquals(expected, selected, 0.0);
+        }
+    }
+
+    public static class BindDoublePrimitive {
+        @Test
+        public void value() throws Exception {
             final double expected = 1.2;
 
             final double selected;
             try (Connection connection = db.getConnection()) {
                 selected = new TestBuilder()
-                        .bindDefaultDouble(":binding", Double.MIN_VALUE)
+                        .bindDefaultDoublePrimitive(":binding", Double.MIN_VALUE)
                         .bindOptionalDouble(":binding", OptionalDouble.of(expected))
-                        .execute(connection, rs -> rs.getDouble(1));
+                        .execute(connection, rs -> rs.getDoublePrimitive(1));
             }
             assertEquals(expected, selected, 0.0);
         }
@@ -688,9 +778,9 @@ public class OptionalValueBindingsBuilderTest {
             final double selected;
             try (Connection connection = db.getConnection()) {
                 selected = new TestBuilder()
-                        .bindDefaultDouble(":binding", expected)
+                        .bindDefaultDoublePrimitive(":binding", expected)
                         .bindOptionalDouble(":binding", OptionalDouble.empty())
-                        .execute(connection, rs -> rs.getDouble(1));
+                        .execute(connection, rs -> rs.getDoublePrimitive(1));
             }
             assertEquals(expected, selected, 0.0);
         }
@@ -699,16 +789,46 @@ public class OptionalValueBindingsBuilderTest {
     public static class BindFloat {
         @Test
         public void value() throws Exception {
+            final Float expected = 1.2f;
+
+            final Float selected;
+            try (Connection connection = db.getConnection()) {
+                selected = new TestBuilder()
+                        .bindDefaultFloat(":binding", Float.MIN_VALUE)
+                        .bindOptionalFloat(":binding", Optional.of(expected))
+                        .execute(connection, rs -> rs.getFloat(1));
+            }
+            assertEquals(expected, selected, 0.0f);
+        }
+
+        @Test
+        public void notPresent() throws Exception {
+            final Float expected = 1.2f;
+
+            final Float selected;
+            try (Connection connection = db.getConnection()) {
+                selected = new TestBuilder()
+                        .bindDefaultFloat(":binding", expected)
+                        .bindOptionalFloat(":binding", Optional.empty())
+                        .execute(connection, rs -> rs.getFloat(1));
+            }
+            assertEquals(expected, selected, 0.0f);
+        }
+    }
+
+    public static class BindFloatPrimitive {
+        @Test
+        public void value() throws Exception {
             final float expected = 1.2f;
 
             final float selected;
             try (Connection connection = db.getConnection()) {
                 selected = new TestBuilder()
-                        .bindDefaultFloat(":binding", Float.MIN_VALUE)
+                        .bindDefaultFloatPrimtitive(":binding", Float.MIN_VALUE)
                         .bindOptionalFloat(":binding", OptionalFloat.of(expected))
-                        .execute(connection, rs -> rs.getFloat(1));
+                        .execute(connection, rs -> rs.getFloatPrimitive(1));
             }
-            assertEquals(expected, selected, 0.0);
+            assertEquals(expected, selected, 0.0f);
         }
 
         @Test
@@ -718,15 +838,105 @@ public class OptionalValueBindingsBuilderTest {
             final float selected;
             try (Connection connection = db.getConnection()) {
                 selected = new TestBuilder()
-                        .bindDefaultFloat(":binding", expected)
+                        .bindDefaultFloatPrimtitive(":binding", expected)
                         .bindOptionalFloat(":binding", OptionalFloat.empty())
-                        .execute(connection, rs -> rs.getFloat(1));
+                        .execute(connection, rs -> rs.getFloatPrimitive(1));
             }
-            assertEquals(expected, selected, 0.0);
+            assertEquals(expected, selected, 0.0f);
+        }
+    }
+
+    public static class BindInteger {
+        @Test
+        public void value() throws Exception {
+            final Integer expected = 12;
+
+            final Integer selected;
+            try (Connection connection = db.getConnection()) {
+                selected = new TestBuilder()
+                        .bindDefaultInteger(":binding", Integer.MIN_VALUE)
+                        .bindOptionalInteger(":binding", Optional.of(expected))
+                        .execute(connection, rs -> rs.getInteger(1));
+            }
+            assertEquals(expected, selected);
+        }
+
+        @Test
+        public void notPresent() throws Exception {
+            final Integer expected = 12;
+
+            final Integer selected;
+            try (Connection connection = db.getConnection()) {
+                selected = new TestBuilder()
+                        .bindDefaultInteger(":binding", expected)
+                        .bindOptionalInteger(":binding", Optional.empty())
+                        .execute(connection, rs -> rs.getInteger(1));
+            }
+            assertEquals(expected, selected);
+        }
+    }
+
+    public static class BindIntegerPrimitive {
+        @Test
+        public void value() throws Exception {
+            final int expected = 12;
+
+            final int selected;
+            try (Connection connection = db.getConnection()) {
+                selected = new TestBuilder()
+                        .bindDefaultIntegerPrimitive(":binding", Integer.MIN_VALUE)
+                        .bindOptionalInteger(":binding", OptionalInt.of(expected))
+                        .execute(connection, rs -> rs.getIntegerPrimitive(1));
+            }
+            assertEquals(expected, selected);
+        }
+
+        @Test
+        public void notPresent() throws Exception {
+            final int expected = 12;
+
+            final int selected;
+            try (Connection connection = db.getConnection()) {
+                selected = new TestBuilder()
+                        .bindDefaultIntegerPrimitive(":binding", expected)
+                        .bindOptionalInteger(":binding", OptionalInt.empty())
+                        .execute(connection, rs -> rs.getIntegerPrimitive(1));
+            }
+            assertEquals(expected, selected);
         }
     }
 
     public static class BindInt {
+        @Test
+        public void value() throws Exception {
+            final Integer expected = 12;
+
+            final Integer selected;
+            try (Connection connection = db.getConnection()) {
+                selected = new TestBuilder()
+                        .bindDefaultInt(":binding", Integer.MIN_VALUE)
+                        .bindOptionalInt(":binding", Optional.of(expected))
+                        .execute(connection, rs -> rs.getInteger(1));
+            }
+            assertEquals(expected, selected);
+        }
+
+        @Test
+        public void notPresent() throws Exception {
+            final Integer expected = 12;
+
+            final Integer selected;
+            try (Connection connection = db.getConnection()) {
+                selected = new TestBuilder()
+                        .bindDefaultInt(":binding", expected)
+                        .bindOptionalInt(":binding", Optional.empty())
+                        .execute(connection, rs -> rs.getInteger(1));
+            }
+            assertEquals(expected, selected);
+        }
+    }
+
+    public static class BindIntPrimitive {
         @Test
         public void value() throws Exception {
             final int expected = 12;
@@ -756,7 +966,37 @@ public class OptionalValueBindingsBuilderTest {
         }
     }
 
-    public static class lng {
+    public static class BindLong {
+        @Test
+        public void value() throws Exception {
+            final Long expected = 12L;
+
+            final Long selected;
+            try (Connection connection = db.getConnection()) {
+                selected = new TestBuilder()
+                        .bindDefaultLong(":binding", Long.MIN_VALUE)
+                        .bindOptionalLong(":binding", Optional.of(expected))
+                        .execute(connection, rs -> rs.getLong(1));
+            }
+            assertEquals(expected, selected);
+        }
+
+        @Test
+        public void notPresent() throws Exception {
+            final Long expected = 12L;
+
+            final Long selected;
+            try (Connection connection = db.getConnection()) {
+                selected = new TestBuilder()
+                        .bindDefaultLong(":binding", expected)
+                        .bindOptionalLong(":binding", Optional.empty())
+                        .execute(connection, rs -> rs.getLong(1));
+            }
+            assertEquals(expected, selected);
+        }
+    }
+
+    public static class BindLongPrimitive {
         @Test
         public void value() throws Exception {
             final long expected = 12L;
@@ -764,9 +1004,9 @@ public class OptionalValueBindingsBuilderTest {
             final long selected;
             try (Connection connection = db.getConnection()) {
                 selected = new TestBuilder()
-                        .bindDefaultLong(":binding", Long.MIN_VALUE)
+                        .bindDefaultLongPrimitive(":binding", Long.MIN_VALUE)
                         .bindOptionalLong(":binding", OptionalLong.of(expected))
-                        .execute(connection, rs -> rs.getLong(1));
+                        .execute(connection, rs -> rs.getLongPrimitive(1));
             }
             assertEquals(expected, selected);
         }
@@ -778,15 +1018,15 @@ public class OptionalValueBindingsBuilderTest {
             final long selected;
             try (Connection connection = db.getConnection()) {
                 selected = new TestBuilder()
-                        .bindDefaultLong(":binding", expected)
+                        .bindDefaultLongPrimitive(":binding", expected)
                         .bindOptionalLong(":binding", OptionalLong.empty())
-                        .execute(connection, rs -> rs.getLong(1));
+                        .execute(connection, rs -> rs.getLongPrimitive(1));
             }
             assertEquals(expected, selected);
         }
     }
 
-    public static class NCharacterStream {
+    public static class BindNCharacterStream {
 
         @Test
         public void reader() throws Exception {
@@ -845,7 +1085,7 @@ public class OptionalValueBindingsBuilderTest {
         }
     }
 
-    public static class nclob {
+    public static class BindNClob {
 
 
         @Test
@@ -905,7 +1145,7 @@ public class OptionalValueBindingsBuilderTest {
         }
     }
 
-    public static class nstring {
+    public static class BindNString {
 
         @Test
         public void value() throws Exception {
@@ -936,7 +1176,7 @@ public class OptionalValueBindingsBuilderTest {
         }
     }
 
-    public static class object {
+    public static class BindObject {
 
         @Test
         public void value() throws Exception {
@@ -1084,7 +1324,7 @@ public class OptionalValueBindingsBuilderTest {
     }
 
     @Ignore //not supported in h2
-    public static class ref {
+    public static class BindRef {
 
         @Test
         public void value() throws Exception {
@@ -1119,7 +1359,37 @@ public class OptionalValueBindingsBuilderTest {
         }
     }
 
-    public static class Shrt {
+    public static class BindShort {
+        @Test
+        public void value() throws Exception {
+            final Short expected = 12;
+
+            final Short selected;
+            try (Connection connection = db.getConnection()) {
+                selected = new TestBuilder()
+                        .bindDefaultShort(":binding", Short.MIN_VALUE)
+                        .bindOptionalShort(":binding", Optional.of(expected))
+                        .execute(connection, rs -> rs.getShort(1));
+            }
+            assertEquals(expected, selected);
+        }
+
+        @Test
+        public void notPresent() throws Exception {
+            final Short expected = 12;
+
+            final Short selected;
+            try (Connection connection = db.getConnection()) {
+                selected = new TestBuilder()
+                        .bindDefaultShort(":binding", expected)
+                        .bindOptionalShort(":binding", Optional.empty())
+                        .execute(connection, rs -> rs.getShort(1));
+            }
+            assertEquals(expected, selected);
+        }
+    }
+
+    public static class BindShortPrimtive {
         @Test
         public void value() throws Exception {
             final short expected = 12;
@@ -1127,9 +1397,9 @@ public class OptionalValueBindingsBuilderTest {
             final short selected;
             try (Connection connection = db.getConnection()) {
                 selected = new TestBuilder()
-                        .bindDefaultShort(":binding", Short.MIN_VALUE)
+                        .bindDefaultShortPrimitive(":binding", Short.MIN_VALUE)
                         .bindOptionalShort(":binding", OptionalShort.of(expected))
-                        .execute(connection, rs -> rs.getShort(1));
+                        .execute(connection, rs -> rs.getShortPrimitive(1));
             }
             assertEquals(expected, selected);
         }
@@ -1141,15 +1411,15 @@ public class OptionalValueBindingsBuilderTest {
             final short selected;
             try (Connection connection = db.getConnection()) {
                 selected = new TestBuilder()
-                        .bindDefaultShort(":binding", expected)
+                        .bindDefaultShortPrimitive(":binding", expected)
                         .bindOptionalShort(":binding", OptionalShort.empty())
-                        .execute(connection, rs -> rs.getShort(1));
+                        .execute(connection, rs -> rs.getShortPrimitive(1));
             }
             assertEquals(expected, selected);
         }
     }
 
-    public static class string {
+    public static class BindString {
 
         @Test
         public void value() throws Exception {
@@ -1181,7 +1451,7 @@ public class OptionalValueBindingsBuilderTest {
     }
 
     @Ignore //not supported in h2
-    public static class sqlxml {
+    public static class BindSQLXML {
 
         @Test
         public void value() throws Exception {
@@ -1217,11 +1487,11 @@ public class OptionalValueBindingsBuilderTest {
         }
     }
 
-    public static class time {
+    public static class BindTime {
 
         private final long expectedTime;
 
-        public time() {
+        public BindTime() {
             final Calendar instance = GregorianCalendar.getInstance();
             instance.set(1970, Calendar.JANUARY, 1, 12, 11, 10);
             this.expectedTime = 1000 * (instance.getTimeInMillis() / 1000);
@@ -1285,15 +1555,7 @@ public class OptionalValueBindingsBuilderTest {
 
     }
 
-    public static class timestamp {
-
-        private final long expectedTime;
-
-        public timestamp() {
-            final Calendar instance = GregorianCalendar.getInstance();
-            instance.set(2015, Calendar.JANUARY, 1, 0, 0, 0);
-            this.expectedTime = 1000 * (instance.getTimeInMillis() / 1000);
-        }
+    public static class BindTimestamp extends HasExpectedTime {
 
         @Test
         public void value() throws Exception {
@@ -1354,7 +1616,7 @@ public class OptionalValueBindingsBuilderTest {
     }
 
     @Ignore //not supported in h2
-    public static class url {
+    public static class BindUrl {
 
         @Test
         public void value() throws Exception {

@@ -728,7 +728,7 @@ public class ValueBindingsBuilderTest {
                         .bindFloat(":binding", expected)
                         .execute(connection, rs -> rs.getFloat(1));
             }
-            assertEquals(expected, selected, 0.0);
+            assertEquals(expected, selected, 0.0f);
         }
 
         @Test
@@ -754,7 +754,7 @@ public class ValueBindingsBuilderTest {
                         .bindFloatPrimitive(":binding", expected)
                         .execute(connection, rs -> rs.getFloatPrimitive(1));
             }
-            assertEquals(expected, selected, 0.0);
+            assertEquals(expected, selected, 0.0f);
         }
     }
 
