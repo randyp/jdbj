@@ -38,7 +38,7 @@ public class DefaultValueBindingsBuilderTest {
             try (Connection connection = db.getConnection()) {
                 final String[] selected = new TestBuilder()
                         .bindDefaultArray(":binding", connection.createArrayOf("varchar", expected))
-                        .execute(connection, rs -> (String[]) rs.getArray(1).getArray());
+                        .execute(connection, rs -> (String[]) rs.getSQLArray(1).getArray());
                 assertArrayEquals(expected, selected);
             }
         }
@@ -49,7 +49,7 @@ public class DefaultValueBindingsBuilderTest {
                 final String[] selected = new TestBuilder()
                         .bindDefaultArray(":binding", null)
                         .execute(connection, rs -> {
-                            final Array array = rs.getArray(1);
+                            final Array array = rs.getSQLArray(1);
                             return array == null ? null : (String[]) array.getArray();
                         });
                 assertNull(selected);

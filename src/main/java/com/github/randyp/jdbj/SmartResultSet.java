@@ -29,11 +29,11 @@ public class SmartResultSet implements AutoCloseable {
         rs.close();
     }
 
-    public Array getArray(int columnIndex) throws SQLException {
+    public Array getSQLArray(int columnIndex) throws SQLException {
         return rs.getArray(columnIndex);
     }
 
-    public Array getArray(String columnLabel) throws SQLException {
+    public Array getSQLArray(String columnLabel) throws SQLException {
         return rs.getArray(columnLabel);
     }
 

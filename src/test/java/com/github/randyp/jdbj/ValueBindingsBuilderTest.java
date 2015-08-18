@@ -39,7 +39,7 @@ public class ValueBindingsBuilderTest {
             try (Connection connection = db.getConnection()) {
                 final String[] selected = new TestBuilder()
                         .bindArray(":binding", connection.createArrayOf("varchar", expected))
-                        .execute(connection, rs -> (String[]) rs.getArray(1).getArray());
+                        .execute(connection, rs -> (String[]) rs.getSQLArray(1).getArray());
                 assertArrayEquals(expected, selected);
             }
         }
@@ -50,7 +50,7 @@ public class ValueBindingsBuilderTest {
                 final String[] selected = new TestBuilder()
                         .bindArray(":binding", null)
                         .execute(connection, rs -> {
-                            final Array array = rs.getArray(1);
+                            final Array array = rs.getSQLArray(1);
                             return array == null ? null : (String[]) array.getArray();
                         });
                 assertNull(selected);

@@ -43,7 +43,7 @@ public class OptionalValueBindingsBuilderTest {
                 final String[] selected = new TestBuilder()
                         .bindArray(":binding", null)
                         .bindOptionalArray(":binding", Optional.of(connection.createArrayOf("varchar", expected)))
-                        .execute(connection, rs -> (String[]) rs.getArray(1).getArray());
+                        .execute(connection, rs -> (String[]) rs.getSQLArray(1).getArray());
                 assertArrayEquals(expected, selected);
             }
         }
@@ -56,7 +56,7 @@ public class OptionalValueBindingsBuilderTest {
                         .bindDefaultArray(":binding", connection.createArrayOf("varchar", expected))
                         .bindOptionalArray(":binding", Optional.empty())
                         .execute(connection, rs -> {
-                            final Array array = rs.getArray(1);
+                            final Array array = rs.getSQLArray(1);
                             return array == null ? null : (String[]) array.getArray();
                         });
                 assertArrayEquals(expected, selected);
