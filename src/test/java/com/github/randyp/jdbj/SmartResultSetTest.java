@@ -94,24 +94,6 @@ public class SmartResultSetTest {
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getBigDecimal("bound"));
             assertResults(binding, assertions);
         }
-
-        @Test
-        public void indexScale() throws Exception {
-            final BigDecimal expected = new BigDecimal("1.2");
-            final Binding binding = pc -> pc.setBigDecimal(expected);
-            //noinspection deprecation
-            final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getBigDecimal(1, 1));
-            assertResults(binding, assertions);
-        }
-
-        @Test
-        public void labelScale() throws Exception {
-            final BigDecimal expected = new BigDecimal("1.2");
-            final Binding binding = pc -> pc.setBigDecimal(expected);
-            //noinspection deprecation
-            final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getBigDecimal("bound", 1));
-            assertResults(binding, assertions);
-        }
     }
 
     public static class GetBinaryStream {

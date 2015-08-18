@@ -54,18 +54,6 @@ public class SmartResultSet implements AutoCloseable {
         return rs.getBigDecimal(columnLabel);
     }
 
-    @Deprecated
-    public BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
-        //noinspection deprecation
-        return rs.getBigDecimal(columnIndex, scale);
-    }
-
-    @Deprecated
-    public BigDecimal getBigDecimal(String columnLabel, int scale) throws SQLException {
-        //noinspection deprecation
-        return rs.getBigDecimal(columnLabel, scale);
-    }
-
     public InputStream getBinaryStream(int columnIndex) throws SQLException {
         return rs.getBinaryStream(columnIndex);
     }
@@ -374,18 +362,6 @@ public class SmartResultSet implements AutoCloseable {
 
     public URL getURL(String columnLabel) throws SQLException {
         return rs.getURL(columnLabel);
-    }
-
-    @Deprecated
-    public InputStream getUnicodeStream(int columnIndex) throws SQLException {
-        //noinspection deprecation
-        return rs.getUnicodeStream(columnIndex);
-    }
-
-    @Deprecated
-    public InputStream getUnicodeStream(String columnLabel) throws SQLException {
-        //noinspection deprecation
-        return rs.getUnicodeStream(columnLabel);
     }
 
     public SQLWarning getWarnings() throws SQLException {

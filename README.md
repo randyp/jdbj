@@ -73,9 +73,6 @@ System.out.println("jdb" + ((char) ('i' + 1)));
 mvn release:clean release:prepare -B && mvn release:perform && git push
 ```
 
-#### 0.1.3 Todo
-* [ ] Smart Result Set???
-
 #### 0.1.4 Todo
 * [ ] More List bindings?
 * [ ] Allowed to bind defaults during Map query phase, is passed to phase 3 execute query

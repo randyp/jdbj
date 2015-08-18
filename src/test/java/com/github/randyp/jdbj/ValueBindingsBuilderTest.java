@@ -1224,6 +1224,44 @@ public class ValueBindingsBuilderTest {
         }
     }
 
+    public static class GetMetadata {
+
+        @Test
+        public void get() throws Exception {
+            try (Connection connection = db.getConnection();
+                 PreparedStatement ps = connection.prepareStatement("SELECT id, table_name FROM INFORMATION_SCHEMA.TABLES");
+                 SmartResultSet rs = new SmartResultSet(ps.executeQuery())) {
+                assertEquals(2, rs.getMetaData().getColumnCount());
+            }
+        }
+    }
+
+    public static class FindColumn {
+
+        @Test
+        public void find() throws Exception {
+            try (Connection connection = db.getConnection();
+                 PreparedStatement ps = connection.prepareStatement("SELECT id, table_name FROM INFORMATION_SCHEMA.TABLES");
+                 SmartResultSet rs = new SmartResultSet(ps.executeQuery())) {
+                assertEquals(1, rs.findColumn("id"));
+                assertEquals(2, rs.findColumn("table_name"));
+            }
+        }
+    }
+
+    public static class GetWarnings {
+
+        @Test
+        public void none() throws Exception {
+            try (Connection connection = db.getConnection();
+                 PreparedStatement ps = connection.prepareStatement("SELECT id, table_name FROM INFORMATION_SCHEMA.TABLES");
+                 SmartResultSet rs = new SmartResultSet(ps.executeQuery())) {
+                final SQLWarning warnings = rs.getWarnings();
+                assertNull(warnings);
+            }
+        }
+    }
+
     private static class TestBuilder extends PositionalBindingsBuilder<TestBuilder> {
 
         TestBuilder() {
