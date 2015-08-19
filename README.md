@@ -88,15 +88,15 @@ mvn release:clean release:prepare -B && mvn release:perform && git push
 * [x] smarter result set (get array)
 * [x] More List bindings?
 * [x] Allowed to bind defaults during earlier phases
-* [ ] Smarter tests
-* [ ] SQLLite Integration Tests?
-* [ ] Mysql Integration Tests
+* [x] Smarter tests
 
 #### 0.1.5 Todo
+* [ ] SQLLite Integration Tests?
+* [ ] Mysql Integration Tests
 * [ ] Hacky-yet-compatible batch insert query
-* [ ] Java Doc
-* [ ] Examples
 
 #### 0.1.6
 * [ ] Somehow remove most antlr classes we don't need from shading process...
 * [ ] Wrap Batch sql exceptions
+* [ ] Java Doc
+* [ ] Examples
