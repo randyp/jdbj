@@ -35,7 +35,7 @@ try (Stream<Student> stream = streamQuery.execute(db)) {
 * Script Execution, with parameters
 
 #### Examples
-A full set of examples is being developed in [jdbj-examples](https://github.com/randyp/jdbj-examples), but here are some in this repository.
+A full set of examples is being developed in [jdbj-examples](https://github.com/randyp/jdbj-examples), but here are some quick examples.
 
 * [Example Main](src/test/java/com/github/randyp/jdbj/example/InformationSchemaMain.java)
 * [Example DAO (connection as construction parameter)](src/test/java/com/github/randyp/jdbj/example/StudentDAO.java)
