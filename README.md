@@ -81,12 +81,6 @@ System.out.println("jdb" + ((char) ('i' + 1)));
 mvn release:clean release:prepare -B && mvn release:perform && git push
 ```
 
-#### 0.1.4 Todo
-* [x] smarter result set (get array)
-* [x] More List bindings?
-* [x] Allowed to bind defaults during earlier phases
-* [x] Smarter tests
-
 #### 0.1.5 Todo
 * [ ] Derby Integration Tests
 * [ ] SQLLite Integration Tests
