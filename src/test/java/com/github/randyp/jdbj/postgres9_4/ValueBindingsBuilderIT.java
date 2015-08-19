@@ -20,7 +20,7 @@ import java.util.GregorianCalendar;
 import static org.junit.Assert.*;
 
 @RunWith(Enclosed.class)
-public class ValueBindingsBuilderTest {
+public class ValueBindingsBuilderIT {
 
     @ClassRule
     public static final DBRule db = new DBRule();
