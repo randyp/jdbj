@@ -1,31 +1,33 @@
 package com.github.randyp.jdbj;
 
 import com.github.randyp.jdbj.db.h2_1_4.H2Rule;
+import com.github.randyp.jdbj.db.postgres_9_4.PGRule;
 import com.github.randyp.jdbj.lambda.Binding;
 import org.junit.ClassRule;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
+import javax.sql.DataSource;
 import java.io.*;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.sql.*;
-import java.sql.Date;
-import java.util.*;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
 @RunWith(Enclosed.class)
 public class SmartResultSetTest {
 
-    @ClassRule
-    public static final H2Rule db = new H2Rule();
-
-    @Ignore //not supported in h2
     public static class GetArray {
+
+        @ClassRule
+        public static final PGRule db = new PGRule();
+
         @Test
         public void index() throws Exception {
             final Long[] expected = new Long[]{1L, 2L, 3L};
@@ -34,7 +36,7 @@ public class SmartResultSetTest {
                 final Long[] actual = rs.getArray(1);
                 assertArrayEquals(expected, actual);
             };
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, "bigint[]", db);
         }
 
         @Test
@@ -45,7 +47,7 @@ public class SmartResultSetTest {
                 final Long[] actual = rs.getArray(1);
                 assertArrayEquals(expected, actual);
             };
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, "bigint[]", db);
         }
 
         @Test
@@ -55,7 +57,7 @@ public class SmartResultSetTest {
                 final Long[] actual = rs.getArray(1);
                 assertNull(actual);
             };
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -65,22 +67,25 @@ public class SmartResultSetTest {
                 final Long[] actual = rs.getArray(1);
                 assertNull(actual);
             };
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
     }
 
 
-    @Ignore //not supported in h2
     public static class GetSQLArray {
+
+        @ClassRule
+        public static final PGRule db = new PGRule();
+
         @Test
         public void index() throws Exception {
             final Long[] expected = new Long[]{1L, 2L, 3L};
             final Binding binding = pc -> pc.setArray(pc.createArrayOf("bigint", expected));
             final ResultSetAssertions assertions = rs -> {
                 assertNotNull(rs.getSQLArray(1));
-                assertEquals(expected, rs.getSQLArray(1).getArray());
+                assertArrayEquals(expected, (Object[]) rs.getSQLArray(1).getArray());
             };
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, "bigint[]", db);
         }
 
         @Test
@@ -89,13 +94,17 @@ public class SmartResultSetTest {
             final Binding binding = pc -> pc.setArray(pc.createArrayOf("bigint", expected));
             final ResultSetAssertions assertions = rs -> {
                 assertNotNull(rs.getSQLArray("bound"));
-                assertEquals(expected, rs.getSQLArray("bound").getArray());
+                assertArrayEquals(expected, (Object[]) rs.getSQLArray("bound").getArray());
             };
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, "bigint[]", db);
         }
     }
 
     public static class GetAsciiStream {
+
+        @ClassRule
+        public static final H2Rule db = new H2Rule();
+
         @Test
         public void index() throws Exception {
             final String expected = "abcde";
@@ -107,7 +116,7 @@ public class SmartResultSetTest {
                 copyStream(in, baos);
                 assertEquals(expected, new String(baos.toByteArray(), Charset.forName("ascii")));
             };
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -121,17 +130,21 @@ public class SmartResultSetTest {
                 copyStream(in, baos);
                 assertEquals(expected, new String(baos.toByteArray(), Charset.forName("ascii")));
             };
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
     }
 
     public static class GetBigDecimal {
+
+        @ClassRule
+        public static final H2Rule db = new H2Rule();
+
         @Test
         public void index() throws Exception {
             final BigDecimal expected = new BigDecimal("1.2");
             final Binding binding = pc -> pc.setBigDecimal(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getBigDecimal(1));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -139,11 +152,15 @@ public class SmartResultSetTest {
             final BigDecimal expected = new BigDecimal("1.2");
             final Binding binding = pc -> pc.setBigDecimal(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getBigDecimal("bound"));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
     }
 
     public static class GetBinaryStream {
+
+        @ClassRule
+        public static final H2Rule db = new H2Rule();
+
         @Test
         public void index() throws Exception {
             final String expected = "abcde";
@@ -155,7 +172,7 @@ public class SmartResultSetTest {
                 copyStream(in, baos);
                 assertEquals(expected, new String(baos.toByteArray(), Charset.forName("ascii")));
             };
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -169,11 +186,15 @@ public class SmartResultSetTest {
                 copyStream(in, baos);
                 assertEquals(expected, new String(baos.toByteArray(), Charset.forName("ascii")));
             };
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
     }
 
     public static class GetBlob {
+
+        @ClassRule
+        public static final H2Rule db = new H2Rule();
+
         @Test
         public void index() throws Exception {
             final String expected = "abcde";
@@ -185,7 +206,7 @@ public class SmartResultSetTest {
                 copyStream(blob.getBinaryStream(), baos);
                 assertEquals(expected, new String(baos.toByteArray(), Charset.forName("ascii")));
             };
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -199,25 +220,29 @@ public class SmartResultSetTest {
                 copyStream(blob.getBinaryStream(), baos);
                 assertEquals(expected, new String(baos.toByteArray(), Charset.forName("ascii")));
             };
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
     }
 
     @SuppressWarnings("ConstantConditions")
     public static class GetBoolean {
+
+        @ClassRule
+        public static final H2Rule db = new H2Rule();
+
         @Test
         public void index() throws Exception {
             final Boolean expected = Boolean.TRUE;
             final Binding binding = pc -> pc.setBoolean(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getBoolean(1));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
         public void indexNull() throws Exception {
             final Binding binding = pc -> pc.setObject(null);
             final ResultSetAssertions assertions = rs -> assertNull(rs.getBoolean(1));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
 
@@ -226,25 +251,29 @@ public class SmartResultSetTest {
             final Boolean expected = Boolean.TRUE;
             final Binding binding = pc -> pc.setBoolean(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getBoolean("bound"));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
         public void labelNull() throws Exception {
             final Binding binding = pc -> pc.setObject(null);
             final ResultSetAssertions assertions = rs -> assertNull(rs.getBoolean("bound"));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
     }
 
     @SuppressWarnings("ConstantConditions")
     public static class GetBooleanPrimitive {
+
+        @ClassRule
+        public static final H2Rule db = new H2Rule();
+
         @Test
         public void index() throws Exception {
             final boolean expected = true;
             final Binding binding = pc -> pc.setBoolean(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getBooleanPrimitive(1));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -258,7 +287,7 @@ public class SmartResultSetTest {
                     assertEquals("tried to get primitive for column 1 but was null", e.getMessage());
                 }
             };
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
 
@@ -267,7 +296,7 @@ public class SmartResultSetTest {
             final Boolean expected = Boolean.TRUE;
             final Binding binding = pc -> pc.setBoolean(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getBooleanPrimitive("bound"));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -281,24 +310,28 @@ public class SmartResultSetTest {
                     assertEquals("tried to get primitive for column \"bound\" but was null", e.getMessage());
                 }
             };
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
     }
 
     public static class GetByte {
+
+        @ClassRule
+        public static final H2Rule db = new H2Rule();
+
         @Test
         public void index() throws Exception {
             final Byte expected = 12;
             final Binding binding = pc -> pc.setByte(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getByte(1));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
         public void indexNull() throws Exception {
             final Binding binding = pc -> pc.setObject(null);
             final ResultSetAssertions assertions = rs -> assertNull(rs.getByte(1));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
 
@@ -307,24 +340,28 @@ public class SmartResultSetTest {
             final Byte expected = 12;
             final Binding binding = pc -> pc.setByte(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getByte("bound"));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
         public void labelNull() throws Exception {
             final Binding binding = pc -> pc.setObject(null);
             final ResultSetAssertions assertions = rs -> assertNull(rs.getByte("bound"));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
     }
 
     public static class GetBytePrimitive {
+
+        @ClassRule
+        public static final H2Rule db = new H2Rule();
+
         @Test
         public void index() throws Exception {
             final byte expected = 12;
             final Binding binding = pc -> pc.setByte(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getBytePrimitive(1));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -338,7 +375,7 @@ public class SmartResultSetTest {
                     assertEquals("tried to get primitive for column 1 but was null", e.getMessage());
                 }
             };
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
 
@@ -347,7 +384,7 @@ public class SmartResultSetTest {
             final byte expected = 12;
             final Binding binding = pc -> pc.setByte(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getBytePrimitive("bound"));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -361,17 +398,21 @@ public class SmartResultSetTest {
                     assertEquals("tried to get primitive for column \"bound\" but was null", e.getMessage());
                 }
             };
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
     }
 
     public static class GetBytes {
+
+        @ClassRule
+        public static final H2Rule db = new H2Rule();
+
         @Test
         public void index() throws Exception {
             final byte[] expected = {12};
             final Binding binding = pc -> pc.setBytes(expected);
             final ResultSetAssertions assertions = rs -> assertArrayEquals(expected, rs.getBytes(1));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -379,11 +420,15 @@ public class SmartResultSetTest {
             final byte[] expected = {12};
             final Binding binding = pc -> pc.setBytes(expected);
             final ResultSetAssertions assertions = rs -> assertArrayEquals(expected, rs.getBytes("bound"));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
     }
 
     public static class GetCharacterStream {
+
+        @ClassRule
+        public static final H2Rule db = new H2Rule();
+
         @Test
         public void index() throws Exception {
             final String expected = "abcde";
@@ -395,7 +440,7 @@ public class SmartResultSetTest {
                 copyReader(reader, w);
                 assertEquals(expected, w.toString());
             };
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -409,11 +454,15 @@ public class SmartResultSetTest {
                 copyReader(reader, w);
                 assertEquals(expected, w.toString());
             };
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
     }
 
     public static class GetClob {
+
+        @ClassRule
+        public static final H2Rule db = new H2Rule();
+
         @Test
         public void index() throws Exception {
             final String expected = "abcde";
@@ -425,7 +474,7 @@ public class SmartResultSetTest {
                 copyReader(clob.getCharacterStream(), w);
                 assertEquals(expected, w.toString());
             };
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -439,18 +488,21 @@ public class SmartResultSetTest {
                 copyReader(clob.getCharacterStream(), w);
                 assertEquals(expected, w.toString());
             };
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
     }
 
     public static class GetDate extends HasExpectedTimeSinceEpoch {
+
+        @ClassRule
+        public static final H2Rule db = new H2Rule();
 
         @Test
         public void index() throws Exception {
             final Date expected = new Date(expectedTime);
             final Binding binding = pc -> pc.setDate(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getDate(1));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -458,7 +510,7 @@ public class SmartResultSetTest {
             final Date expected = new Date(expectedTime);
             final Binding binding = pc -> pc.setDate(expected, GregorianCalendar.getInstance());
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getDate(1, GregorianCalendar.getInstance()));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -466,7 +518,7 @@ public class SmartResultSetTest {
             final Date expected = new Date(expectedTime);
             final Binding binding = pc -> pc.setDate(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getDate("bound"));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -474,24 +526,28 @@ public class SmartResultSetTest {
             final Date expected = new Date(expectedTime);
             final Binding binding = pc -> pc.setDate(expected, GregorianCalendar.getInstance());
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getDate("bound", GregorianCalendar.getInstance()));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
     }
 
     public static class GetDouble {
+
+        @ClassRule
+        public static final H2Rule db = new H2Rule();
+
         @Test
         public void index() throws Exception {
             final Double expected = 1.2;
             final Binding binding = pc -> pc.setDouble(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getDouble(1));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
         public void indexNull() throws Exception {
             final Binding binding = pc -> pc.setObject(null);
             final ResultSetAssertions assertions = rs -> assertNull(rs.getDouble(1));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
 
@@ -500,24 +556,28 @@ public class SmartResultSetTest {
             final Double expected = 1.2;
             final Binding binding = pc -> pc.setDouble(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getDouble("bound"));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
         public void labelNull() throws Exception {
             final Binding binding = pc -> pc.setObject(null);
             final ResultSetAssertions assertions = rs -> assertNull(rs.getDouble("bound"));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
     }
 
     public static class GetDoublePrimitive {
+
+        @ClassRule
+        public static final H2Rule db = new H2Rule();
+
         @Test
         public void index() throws Exception {
             final double expected = 1.2;
             final Binding binding = pc -> pc.setDouble(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getDoublePrimitive(1), 0.0);
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -531,7 +591,7 @@ public class SmartResultSetTest {
                     assertEquals("tried to get primitive for column 1 but was null", e.getMessage());
                 }
             };
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -539,7 +599,7 @@ public class SmartResultSetTest {
             final double expected = 1.2;
             final Binding binding = pc -> pc.setDouble(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getDoublePrimitive("bound"), 0.0);
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -554,24 +614,28 @@ public class SmartResultSetTest {
                 }
 
             };
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
     }
 
     public static class GetFloat {
+
+        @ClassRule
+        public static final H2Rule db = new H2Rule();
+
         @Test
         public void index() throws Exception {
             final Float expected = 1.2f;
             final Binding binding = pc -> pc.setFloat(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getFloat(1));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
         public void indexNull() throws Exception {
             final Binding binding = pc -> pc.setObject(null);
             final ResultSetAssertions assertions = rs -> assertNull(rs.getFloat(1));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
 
@@ -580,24 +644,28 @@ public class SmartResultSetTest {
             final Float expected = 1.2f;
             final Binding binding = pc -> pc.setFloat(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getFloat("bound"));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
         public void labelNull() throws Exception {
             final Binding binding = pc -> pc.setObject(null);
             final ResultSetAssertions assertions = rs -> assertNull(rs.getFloat("bound"));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
     }
 
     public static class GetFloatPrimitive {
+
+        @ClassRule
+        public static final H2Rule db = new H2Rule();
+
         @Test
         public void index() throws Exception {
             final float expected = 1.2f;
             final Binding binding = pc -> pc.setFloat(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getFloatPrimitive(1), 0.0f);
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -611,7 +679,7 @@ public class SmartResultSetTest {
                     assertEquals("tried to get primitive for column 1 but was null", e.getMessage());
                 }
             };
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -619,7 +687,7 @@ public class SmartResultSetTest {
             final float expected = 1.2f;
             final Binding binding = pc -> pc.setFloat(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getFloatPrimitive("bound"), 0.0f);
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -634,24 +702,28 @@ public class SmartResultSetTest {
                 }
 
             };
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
     }
 
     public static class GetInteger {
+
+        @ClassRule
+        public static final H2Rule db = new H2Rule();
+
         @Test
         public void index() throws Exception {
             final Integer expected = 12;
             final Binding binding = pc -> pc.setInt(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getInteger(1));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
         public void indexNull() throws Exception {
             final Binding binding = pc -> pc.setObject(null);
             final ResultSetAssertions assertions = rs -> assertNull(rs.getInteger(1));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -659,24 +731,28 @@ public class SmartResultSetTest {
             final Integer expected = 12;
             final Binding binding = pc -> pc.setInt(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getInteger("bound"));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
         public void labelNull() throws Exception {
             final Binding binding = pc -> pc.setObject(null);
             final ResultSetAssertions assertions = rs -> assertNull(rs.getInteger("bound"));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
     }
 
     public static class GetIntegerPrimitive {
+
+        @ClassRule
+        public static final H2Rule db = new H2Rule();
+
         @Test
         public void index() throws Exception {
             final int expected = 12;
             final Binding binding = pc -> pc.setInt(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getIntegerPrimitive(1));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -690,7 +766,7 @@ public class SmartResultSetTest {
                     assertEquals("tried to get primitive for column 1 but was null", e.getMessage());
                 }
             };
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -698,7 +774,7 @@ public class SmartResultSetTest {
             final int expected = 12;
             final Binding binding = pc -> pc.setInt(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getIntegerPrimitive("bound"));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -712,24 +788,28 @@ public class SmartResultSetTest {
                     assertEquals("tried to get primitive for column \"bound\" but was null", e.getMessage());
                 }
             };
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
     }
 
     public static class GetLong {
+
+        @ClassRule
+        public static final H2Rule db = new H2Rule();
+
         @Test
         public void index() throws Exception {
             final Long expected = 12L;
             final Binding binding = pc -> pc.setLong(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getLong(1));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
         public void indexNull() throws Exception {
             final Binding binding = pc -> pc.setObject(null);
             final ResultSetAssertions assertions = rs -> assertNull(rs.getLong(1));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -737,24 +817,28 @@ public class SmartResultSetTest {
             final Long expected = 12L;
             final Binding binding = pc -> pc.setLong(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getLong("bound"));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
         public void labelNull() throws Exception {
             final Binding binding = pc -> pc.setObject(null);
             final ResultSetAssertions assertions = rs -> assertNull(rs.getLong("bound"));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
     }
 
     public static class GetLongPrimitive {
+
+        @ClassRule
+        public static final H2Rule db = new H2Rule();
+
         @Test
         public void index() throws Exception {
             final long expected = 12;
             final Binding binding = pc -> pc.setLong(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getLongPrimitive(1));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -768,7 +852,7 @@ public class SmartResultSetTest {
                     assertEquals("tried to get primitive for column 1 but was null", e.getMessage());
                 }
             };
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -776,7 +860,7 @@ public class SmartResultSetTest {
             final long expected = 12;
             final Binding binding = pc -> pc.setLong(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getLongPrimitive("bound"));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -790,11 +874,15 @@ public class SmartResultSetTest {
                     assertEquals("tried to get primitive for column \"bound\" but was null", e.getMessage());
                 }
             };
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
     }
 
     public static class GetNCharacterStream {
+
+        @ClassRule
+        public static final H2Rule db = new H2Rule();
+
         @Test
         public void index() throws Exception {
             final String expected = "abcde";
@@ -806,7 +894,7 @@ public class SmartResultSetTest {
                 copyReader(reader, w);
                 assertEquals(expected, w.toString());
             };
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -820,11 +908,15 @@ public class SmartResultSetTest {
                 copyReader(reader, w);
                 assertEquals(expected, w.toString());
             };
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
     }
 
     public static class GetNClob {
+
+        @ClassRule
+        public static final H2Rule db = new H2Rule();
+
         @Test
         public void index() throws Exception {
             final String expected = "abcde";
@@ -836,7 +928,7 @@ public class SmartResultSetTest {
                 copyReader(clob.getCharacterStream(), w);
                 assertEquals(expected, w.toString());
             };
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -850,17 +942,21 @@ public class SmartResultSetTest {
                 copyReader(clob.getCharacterStream(), w);
                 assertEquals(expected, w.toString());
             };
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
     }
 
     public static class GetNString {
+
+        @ClassRule
+        public static final H2Rule db = new H2Rule();
+
         @Test
         public void index() throws Exception {
             final String expected = "abcde";
             final Binding binding = pc -> pc.setNString(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getNString(1));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -868,17 +964,21 @@ public class SmartResultSetTest {
             final String expected = "abcde";
             final Binding binding = pc -> pc.setNString(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getNString("bound"));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
     }
 
     public static class GetObject {
+
+        @ClassRule
+        public static final H2Rule db = new H2Rule();
+
         @Test
         public void index() throws Exception {
             final String expected = "abcde";
             final Binding binding = pc -> pc.setObject(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getObject(1));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -886,12 +986,14 @@ public class SmartResultSetTest {
             final String expected = "abcde";
             final Binding binding = pc -> pc.setObject(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getObject("bound"));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
     }
 
-    @Ignore //not supported in h2
     public static class GetObjectByMap {
+
+        @ClassRule
+        public static final PGRule db = new PGRule();
 
         private final Map<String, Class<?>> typeMap = new HashMap<>();
 
@@ -899,89 +1001,64 @@ public class SmartResultSetTest {
             typeMap.put(JDBCType.VARCHAR.getName(), String.class);
         }
 
-        @Test
+        @Test(expected = SQLFeatureNotSupportedException.class)
         public void index() throws Exception {
             final String expected = "abcde";
             final Binding binding = pc -> pc.setObject(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getObject(1, typeMap));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
-        @Test
+        @Test(expected = SQLFeatureNotSupportedException.class)
         public void label() throws Exception {
             final String expected = "abcde";
             final Binding binding = pc -> pc.setObject(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getObject("bound", typeMap));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
     }
 
-    @Ignore //not supported in h2
+
     public static class GetObjectByClass {
 
-        @Test
+        @ClassRule
+        public static final PGRule db = new PGRule();
+
+        @Test(expected = SQLFeatureNotSupportedException.class)
         public void index() throws Exception {
             final String expected = "abcde";
             final Binding binding = pc -> pc.setObject(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getObject(1, String.class));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
-        @Test
+        @Test(expected = SQLFeatureNotSupportedException.class)
         public void label() throws Exception {
             final String expected = "abcde";
             final Binding binding = pc -> pc.setObject(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getObject("bound", String.class));
-            assertResults(binding, assertions);
-        }
-    }
-
-    @Ignore //not supported in h2
-    public static class GetRef {
-
-        @Test
-        public void index() throws Exception {
-            try (Connection connection = db.getConnection()) {
-                final Optional<Ref> expected = JDBJ.string("SELECT (SELECT * FROM INFORMATION_SCHEMA.TABLES LIMIT 1) AS ref")
-                        .query()
-                        .map(rs -> rs.getRef(1))
-                        .first()
-                        .execute(connection);
-                final Binding binding = pc -> pc.setRef(expected.get());
-                final ResultSetAssertions assertions = rs -> assertEquals(expected.get(), rs.getRef(1));
-                assertResults(binding, assertions);
-            }
-        }
-
-        @Test
-        public void label() throws Exception {
-            try (Connection connection = db.getConnection()) {
-                final Optional<Ref> expected = JDBJ.string("SELECT (SELECT * FROM INFORMATION_SCHEMA.TABLES LIMIT 1) AS ref")
-                        .query()
-                        .map(rs -> rs.getRef(1))
-                        .first()
-                        .execute(connection);
-                final Binding binding = pc -> pc.setRef(expected.get());
-                final ResultSetAssertions assertions = rs -> assertEquals(expected.get(), rs.getRef("bound"));
-                assertResults(binding, assertions);
-            }
+            assertResults(binding, assertions, db);
         }
     }
 
     public static class GetShort {
+
+        @ClassRule
+        public static final H2Rule db = new H2Rule();
+
         @Test
         public void index() throws Exception {
             final Short expected = 12;
             final Binding binding = pc -> pc.setShort(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getShort(1));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
         public void indexNull() throws Exception {
             final Binding binding = pc -> pc.setObject(null);
             final ResultSetAssertions assertions = rs -> assertNull(rs.getShort(1));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -989,24 +1066,28 @@ public class SmartResultSetTest {
             final Short expected = 12;
             final Binding binding = pc -> pc.setShort(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getShort("bound"));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
         public void labelNull() throws Exception {
             final Binding binding = pc -> pc.setObject(null);
             final ResultSetAssertions assertions = rs -> assertNull(rs.getShort("bound"));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
     }
 
     public static class GetShortPrimitive {
+
+        @ClassRule
+        public static final H2Rule db = new H2Rule();
+
         @Test
         public void index() throws Exception {
             final short expected = 12;
             final Binding binding = pc -> pc.setShort(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getShortPrimitive(1));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -1020,7 +1101,7 @@ public class SmartResultSetTest {
                     assertEquals("tried to get primitive for column 1 but was null", e.getMessage());
                 }
             };
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -1028,7 +1109,7 @@ public class SmartResultSetTest {
             final short expected = 12;
             final Binding binding = pc -> pc.setShort(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getShortPrimitive("bound"));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -1042,12 +1123,14 @@ public class SmartResultSetTest {
                     assertEquals("tried to get primitive for column \"bound\" but was null", e.getMessage());
                 }
             };
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
     }
 
-    @Ignore //not supported in h2
     public static class GetSQLXml {
+
+        @ClassRule
+        public static final PGRule db = new PGRule();
 
         @Test
         public void value() throws Exception {
@@ -1062,7 +1145,7 @@ public class SmartResultSetTest {
                 assertNotNull(sqlxml);
                 assertEquals(expected, sqlxml.getString());
             };
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -1078,17 +1161,21 @@ public class SmartResultSetTest {
                 assertNotNull(sqlxml);
                 assertEquals(expected, sqlxml.getString());
             };
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
     }
 
     public static class GetString {
+
+        @ClassRule
+        public static final H2Rule db = new H2Rule();
+
         @Test
         public void index() throws Exception {
             final String expected = "abcde";
             final Binding binding = pc -> pc.setString(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getString(1));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -1096,26 +1183,21 @@ public class SmartResultSetTest {
             final String expected = "abcde";
             final Binding binding = pc -> pc.setString(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getString("bound"));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
     }
 
-    public static class GetTime {
+    public static class GetTime extends HasExpectedTimeOfDay {
 
-        private final long expectedTime;
-
-        public GetTime() {
-            final Calendar instance = GregorianCalendar.getInstance();
-            instance.set(1970, Calendar.JANUARY, 1, 12, 11, 10);
-            this.expectedTime = 1000 * (instance.getTimeInMillis() / 1000);
-        }
+        @ClassRule
+        public static final H2Rule db = new H2Rule();
 
         @Test
         public void index() throws Exception {
             final Time expected = new Time(expectedTime);
             final Binding binding = pc -> pc.setTime(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getTime(1));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -1123,7 +1205,7 @@ public class SmartResultSetTest {
             final Time expected = new Time(expectedTime);
             final Binding binding = pc -> pc.setTime(expected, GregorianCalendar.getInstance());
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getTime(1, GregorianCalendar.getInstance()));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -1131,7 +1213,7 @@ public class SmartResultSetTest {
             final Time expected = new Time(expectedTime);
             final Binding binding = pc -> pc.setTime(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getTime("bound"));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -1139,18 +1221,21 @@ public class SmartResultSetTest {
             final Time expected = new Time(expectedTime);
             final Binding binding = pc -> pc.setTime(expected, GregorianCalendar.getInstance());
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getTime("bound", GregorianCalendar.getInstance()));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
     }
 
     public static class GetTimestamp extends HasExpectedTimeSinceEpoch {
+
+        @ClassRule
+        public static final H2Rule db = new H2Rule();
 
         @Test
         public void index() throws Exception {
             final Timestamp expected = new Timestamp(expectedTime);
             final Binding binding = pc -> pc.setTimestamp(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getTimestamp(1));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -1158,7 +1243,7 @@ public class SmartResultSetTest {
             final Timestamp expected = new Timestamp(expectedTime);
             final Binding binding = pc -> pc.setTimestamp(expected, GregorianCalendar.getInstance());
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getTimestamp(1, GregorianCalendar.getInstance()));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -1166,7 +1251,7 @@ public class SmartResultSetTest {
             final Timestamp expected = new Timestamp(expectedTime);
             final Binding binding = pc -> pc.setTimestamp(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getTimestamp("bound"));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
         @Test
@@ -1174,33 +1259,45 @@ public class SmartResultSetTest {
             final Timestamp expected = new Timestamp(expectedTime);
             final Binding binding = pc -> pc.setTimestamp(expected, GregorianCalendar.getInstance());
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getTimestamp("bound", GregorianCalendar.getInstance()));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
     }
 
-    @Ignore //not supported in h2
+
     public static class GetURL {
 
-        @Test
+        @ClassRule
+        public static final PGRule db = new PGRule();
+
+        @Test(expected = SQLFeatureNotSupportedException.class)
         public void index() throws Exception {
             final URL expected = new URL("http", "google.com", 8080, "/");
-            final Binding binding = pc -> pc.setURL(expected);
+            assertEquals("http://google.com:8080/", expected.toString());
+
+            final Binding binding = pc -> pc.setString(expected.toString());
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getURL(1));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
 
-        @Test
+        @Test(expected = SQLFeatureNotSupportedException.class)
         public void label() throws Exception {
             final URL expected = new URL("http", "google.com", 8080, "/");
-            final Binding binding = pc -> pc.setURL(expected);
+            assertEquals("http://google.com:8080/", expected.toString());
+
+            final Binding binding = pc -> pc.setString(expected.toString());
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getURL("bound"));
-            assertResults(binding, assertions);
+            assertResults(binding, assertions, db);
         }
     }
 
-    private static void assertResults(Binding binding, ResultSetAssertions assertions) throws SQLException {
+    private static void assertResults(Binding binding, ResultSetAssertions assertions, DataSource db) throws SQLException {
+        final String castType = "varchar";
+        assertResults(binding, assertions, castType, db);
+    }
+
+    private static void assertResults(Binding binding, ResultSetAssertions assertions, String castType, DataSource db) throws SQLException {
         try (Connection connection = db.getConnection();
-             PreparedStatement ps = connection.prepareStatement("SELECT ? as bound")) {
+             PreparedStatement ps = connection.prepareStatement("SELECT CAST(? as " + castType + ") as bound")) {
             binding.bind(new PreparedColumn(ps, 1));
             try (SmartResultSet rs = new SmartResultSet(ps.executeQuery())) {
                 assertTrue(rs.next());

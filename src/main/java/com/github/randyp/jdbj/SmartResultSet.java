@@ -319,14 +319,6 @@ public class SmartResultSet implements AutoCloseable {
         return rs.getObject(columnLabel, type);
     }
 
-    public Ref getRef(int columnIndex) throws SQLException {
-        return rs.getRef(columnIndex);
-    }
-
-    public Ref getRef(String columnLabel) throws SQLException {
-        return rs.getRef(columnLabel);
-    }
-
     public Short getShort(int columnIndex) throws SQLException {
         final short toReturn = rs.getShort(columnIndex);
         return rs.wasNull() ? null : toReturn;
