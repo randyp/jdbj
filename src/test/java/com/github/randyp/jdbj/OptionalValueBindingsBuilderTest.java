@@ -16,7 +16,6 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.math.BigDecimal;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.sql.*;
 import java.sql.Date;
@@ -29,9 +28,6 @@ public class OptionalValueBindingsBuilderTest {
 
     @ClassRule
     public static final H2Rule db = new H2Rule();
-
-    private static final NamedParameterStatement statement =
-            NamedParameterStatement.make("SELECT :binding as bound");
 
     @Ignore //not supported in h2
     public static class BindArray { //lower case so we don't capture java.sql.Array class
@@ -1109,7 +1105,7 @@ public class OptionalValueBindingsBuilderTest {
             }
         }
 
-        @Ignore
+        /*
         @Test
         public void valueSQLType() throws Exception {
             final String expected = "abcde";
@@ -1121,8 +1117,9 @@ public class OptionalValueBindingsBuilderTest {
                 assertEquals(expected, selected);
             }
         }
+        */
 
-        @Ignore
+        /*
         @Test
         public void valueNullSQLType() throws Exception {
             final String expected = "abcde";
@@ -1134,8 +1131,9 @@ public class OptionalValueBindingsBuilderTest {
                 assertEquals(expected, selected);
             }
         }
+        */
 
-        @Ignore //not supported in h2
+        /*
         @Test
         public void valueSQLTypeLength() throws Exception {
             final String expected = "abcde";
@@ -1147,8 +1145,9 @@ public class OptionalValueBindingsBuilderTest {
                 assertEquals(expected, selected);
             }
         }
+        */
 
-        @Ignore //not supported in h2
+        /*
         @Test
         public void valueNullSQLTypeLength() throws Exception {
             final String expected = "abcde";
@@ -1160,9 +1159,10 @@ public class OptionalValueBindingsBuilderTest {
                 assertEquals(expected, selected);
             }
         }
+        */
     }
 
-    @Ignore //not supported in h2
+    /*
     public static class BindRef {
 
         @Test
@@ -1197,6 +1197,7 @@ public class OptionalValueBindingsBuilderTest {
             }
         }
     }
+    */
 
     public static class BindShort {
         @Test
@@ -1277,7 +1278,7 @@ public class OptionalValueBindingsBuilderTest {
         }
     }
 
-    @Ignore //not supported in h2
+    /*
     public static class BindSQLXML {
 
         @Test
@@ -1309,6 +1310,7 @@ public class OptionalValueBindingsBuilderTest {
             }
         }
     }
+    */
 
     public static class BindTime extends HasExpectedTimeOfDay {
 
@@ -1414,7 +1416,7 @@ public class OptionalValueBindingsBuilderTest {
 
     }
 
-    @Ignore //not supported in h2
+    /*
     public static class BindUrl {
 
         @Test
@@ -1441,6 +1443,10 @@ public class OptionalValueBindingsBuilderTest {
             }
         }
     }
+    */
+
+    private static final NamedParameterStatement statement =
+            NamedParameterStatement.make("SELECT :binding as bound");
 
     private static class TestBuilder extends PositionalBindingsBuilder<TestBuilder> {
 

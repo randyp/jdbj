@@ -26,10 +26,7 @@ public class ValueBindingsBuilderTest {
     @ClassRule
     public static final H2Rule db = new H2Rule();
 
-    private static final NamedParameterStatement statement =
-            NamedParameterStatement.make("SELECT :binding as bound");
-
-    @Ignore //not supported in h2
+    /*
     public static class BindArray { //lower case so we don't capture java.sql.Array class
 
         @Test
@@ -57,6 +54,7 @@ public class ValueBindingsBuilderTest {
             }
         }
     }
+    */
 
     public static class BindAsciiStream {
         @Test
@@ -1123,7 +1121,7 @@ public class ValueBindingsBuilderTest {
         }
     }
 
-    @Ignore //not supported in h2
+    /*
     public static class BindSQLXML {
 
         @Test
@@ -1152,6 +1150,7 @@ public class ValueBindingsBuilderTest {
             }
         }
     }
+    */
 
     public static class BindTime extends HasExpectedTimeOfDay {
 
@@ -1245,7 +1244,7 @@ public class ValueBindingsBuilderTest {
 
     }
 
-    @Ignore //not supported in h2
+    /*
     public static class BindURL {
 
         @Test
@@ -1269,6 +1268,7 @@ public class ValueBindingsBuilderTest {
             }
         }
     }
+    */
 
     public static class GetMetadata {
 
@@ -1307,6 +1307,9 @@ public class ValueBindingsBuilderTest {
             }
         }
     }
+
+    private static final NamedParameterStatement statement =
+            NamedParameterStatement.make("SELECT :binding as bound");
 
     private static class TestBuilder extends PositionalBindingsBuilder<TestBuilder> {
 

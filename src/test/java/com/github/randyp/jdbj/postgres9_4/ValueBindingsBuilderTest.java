@@ -166,19 +166,20 @@ public class ValueBindingsBuilderTest {
             }
         }
     }
+
     @Ignore
     public static class BindBlob {
 
         @Test
         public void value() throws Exception {
-            final String expected = "abcde";
+            final byte[] expected = "abcde".getBytes();
             try (Connection connection = db.getConnection()) {
                 final Blob blob = connection.createBlob();
-                blob.setBytes(1, expected.getBytes());
-                final String selected = new TestBuilder()
+                blob.setBytes(1, expected);
+                final byte[] selected = new TestBuilder()
                         .bindBlob(":binding", blob)
-                        .execute(connection, rs -> new String(rs.getBytes(1)));
-                assertEquals(expected, selected);
+                        .execute(connection, rs -> rs.getBytes(1));
+                assertArrayEquals(expected, selected);
             }
         }
 
@@ -197,12 +198,12 @@ public class ValueBindingsBuilderTest {
 
         @Test
         public void inputStream() throws Exception {
-            final String expected = "abcde";
+            final byte[] expected = "abcde".getBytes();
             try (Connection connection = db.getConnection()) {
-                final String selected = new TestBuilder()
-                        .bindBlob(":binding", new ByteArrayInputStream(expected.getBytes()))
-                        .execute(connection, rs -> new String(rs.getBytes(1)));
-                assertEquals(expected, selected);
+                final byte[] selected = new TestBuilder()
+                        .bindBlob(":binding", new ByteArrayInputStream(expected))
+                        .execute(connection, rs -> rs.getBytes(1));
+                assertArrayEquals(expected, selected);
             }
         }
 
@@ -221,12 +222,12 @@ public class ValueBindingsBuilderTest {
 
         @Test
         public void inputStreamLength() throws Exception {
-            final String expected = "abcde";
+            final byte[] expected = "abcde".getBytes();
             try (Connection connection = db.getConnection()) {
-                final String selected = new TestBuilder()
-                        .bindBlob(":binding", new ByteArrayInputStream(expected.getBytes()), (long) expected.length())
-                        .execute(connection, rs -> new String(rs.getBytes(1)));
-                assertEquals(expected, selected);
+                final byte[] selected = new TestBuilder()
+                        .bindBlob(":binding", new ByteArrayInputStream(expected), (long) expected.length)
+                        .execute(connection, rs -> rs.getBytes(1));
+                assertArrayEquals(expected, selected);
             }
         }
 
@@ -387,7 +388,8 @@ public class ValueBindingsBuilderTest {
             }
         }
     }
-    @Ignore
+
+    /*
     public static class BindClob {
 
         @Test
@@ -464,6 +466,7 @@ public class ValueBindingsBuilderTest {
             }
         }
     }
+    */
 
     public static class BindDate extends HasExpectedTimeSinceEpoch {
 

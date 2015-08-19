@@ -12,11 +12,9 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.math.BigDecimal;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.sql.*;
 import java.util.GregorianCalendar;
-import java.util.Optional;
 
 import static org.junit.Assert.*;
 
@@ -26,10 +24,7 @@ public class DefaultValueBindingsBuilderTest {
     @ClassRule
     public static final H2Rule db = new H2Rule();
 
-    private static final NamedParameterStatement statement =
-            NamedParameterStatement.make("SELECT :binding as bound");
-
-    @Ignore //not supported in h2
+    /*
     public static class BindArray { //lower case so we don't capture java.sql.Array class
 
         @Test
@@ -56,6 +51,7 @@ public class DefaultValueBindingsBuilderTest {
             }
         }
     }
+    */
 
     public static class BindAsciiStream {
         @Test
@@ -1035,7 +1031,7 @@ public class DefaultValueBindingsBuilderTest {
         }
     }
 
-    @Ignore //not supported in h2
+    /*
     public static class BindRef {
 
         @Test
@@ -1063,6 +1059,7 @@ public class DefaultValueBindingsBuilderTest {
             }
         }
     }
+    */
 
     public static class BindShort {
         @Test
@@ -1124,7 +1121,7 @@ public class DefaultValueBindingsBuilderTest {
         }
     }
 
-    @Ignore //not supported in h2
+    /*
     public static class BindSQLXML {
 
         @Test
@@ -1153,6 +1150,7 @@ public class DefaultValueBindingsBuilderTest {
             }
         }
     }
+    */
 
     public static class BindTime extends HasExpectedTimeOfDay {
 
@@ -1246,7 +1244,7 @@ public class DefaultValueBindingsBuilderTest {
 
     }
 
-    @Ignore //not supported in h2
+    /*
     public static class BindURL {
 
         @Test
@@ -1270,6 +1268,10 @@ public class DefaultValueBindingsBuilderTest {
             }
         }
     }
+    */
+
+    private static final NamedParameterStatement statement =
+            NamedParameterStatement.make("SELECT :binding as bound");
 
     private static class TestBuilder extends PositionalBindingsBuilder<TestBuilder> {
 
