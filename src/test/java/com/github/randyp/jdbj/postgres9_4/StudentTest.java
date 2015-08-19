@@ -7,7 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class StudentTest {
+public abstract class StudentTest {
 
     @ClassRule
     public static DBRule db = new DBRule(){

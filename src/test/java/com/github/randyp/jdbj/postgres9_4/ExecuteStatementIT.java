@@ -10,7 +10,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class ExecuteStatementTest extends StudentTest {
+public class ExecuteStatementIT extends StudentTest {
 
     //can only test with one batch, as keys are only available from last batch in H2
     @Test

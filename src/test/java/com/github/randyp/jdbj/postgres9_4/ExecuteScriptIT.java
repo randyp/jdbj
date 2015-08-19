@@ -11,7 +11,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class ExecuteScriptTest extends StudentTest {
+public class ExecuteScriptIT extends StudentTest {
 
     //can only test with one batch, as keys are only available from last batch in H2
     @Test

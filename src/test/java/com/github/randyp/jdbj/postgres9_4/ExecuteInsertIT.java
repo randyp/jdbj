@@ -11,22 +11,16 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class BatchedExecuteInsertTest extends StudentTest {
+public class ExecuteInsertIT extends StudentTest {
 
-    //can only test with one batch, as keys are only available from last batch in H2
     @Test
-    public void insertBatch() throws Exception {
-        final NewStudent newStudent = new NewStudent("Ada10", "Dada10", new BigDecimal("3.1"));
-
+    public void insertOne() throws Exception {
+        final NewStudent newStudent = new NewStudent("Ada", "Dada", new BigDecimal("3.1"));
         ResultSetMapper<Long> keyMapper = rs -> rs.getLong(1);
-        //noinspection deprecation
-        BatchedExecuteInsert<Long> insertQuery = JDBJ.resource(Student.insert).insert(keyMapper)
-                .asBatch()
-                .startBatch()
+        final ExecuteInsert<Long> insertQuery = JDBJ.resource(Student.insert).insert(keyMapper)
                 .bindString(":first_name", newStudent.getFirstName())
                 .bindString(":last_name", newStudent.getLastName())
-                .bindBigDecimal(":gpa", newStudent.getGpa())
-                .endBatch();
+                .bindBigDecimal(":gpa", newStudent.getGpa());
 
         final List<Long> keys;
         final List<Student> actual;
@@ -37,4 +31,15 @@ public class BatchedExecuteInsertTest extends StudentTest {
         assertEquals(1, keys.size());
         assertEquals(Collections.singletonList(newStudent.withId(keys.get(0))), actual);
     }
+
+    @Test
+    public void convenienceOnJDBJ() throws Exception {
+        //noinspection AccessStaticViaInstance
+        final ExecuteInsert<Long> executeUpdate = JDBJ.insert("INSERT INTO student (first_name, last_name, gpa) VALUES (:s, :s, :s)", rs -> rs.getLong(1))
+                .bindString(":s", "3.1");
+        try (Connection connection = db.getConnection()) {
+            assertEquals(1, executeUpdate.execute(connection).size());
+        }
+    }
+
 }

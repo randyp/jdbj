@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 
 import static org.junit.Assert.*;
 
-public class ExecuteQueryTest extends StudentTest {
+public class ExecuteQueryIT extends StudentTest {
 
     @Test
     public void selectMapToListExecute() throws Exception {

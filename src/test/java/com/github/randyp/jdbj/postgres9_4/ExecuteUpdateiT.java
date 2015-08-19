@@ -12,7 +12,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class ExecuteUpdateTest extends StudentTest {
+public class ExecuteUpdateiT extends StudentTest {
 
     @Test
     public void insertOne() throws Exception {

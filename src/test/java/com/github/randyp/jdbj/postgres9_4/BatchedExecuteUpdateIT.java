@@ -13,7 +13,7 @@ import java.util.List;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
-public class BatchedExecuteUpdateTest extends StudentTest {
+public class BatchedExecuteUpdateIT extends StudentTest {
 
     @Test
     public void insertBatch() throws Exception {
