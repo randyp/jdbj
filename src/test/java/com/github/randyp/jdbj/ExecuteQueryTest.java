@@ -22,12 +22,7 @@ public class ExecuteQueryTest {
         final ExecuteQuery<List<String>> query = JDBJ.query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE id = -28")
                 .map(rs -> rs.getString("TABLE_NAME"))
                 .toList();
-
-        final List<String> results;
-        try (Connection connection = db.getConnection()) {
-            results = query.execute(connection);
-        }
-
+        final List<String> results = query.execute(db);
         assertEquals(Collections.singletonList("SESSION_STATE"), results);
     }
 
@@ -39,11 +34,7 @@ public class ExecuteQueryTest {
                 .toList()
                 .bindLongs(":ids", new long[]{-28L});
 
-        final List<String> results;
-        try (Connection connection = db.getConnection()) {
-            results = query.execute(connection);
-        }
-
+        final List<String> results = query.execute(db);
         assertEquals(Collections.singletonList("SESSION_STATE"), results);
     }
 
@@ -55,11 +46,7 @@ public class ExecuteQueryTest {
                 .first()
                 .bindLongs(":ids", new long[]{-28L});
 
-        final Optional<String> result;
-        try (Connection connection = db.getConnection()) {
-            result = query.execute(connection);
-        }
-
+        final Optional<String> result = query.execute(db);
         assertTrue(result.isPresent());
         assertEquals("SESSION_STATE", result.get());
     }
@@ -73,11 +60,7 @@ public class ExecuteQueryTest {
                 .first()
                 .bindLongs(":ids", new long[]{-28L});
 
-        final Optional<Integer> result;
-        try (Connection connection = db.getConnection()) {
-            result = query.execute(connection);
-        }
-
+        final Optional<Integer> result = query.execute(db);
         assertTrue(result.isPresent());
         assertEquals("SESSION_STATE".length(), result.get().intValue());
     }
@@ -91,10 +74,8 @@ public class ExecuteQueryTest {
                 .toStream();
 
         final Optional<String> result;
-        try (Connection connection = db.getConnection()) {
-            try (Stream<String> stream = query.execute(connection)) {
-                result = stream.findFirst();
-            }
+        try (Stream<String> stream = query.execute(db)) {
+            result = stream.findFirst();
         }
 
         assertTrue(result.isPresent());
@@ -108,12 +89,7 @@ public class ExecuteQueryTest {
                 .map(rs -> rs.getString("TABLE_NAME"))
                 .bindString(":table_schema", "INFORMATION_SCHEMA")
                 .first();
-
-        final Optional<String> result;
-        try (Connection connection = db.getConnection()) {
-            result = query.execute(connection);
-        }
-
+        final Optional<String> result = query.execute(db);
         assertNotNull(result);
     }
 
@@ -124,10 +100,8 @@ public class ExecuteQueryTest {
                 .map(rs -> rs.getString("TABLE_NAME"))
                 .toList();
 
-        try (Connection connection = db.getConnection()) {
-            assertEquals(5, query.execute(connection).size());
-            assertEquals(10, query.bindInt(":limit", 10).execute(connection).size());
-        }
+        assertEquals(5, query.execute(db).size());
+        assertEquals(10, query.bindInt(":limit", 10).execute(db).size());
     }
 
     @Test
@@ -137,9 +111,7 @@ public class ExecuteQueryTest {
                 .toList()
                 .bindDefaultLongs(":ids", -29L);
 
-        try (Connection connection = db.getConnection()) {
-            assertEquals(1, query.execute(connection).size());
-            assertEquals(2, query.bindLongs(":ids", -29L, -28L).execute(connection).size());
-        }
+        assertEquals(1, query.execute(db).size());
+        assertEquals(2, query.bindLongs(":ids", -29L, -28L).execute(db).size());
     }
 }

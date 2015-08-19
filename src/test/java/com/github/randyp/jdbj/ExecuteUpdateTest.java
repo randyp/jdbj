@@ -28,11 +28,8 @@ public class ExecuteUpdateTest extends StudentTest {
                 .bindString(":last_name", expected.lastName)
                 .bindBigDecimal(":gpa", expected.gpa);
 
-        final List<Student> actual;
-        try (Connection connection = db.getConnection()) {
-            assertEquals(1, executeUpdate.execute(connection));
-            actual = Student.selectAll.execute(connection);
-        }
+        assertEquals(1, executeUpdate.execute(db));
+        final List<Student> actual = Student.selectAll.execute(db);
         assertEquals(Collections.singletonList(expected), actual);
     }
 
@@ -40,9 +37,7 @@ public class ExecuteUpdateTest extends StudentTest {
     public void convenienceOnJDBJ() throws Exception {
         final ExecuteUpdate executeUpdate = JDBJ.update("INSERT INTO student (first_name, last_name, gpa) VALUES (:s, :s, :s)")
                 .bindString(":s", "3.1");
-        try (Connection connection = db.getConnection()) {
-            assertEquals(1, executeUpdate.execute(connection));
-        }
+        assertEquals(1, executeUpdate.execute(db));
     }
 
 }

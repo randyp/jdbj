@@ -4,6 +4,7 @@
 
 jdbj is an incredibly small jdbc fluent interface for capturing query intent before query execution. Sample code:
 ``` java
+//db is a javax.sql.DataSource
 final MapQuery<Student> studentsByIds = JDBJ.resource("student_by_ids.sql")
         .query()
         .bindDefaultLong(":limit", 10L)
@@ -13,17 +14,13 @@ final MapQuery<Student> studentsByIds = JDBJ.resource("student_by_ids.sql")
 final ExecuteQuery<List<Student>> listQuery = studentsByIds
         .toList()
         .bindLongs(":ids", 1L, 2L, 3L, 11L, 12L, 14L);
-try (Connection connection = db.getConnection()) {
-    final List<Student> students = listQuery.execute(connection);
-    System.out.println(students);
-}
+System.out.println(listQuery.execute(db));
 
 //do something else for a while
 final StreamQuery<Student> streamQuery = studentsByIds
         .toStream()
         .bindLongs(":ids", 10L, 11L, 12L);
-try (Connection connection = db.getConnection();
-     Stream<Student> stream = streamQuery.execute(connection)) {
+try (Stream<Student> stream = streamQuery.execute(db)) {
     stream.forEach(System.out::println);
 }
 ```

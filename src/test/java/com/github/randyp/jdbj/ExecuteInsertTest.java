@@ -21,12 +21,9 @@ public class ExecuteInsertTest extends StudentTest {
                 .bindString(":last_name", newStudent.lastName)
                 .bindBigDecimal(":gpa", newStudent.gpa);
 
-        final List<Long> keys;
-        final List<Student> actual;
-        try (Connection connection = db.getConnection()) {
-            keys = insertQuery.execute(connection);
-            actual = Student.selectAll.execute(connection);
-        }
+        final List<Long> keys = insertQuery.execute(db);
+        final List<Student> actual = Student.selectAll.execute(db);
+
         assertEquals(1, keys.size());
         assertEquals(Collections.singletonList(newStudent.withId(keys.get(0))), actual);
     }
@@ -36,9 +33,6 @@ public class ExecuteInsertTest extends StudentTest {
         //noinspection AccessStaticViaInstance
         final ExecuteInsert<Long> executeUpdate = new JDBJ().insert("INSERT INTO student (first_name, last_name, gpa) VALUES (:s, :s, :s)", rs -> rs.getLong(1)) //for test coverage...
                 .bindString(":s", "3.1");
-        try (Connection connection = db.getConnection()) {
-            assertEquals(1, executeUpdate.execute(connection).size());
-        }
+        assertEquals(1, executeUpdate.execute(db).size());
     }
-
 }

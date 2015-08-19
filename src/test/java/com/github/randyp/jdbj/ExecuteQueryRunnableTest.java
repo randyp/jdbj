@@ -16,13 +16,10 @@ public class ExecuteQueryRunnableTest {
     @Test
     public void selectRunExecute() throws Exception {
         final String[] firstColumnName = {null};
-        final ExecuteQueryRunnable query = JDBJ.string("SELECT * FROM INFORMATION_SCHEMA.TABLES")
+        JDBJ.string("SELECT * FROM INFORMATION_SCHEMA.TABLES")
                 .query()
-                .runnable(rs -> firstColumnName[0] = rs.getMetaData().getColumnName(1));
-
-        try (Connection connection = db.getConnection()) {
-            query.execute(connection);
-        }
+                .runnable(rs -> firstColumnName[0] = rs.getMetaData().getColumnName(1))
+                .execute(db);
 
         assertEquals("TABLE_CATALOG", firstColumnName[0]);
     }
@@ -30,18 +27,15 @@ public class ExecuteQueryRunnableTest {
     @Test
     public void selectRunBindValueExecute() throws Exception {
         final int[] count = {0};
-        final ExecuteQueryRunnable query = JDBJ.string("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE id = :id")
+        JDBJ.string("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE id = :id")
                 .query()
                 .runnable(rs -> {
                     while (rs.next()) {
                         count[0]++;
                     }
                 })
-                .bindLong(":id", -28L);
-
-        try (Connection connection = db.getConnection()) {
-            query.execute(connection);
-        }
+                .bindLong(":id", -28L)
+                .execute(db);
 
         assertEquals(1, count[0]);
     }
@@ -49,20 +43,16 @@ public class ExecuteQueryRunnableTest {
     @Test
     public void selectRunBindStringListExecute() throws Exception {
         final int[] count = {0};
-        final ExecuteQueryRunnable query = JDBJ.string("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA in :schemas")
+        JDBJ.string("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA in :schemas")
                 .query()
                 .bindStrings(":schemas", "INFORMATION_SCHEMA")
                 .runnable(rs -> {
                     while (rs.next()) {
                         count[0]++;
                     }
-                });
-
-        try (Connection connection = db.getConnection()) {
-            query.execute(connection);
-        }
+                })
+                .execute(db);
 
         assertEquals(29, count[0]);
     }
-
 }

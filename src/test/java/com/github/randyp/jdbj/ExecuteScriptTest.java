@@ -19,12 +19,8 @@ public class ExecuteScriptTest extends StudentTest {
                 new Student(11L, "Ada11", "Dada11", new BigDecimal("3.2"))
         );
 
-        final List<Student> actual;
-        try (Connection connection = db.getConnection()) {
-            JDBJ.resource("student_insert_ada10_ada11.sql").script()
-                    .execute(connection);
-            actual = Student.selectAll.execute(connection);
-        }
+        JDBJ.resource("student_insert_ada10_ada11.sql").script().execute(db);
+        final List<Student> actual = Student.selectAll.execute(db);
         assertEquals(expected, actual);
     }
 
@@ -35,26 +31,20 @@ public class ExecuteScriptTest extends StudentTest {
                 new Student(11L, "Ada11", "Dada11", new BigDecimal("3.2"))
         );
 
-        final List<Student> actual;
-        try (Connection connection = db.getConnection()) {
-            JDBJ.script(
-                    "INSERT INTO student(id, first_name, last_name, gpa) VALUES(:id0, 'Ada10', 'Dada10', '3.1');\n" +
-                            "INSERT INTO student(id, first_name, last_name, gpa) VALUES(:id1, 'Ada11', 'Dada11', '3.2');"
-            ).bindLong(":id0", expected.get(0).getId())
-                    .bindLong(":id1", expected.get(1).getId())
-                    .execute(connection);
-            actual = Student.selectAll.execute(connection);
-        }
+        JDBJ.script(
+                "INSERT INTO student(id, first_name, last_name, gpa) VALUES(:id0, 'Ada10', 'Dada10', '3.1');\n" +
+                        "INSERT INTO student(id, first_name, last_name, gpa) VALUES(:id1, 'Ada11', 'Dada11', '3.2');"
+        ).bindLong(":id0", expected.get(0).getId())
+                .bindLong(":id1", expected.get(1).getId())
+                .execute(db);
+        final List<Student> actual = Student.selectAll.execute(db);
         assertEquals(expected, actual);
     }
 
     @Test
     public void convenienceMethodOnJDBJ() throws Exception {
-        try (Connection connection = db.getConnection()) {
-            JDBJ.script("INSERT INTO student(id, first_name, last_name, gpa) VALUES (10 ,'a', 'b', '3.1');")
-                    .execute(connection);
-            assertEquals(1, Student.selectAll.execute(connection).size());
-        }
+        JDBJ.script("INSERT INTO student(id, first_name, last_name, gpa) VALUES (10 ,'a', 'b', '3.1');")
+                .execute(db);
+        assertEquals(1, Student.selectAll.execute(db).size());
     }
-
 }
