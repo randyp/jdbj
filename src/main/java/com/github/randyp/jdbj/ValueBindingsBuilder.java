@@ -39,7 +39,9 @@ public interface ValueBindingsBuilder<E> {
     }
 
     default E bindBinaryStream(String name, @Nullable InputStream x, long length) {
-        return bind(name, pc -> pc.setBinaryStream(x, length));
+        return x == null
+                ? bind(name, pc -> pc.setNull(Types.BINARY))
+                : bind(name, pc -> pc.setBinaryStream(x, length));
     }
 
     default E bindBinaryStream(String name, @Nullable InputStream x, int length) {

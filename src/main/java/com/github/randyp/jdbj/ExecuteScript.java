@@ -5,6 +5,7 @@ import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.Token;
 
 import javax.annotation.concurrent.Immutable;
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -57,6 +58,13 @@ public final class ExecuteScript extends PositionalBindingsBuilder<ExecuteScript
     ExecuteScript(NamedParameterStatement script, PositionalBindings bindings, List<NamedParameterStatement> statements) {
         super(script, bindings, (s,b) -> new ExecuteScript(s, b, statements));
         this.statements = statements;
+    }
+
+    public boolean[] execute(DataSource db) throws SQLException {
+        checkAllBindingsPresent();
+        try(Connection connection = db.getConnection()){
+            return execute(connection);
+        }
     }
 
     public boolean[] execute(Connection connection) throws SQLException {

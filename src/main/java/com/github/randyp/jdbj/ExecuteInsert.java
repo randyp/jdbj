@@ -3,6 +3,7 @@ package com.github.randyp.jdbj;
 import com.github.randyp.jdbj.lambda.ResultSetMapper;
 
 import javax.annotation.concurrent.Immutable;
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,13 @@ public final class ExecuteInsert<R> extends PositionalBindingsBuilder<ExecuteIns
     @SuppressWarnings("deprecation")
     public BatchedExecuteInsert<R> asBatch(){
         return new BatchedExecuteInsert<>(statement, keysMapper);
+    }
+
+    public List<R> execute(DataSource db) throws SQLException {
+        checkAllBindingsPresent();
+        try(Connection connection = db.getConnection()){
+            return execute(connection);
+        }
     }
 
     public List<R> execute(Connection connection) throws SQLException {

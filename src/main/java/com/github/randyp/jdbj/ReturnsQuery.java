@@ -26,5 +26,4 @@ public final class ReturnsQuery extends PositionalBindingsBuilder<ReturnsQuery> 
     public ExecuteQueryRunnable runnable(ResultSetRunnable runnable){
         return new ExecuteQueryRunnable(statement, bindings, runnable);
     }
-
 }

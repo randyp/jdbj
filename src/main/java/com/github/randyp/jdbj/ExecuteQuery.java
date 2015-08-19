@@ -4,6 +4,7 @@ package com.github.randyp.jdbj;
 import com.github.randyp.jdbj.lambda.ResultSetToResult;
 
 import javax.annotation.concurrent.Immutable;
+import javax.sql.DataSource;
 import java.sql.*;
 
 @Immutable
@@ -11,13 +12,16 @@ public final class ExecuteQuery<R> extends PositionalBindingsBuilder<ExecuteQuer
 
     private final ResultSetToResult<R> toResult;
 
-    ExecuteQuery(NamedParameterStatement statement, ResultSetToResult<R> toResult) {
-        this(statement, PositionalBindings.empty(), toResult);
-    }
-
     public ExecuteQuery(NamedParameterStatement statement, PositionalBindings bindings, ResultSetToResult<R> toResult) {
         super(statement, bindings, (s, b) -> new ExecuteQuery<>(s, b, toResult));
         this.toResult = toResult;
+    }
+
+    public R execute(DataSource db) throws SQLException {
+        checkAllBindingsPresent(); //might as well, not need to open connection
+        try(Connection connection = db.getConnection()){
+            return execute(connection);
+        }
     }
 
     public R execute(Connection connection) throws SQLException {

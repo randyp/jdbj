@@ -1,6 +1,7 @@
 package com.github.randyp.jdbj;
 
 import javax.annotation.concurrent.Immutable;
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -21,6 +22,13 @@ public final class ExecuteUpdate extends PositionalBindingsBuilder<ExecuteUpdate
 
     public BatchedExecuteUpdate asBatch(){
         return new BatchedExecuteUpdate(statement);
+    }
+
+    public int execute(DataSource db) throws SQLException {
+        checkAllBindingsPresent();
+        try(Connection connection = db.getConnection()){
+            return execute(connection);
+        }
     }
 
     public int execute(Connection connection) throws SQLException {

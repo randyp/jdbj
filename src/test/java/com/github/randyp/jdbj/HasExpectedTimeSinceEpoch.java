@@ -5,7 +5,7 @@ import java.util.GregorianCalendar;
 
 public abstract class HasExpectedTimeSinceEpoch {
 
-    final long expectedTime;
+    protected final long expectedTime;
 
     public HasExpectedTimeSinceEpoch() {
         final Calendar instance = GregorianCalendar.getInstance();

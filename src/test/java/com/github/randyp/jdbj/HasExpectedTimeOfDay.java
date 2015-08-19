@@ -5,7 +5,7 @@ import java.util.GregorianCalendar;
 
 public abstract class HasExpectedTimeOfDay {
 
-    final long expectedTime;
+    protected  final long expectedTime;
 
     public HasExpectedTimeOfDay() {
         final Calendar instance = GregorianCalendar.getInstance();

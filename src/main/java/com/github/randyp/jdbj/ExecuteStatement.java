@@ -1,6 +1,7 @@
 package com.github.randyp.jdbj;
 
 import javax.annotation.concurrent.Immutable;
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -17,6 +18,13 @@ public final class ExecuteStatement extends PositionalBindingsBuilder<ExecuteSta
 
     ExecuteStatement(NamedParameterStatement statement, PositionalBindings bindings) {
         super(statement, bindings, ExecuteStatement::new);
+    }
+
+    public boolean execute(DataSource db) throws SQLException {
+        checkAllBindingsPresent();
+        try(Connection connection = db.getConnection()){
+            return execute(connection);
+        }
     }
 
     public boolean execute(Connection connection) throws SQLException {

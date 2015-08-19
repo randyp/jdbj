@@ -37,7 +37,6 @@ public final class MapQuery<R> extends PositionalBindingsBuilder<MapQuery<R>> {
         });
     }
 
-
     public ExecuteQuery<Optional<R>> first() {
         return new ExecuteQuery<>(statement, bindings, rs -> {
             Optional<R> result = Optional.empty();

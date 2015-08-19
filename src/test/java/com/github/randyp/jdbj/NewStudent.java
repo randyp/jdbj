@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 public class NewStudent {
 
-    static final String insert = "student_insert.sql";
+    public static final String insert = "student_insert.sql";
 
     final String firstName;
     final String lastName;

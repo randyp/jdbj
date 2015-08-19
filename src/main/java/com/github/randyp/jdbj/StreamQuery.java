@@ -3,6 +3,7 @@ package com.github.randyp.jdbj;
 import com.github.randyp.jdbj.lambda.ResultSetMapper;
 
 import javax.annotation.concurrent.Immutable;
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,13 +17,21 @@ public final class StreamQuery<R> extends PositionalBindingsBuilder<StreamQuery<
 
     private final ResultSetMapper<R> mapper;
 
-    StreamQuery(NamedParameterStatement statement, ResultSetMapper<R> mapper) {
-        this(statement, PositionalBindings.empty(), mapper);
-    }
-
     StreamQuery(NamedParameterStatement statement, PositionalBindings bindings, ResultSetMapper<R> mapper) {
         super(statement, bindings, ((s, b) -> new StreamQuery<>(s, b, mapper)));
         this.mapper = mapper;
+    }
+
+    public Stream<R> execute(DataSource db) throws SQLException {
+        checkAllBindingsPresent();
+        final Connection connection = db.getConnection();
+        return execute(connection).onClose( ()->{
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                //ignore
+            }
+        });
     }
 
     public Stream<R> execute(Connection connection) throws SQLException {

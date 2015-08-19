@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Immutable
 public final class NamedParameterStatement {
 
-    static NamedParameterStatement make(String sql){
+    public static NamedParameterStatement make(String sql){
         final NamedParameterStatementLexer lexer = new NamedParameterStatementLexer(new ANTLRInputStream(sql));
         //noinspection unchecked
         final List<Token> tokens = (List<Token>) lexer.getAllTokens();

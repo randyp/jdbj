@@ -16,7 +16,7 @@ public class PositionalBindingsBuilder<E extends PositionalBindingsBuilder<E>> e
     final PositionalBindings bindings;
     final PositionalBindingsBuilderFactory<E> factory;
 
-    PositionalBindingsBuilder(NamedParameterStatement statement, PositionalBindings bindings, PositionalBindingsBuilderFactory<E> factory){
+    protected PositionalBindingsBuilder(NamedParameterStatement statement, PositionalBindings bindings, PositionalBindingsBuilderFactory<E> factory){
         this.statement = statement;
         this.bindings = bindings;
         this.factory = factory;

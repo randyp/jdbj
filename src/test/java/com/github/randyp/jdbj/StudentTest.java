@@ -46,7 +46,5 @@ public abstract class StudentTest {
                 super.after();
             }
         };
-
     }
-
 }
