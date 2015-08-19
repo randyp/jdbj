@@ -111,7 +111,6 @@ public class ValueBindingsBuilderTest {
                         .execute(connection, rs -> rs.getBytes(1));
                 assertArrayEquals(expected, selected);
             }
-            fail();
         }
 
         @Ignore("appears to be broken in postgres because NPE")
