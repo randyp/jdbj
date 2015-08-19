@@ -88,7 +88,8 @@ mvn release:clean release:prepare -B && mvn release:perform && git push
 * [x] Smarter tests
 
 #### 0.1.5 Todo
-* [ ] SQLLite Integration Tests?
+* [ ] Derby Integration Tests
+* [ ] SQLLite Integration Tests
 * [ ] Mysql Integration Tests
 * [ ] Hacky-yet-compatible batch insert query
 
