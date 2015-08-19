@@ -27,12 +27,12 @@ try (Stream<Student> stream = streamQuery.execute(db)) {
 
 #### Features
 * Named Parameters (No Positional Parameters, ever)
-* List bindings (not during batch execution)
-* Nullable binding and Null-Safe fetching of (Boolean|Byte|Double|Float|Integer|Long|Short)
+* Collections bindable (not during batch execution)
+* Null-Safe fetching of (Boolean|Byte|Double|Float|Integer|Long|Short)
 * Java8 lambda interface for bindings, transactions
 * Fetch-forward read-only cursors, always
-* Queries as objects
-* Utilities for best practices (store query strings as resources)
+* Utilities for best practices
+* Script Execution, with parameters
 
 #### Examples
 A full set of examples is being developed in [jdbj-examples](https://github.com/randyp/jdbj-examples), but here are some in this repository.
