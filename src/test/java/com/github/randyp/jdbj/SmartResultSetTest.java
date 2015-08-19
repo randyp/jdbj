@@ -44,7 +44,7 @@ public class SmartResultSetTest {
             final Long[] expected = new Long[]{1L, 2L, 3L};
             final Binding binding = pc -> pc.setArray(pc.createArrayOf("bigint", expected));
             final ResultSetAssertions assertions = rs -> {
-                final Long[] actual = rs.getArray(1);
+                final Long[] actual = rs.getArray("bound");
                 assertArrayEquals(expected, actual);
             };
             assertResults(binding, assertions, "bigint[]", db);
@@ -614,6 +614,32 @@ public class SmartResultSetTest {
                 }
 
             };
+            assertResults(binding, assertions, db);
+        }
+    }
+
+    public static class GetEnum {
+
+        public enum Fish {
+            RED, BLUE
+        }
+
+        @ClassRule
+        public static final H2Rule db = new H2Rule();
+
+        @Test
+        public void index() throws Exception {
+            final Fish expected = Fish.BLUE;
+            final Binding binding = pc -> pc.setString(expected.name());
+            final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getEnum(1, Fish.class));
+            assertResults(binding, assertions, db);
+        }
+
+        @Test
+        public void label() throws Exception {
+            final Fish expected = Fish.BLUE;
+            final Binding binding = pc -> pc.setString(expected.name());
+            final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getEnum("bound", Fish.class));
             assertResults(binding, assertions, db);
         }
     }

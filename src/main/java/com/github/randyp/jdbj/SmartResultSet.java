@@ -192,9 +192,9 @@ public class SmartResultSet implements AutoCloseable {
         return Enum.valueOf(enumType, enumName);
     }
 
-    public <T extends Enum<T>> T getEnumNullable(String columnLabel, Class<T> enumType) throws SQLException {
-        String enumName = rs.getString(columnLabel);
-        return rs.wasNull() ? null : Enum.valueOf(enumType, enumName);
+    public <T extends Enum<T>> T getEnum(int columnIndex, Class<T> enumType) throws SQLException {
+        String enumName = rs.getString(columnIndex);
+        return Enum.valueOf(enumType, enumName);
     }
 
     public Float getFloat(int columnIndex) throws SQLException {
