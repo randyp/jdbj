@@ -28,7 +28,8 @@ public class JDBJTest extends StudentTest {
 
         try(Connection connection = db.getConnection()){
             assertTrue(Student.selectAll.execute(connection).isEmpty());
-            JDBJ.path(tmpFile.toPath()).statement().execute(connection);
+            //noinspection AccessStaticViaInstance
+            new JDBJ().path(tmpFile.toPath()).statement().execute(connection); //for test coverage
             assertEquals(1, Student.selectAll.execute(connection).size());
         }
     }
