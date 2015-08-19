@@ -48,7 +48,7 @@ public class ValueBindingBuilderTest {
         }
     }
 
-    public static class BindAsciiStream extends BindAsciiStreamTestT {
+    public static class BindAsciiStream extends BindAsciiStreamTest {
         @Override
         public DataSource db() {
             return db;
