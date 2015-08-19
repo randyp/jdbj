@@ -38,10 +38,6 @@ public class PreparedColumn {
         return ps.getConnection().createSQLXML();
     }
 
-    public Struct createStruct(String typeName, Object[] attributes) throws SQLException {
-        return ps.getConnection().createStruct(typeName, attributes);
-    }
-
     public boolean isSet(){
         return set;
     }
@@ -296,11 +292,6 @@ public class PreparedColumn {
 
     public void setObject( Object x, SQLType targetSqlType, int scaleOrLength) throws SQLException {
         ps.setObject(parameterIndex, x, targetSqlType, scaleOrLength);
-        set=true;
-    }
-
-    public void setRef( Ref x) throws SQLException {
-        ps.setRef(parameterIndex, x);
         set=true;
     }
 

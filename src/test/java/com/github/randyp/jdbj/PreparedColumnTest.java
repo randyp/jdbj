@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
+import java.net.URL;
 import java.sql.*;
 
 import static org.junit.Assert.*;
@@ -137,6 +138,24 @@ public class PreparedColumnTest {
                     final SQLXML sqlxml = rs.getSQLXML(1);
                     assertNotNull(sqlxml);
                     assertEquals(expected, sqlxml.getString());
+                    assertFalse(rs.next());
+                }
+            }
+        }
+
+        @Test(expected = SQLFeatureNotSupportedException.class)
+        public void setURL() throws Exception {
+            final URL expected = new URL("http", "google.com", 8080, "/");
+            try(Connection connection = db.getConnection();
+                PreparedStatement ps = connection.prepareStatement("SELECT ? AS binding")){
+                {
+                    final PreparedColumn pc = new PreparedColumn(ps, 1);
+                    pc.setURL(expected);
+                }
+                try (ResultSet rs = ps.executeQuery()){
+                    assertTrue(rs.next());
+                    final String selected = rs.getString(1);
+                    assertEquals(expected.toString(), selected);
                     assertFalse(rs.next());
                 }
             }

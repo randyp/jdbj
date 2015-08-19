@@ -4,7 +4,6 @@ import com.github.randyp.jdbj.db.h2_1_4.H2Rule;
 import com.github.randyp.jdbj.db.postgres_9_4.PGRule;
 import com.github.randyp.jdbj.test.SimpleBuilder;
 import org.junit.ClassRule;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
@@ -17,13 +16,30 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.sql.*;
+import java.util.Collections;
 import java.util.GregorianCalendar;
-import java.util.Optional;
 
 import static org.junit.Assert.*;
 
 @RunWith(Enclosed.class)
 public class DefaultValueBindingsBuilderTest {
+
+    public static class BindDefault {
+        @Test(expected = IllegalArgumentException.class)
+        public void nullName() throws Exception {
+            new SimpleBuilder().bindDefault(null, pc -> pc.setString("hi"));
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void nullBinding() throws Exception {
+            new SimpleBuilder().bindDefault(":binding", null);
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void bindingNotInStatement() throws Exception {
+            new SimpleBuilder().bindDefault(":not_binding", pc->pc.setString("hi"));
+        }
+    }
 
     public static class BindArray {
 
@@ -1185,7 +1201,6 @@ public class DefaultValueBindingsBuilderTest {
         }
     }
 
-
     public static class BindSQLXML {
 
         @ClassRule
@@ -1217,7 +1232,6 @@ public class DefaultValueBindingsBuilderTest {
             }
         }
     }
-
 
     public static class BindTime extends HasExpectedTimeOfDay {
 
@@ -1343,8 +1357,4 @@ public class DefaultValueBindingsBuilderTest {
             }
         }
     }
-
-    private static final NamedParameterStatement statement =
-            NamedParameterStatement.make("SELECT :binding as bound");
-
 }

@@ -79,6 +79,7 @@ public class PositionalBindingsBuilder<E extends PositionalBindingsBuilder<E>> e
             //noinspection unchecked
             return (E) this;
         } catch (ClassCastException e) {
+            //should never happen
             return factory.make(statement, bindings);
         }
     }

@@ -34,6 +34,11 @@ public class DefaultCollectionBindingsBuilderTest {
         public void nulList() throws Exception {
             new TestBuilder().bindDefaultList(":binding", null);
         }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void bindingNotInStatement() throws Exception {
+            new TestBuilder().bindDefaultList(":not_binding", null);
+        }
     }
 
     public static class BindBooleans {
