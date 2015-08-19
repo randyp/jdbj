@@ -94,8 +94,10 @@ mvn release:clean release:prepare -B && mvn release:perform && git push
 * [ ] Hacky-yet-compatible batch insert query
 * [ ] Java Doc
 * [ ] Examples
+* [ ] Mysql Integration Tests
 
 #### 0.1.6
 * [ ] Somehow remove most antlr classes we don't need from shading process...
 * [ ] Wrap Batch sql exceptions
+* [ ] SQLLite Integration Tests?
 
