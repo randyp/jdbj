@@ -2,8 +2,8 @@ package com.github.randyp.jdbj.example;
 
 import com.github.randyp.jdbj.*;
 import com.github.randyp.jdbj.db.h2_1_4.H2DB;
+import com.github.randyp.jdbj.student.Student;
 
-import java.sql.Connection;
 import java.util.List;
 import java.util.stream.Stream;
 

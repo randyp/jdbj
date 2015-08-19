@@ -1,4 +1,4 @@
-package com.github.randyp.jdbj;
+package com.github.randyp.jdbj.student;
 
 import java.math.BigDecimal;
 

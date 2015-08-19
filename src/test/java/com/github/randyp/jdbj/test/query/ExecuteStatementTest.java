@@ -1,27 +1,18 @@
 package com.github.randyp.jdbj.test.query;
 
 import com.github.randyp.jdbj.*;
-import com.github.randyp.jdbj.test.binding.value.DBSupplier;
-import org.junit.After;
+import com.github.randyp.jdbj.student.NewStudent;
+import com.github.randyp.jdbj.student.Student;
+import com.github.randyp.jdbj.student.StudentTest;
 import org.junit.Test;
 
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public abstract class ExecuteStatementTest implements DBSupplier {
-
-    @After
-    public void tearDown() throws Exception {
-        try (Connection connection = db().getConnection();
-             PreparedStatement ps = connection.prepareStatement("DELETE FROM student")) {
-            ps.execute();
-        }
-    }
+public abstract class ExecuteStatementTest extends StudentTest {
 
     //can only test with one batch, as keys are only available from last batch in H2
     @Test

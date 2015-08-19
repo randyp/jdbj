@@ -1,5 +1,8 @@
-package com.github.randyp.jdbj;
+package com.github.randyp.jdbj.test.query;
 
+import com.github.randyp.jdbj.*;
+import com.github.randyp.jdbj.student.Student;
+import com.github.randyp.jdbj.student.StudentTest;
 import org.junit.Test;
 
 import javax.sql.DataSource;
@@ -11,22 +14,22 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class TransactionTest extends StudentTest {
+public abstract class TransactionTest extends StudentTest {
 
     final Student student = new Student(10L, "Ada", "Dada", new BigDecimal("3.1"));
 
     final ExecuteUpdate executeUpdate = JDBJ.resource(Student.insert_id).update()
-            .bindLong(":id", student.id)
-            .bindString(":first_name", student.firstName)
-            .bindString(":last_name", student.lastName)
-            .bindBigDecimal(":gpa", student.gpa);
+            .bindLong(":id", student.getId())
+            .bindString(":first_name", student.getFirstName())
+            .bindString(":last_name", student.getLastName())
+            .bindBigDecimal(":gpa", student.getGpa());
 
     @Test
     public void committed() throws Exception {
-        JDBJ.transaction(db, connection -> assertEquals(1, executeUpdate.execute(connection)));
+        JDBJ.transaction(db(), connection -> assertEquals(1, executeUpdate.execute(connection)));
 
         final List<Student> actual;
-        try (Connection connection = db.getConnection()) {
+        try (Connection connection = db().getConnection()) {
             actual = Student.selectAll.execute(connection);
         }
 
@@ -35,7 +38,7 @@ public class TransactionTest extends StudentTest {
 
     @Test
     public void returning() throws Exception {
-        final List<Student> actual = JDBJ.returningTransaction(db, connection -> {
+        final List<Student> actual = JDBJ.returningTransaction(db(), connection -> {
             assertEquals(1, executeUpdate.execute(connection));
             return Student.selectAll.execute(connection);
         });
@@ -45,7 +48,7 @@ public class TransactionTest extends StudentTest {
 
     @Test
     public void returningWithIsolation() throws Exception {
-        final List<Student> actual = JDBJ.returningTransaction(db, Connection.TRANSACTION_READ_COMMITTED, connection -> {
+        final List<Student> actual = JDBJ.returningTransaction(db(), Connection.TRANSACTION_READ_COMMITTED, connection -> {
             assertEquals(1, executeUpdate.execute(connection));
             return Student.selectAll.execute(connection);
         });
@@ -56,7 +59,7 @@ public class TransactionTest extends StudentTest {
     @Test
     public void rollback() throws Exception {
         try {
-            JDBJ.transaction(db, connection -> {
+            JDBJ.transaction(db(), connection -> {
                 assertEquals(1, executeUpdate.execute(connection));
                 throw new SQLException("did I do that?");
             });
@@ -66,7 +69,7 @@ public class TransactionTest extends StudentTest {
         }
 
         final List<Student> actual;
-        try (Connection connection = db.getConnection()) {
+        try (Connection connection = db().getConnection()) {
             actual = Student.selectAll.execute(connection);
         }
         assertTrue(actual.isEmpty());
@@ -74,7 +77,7 @@ public class TransactionTest extends StudentTest {
 
     @Test
     public void autoCommitTurnedOff() throws Exception {
-        try (Connection connection = db.getConnection()) {
+        try (Connection connection = db().getConnection()) {
             DataSource fakeDataSource = new FakeDataSource<>(() -> new FakeConnection(connection));
 
             assertTrue(connection.getAutoCommit());
@@ -88,7 +91,7 @@ public class TransactionTest extends StudentTest {
 
     @Test
     public void transactionIsolationReset() throws Exception {
-        try (Connection connection = db.getConnection()) {
+        try (Connection connection = db().getConnection()) {
             final int originalIsolation = Connection.TRANSACTION_READ_UNCOMMITTED;
 
             connection.setTransactionIsolation(originalIsolation);
@@ -102,9 +105,10 @@ public class TransactionTest extends StudentTest {
         }
     }
 
+
     @Test
     public void transactionIsolationNotResetIfNotProvided() throws Exception {
-        try (Connection connection = db.getConnection()) {
+        try (Connection connection = db().getConnection()) {
             final int originalIsolation = Connection.TRANSACTION_READ_UNCOMMITTED;
 
             connection.setTransactionIsolation(originalIsolation);
@@ -118,10 +122,9 @@ public class TransactionTest extends StudentTest {
         }
     }
 
-
     @Test(expected = IllegalStateException.class)
     public void exceptIfAutocommitAlreadyOff() throws Exception {
-        try (Connection connection = db.getConnection()) {
+        try (Connection connection = db().getConnection()) {
             DataSource fakeDataSource = new FakeDataSource<>(() -> connection);
             connection.setAutoCommit(false);
             JDBJ.transaction(fakeDataSource, c -> assertEquals(1, executeUpdate.execute(c)));
@@ -130,7 +133,7 @@ public class TransactionTest extends StudentTest {
 
     @Test
     public void exceptDuringAutocommitResetIgnored() throws Exception {
-        try (Connection connection = db.getConnection()) {
+        try (Connection connection = db().getConnection()) {
             DataSource fakeDataSource = new FakeDataSource<>(() -> new FakeConnection(connection) {
                 @Override
                 public void setAutoCommit(boolean autoCommit) throws SQLException {
@@ -152,7 +155,7 @@ public class TransactionTest extends StudentTest {
 
     @Test
     public void exceptDuringIsolationResetIgnored() throws Exception {
-        try (Connection connection = db.getConnection()) {
+        try (Connection connection = db().getConnection()) {
             connection.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
             DataSource fakeDataSource = new FakeDataSource<>(() -> new FakeConnection(connection) {
                 @Override
@@ -176,7 +179,7 @@ public class TransactionTest extends StudentTest {
 
     @Test
     public void exceptDuringCloseIgnored() throws Exception {
-        try (Connection connection = db.getConnection()) {
+        try (Connection connection = db().getConnection()) {
             DataSource fakeDataSource = new FakeDataSource<>(() -> new FakeConnection(connection) {
                 @Override
                 public void close() throws SQLException {
@@ -191,7 +194,7 @@ public class TransactionTest extends StudentTest {
 
     @Test
     public void exceptDuringRollbackIgnored() throws Exception {
-        try (Connection connection = db.getConnection()) {
+        try (Connection connection = db().getConnection()) {
             DataSource fakeDataSource = new FakeDataSource<>(() -> new FakeConnection(connection) {
 
                 @Override

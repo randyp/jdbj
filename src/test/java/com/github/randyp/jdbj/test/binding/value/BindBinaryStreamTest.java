@@ -4,10 +4,9 @@ import com.github.randyp.jdbj.test.SimpleBuilder;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
-import java.sql.Connection;
-import java.util.Arrays;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertNull;
 
 public abstract class BindBinaryStreamTest implements DBSupplier {
 

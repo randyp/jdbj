@@ -4,7 +4,6 @@ import com.github.randyp.jdbj.HasExpectedTimeSinceEpoch;
 import com.github.randyp.jdbj.test.SimpleBuilder;
 import org.junit.Test;
 
-import java.sql.Connection;
 import java.sql.Date;
 import java.util.GregorianCalendar;
 

@@ -1,7 +1,12 @@
 package com.github.randyp.jdbj;
 
+import com.github.randyp.jdbj.db.h2_1_4.H2Rule;
+import com.github.randyp.jdbj.student.Student;
+import com.github.randyp.jdbj.student.StudentTest;
+import org.junit.ClassRule;
 import org.junit.Test;
 
+import javax.sql.DataSource;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,6 +18,14 @@ import java.sql.Connection;
 import static org.junit.Assert.*;
 
 public class JDBJTest extends StudentTest {
+
+    @ClassRule
+    public static final H2Rule db = dbRule();
+
+    @Override
+    public DataSource db() {
+        return db;
+    }
 
     @Test
     public void path() throws Exception {

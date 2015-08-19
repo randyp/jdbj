@@ -4,7 +4,6 @@ import com.github.randyp.jdbj.test.SimpleBuilder;
 import org.junit.Test;
 
 import java.io.StringReader;
-import java.sql.Connection;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;

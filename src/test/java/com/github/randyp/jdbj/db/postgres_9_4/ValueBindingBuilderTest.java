@@ -406,7 +406,7 @@ public class ValueBindingBuilderTest {
         }
     }
 
-    public static class BindTimestamp extends BindTimeTest {
+    public static class BindTimestamp extends BindTimestampTest {
 
         @Override
         public DataSource db() {

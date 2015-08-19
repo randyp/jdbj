@@ -1,6 +1,10 @@
-package com.github.randyp.jdbj;
+package com.github.randyp.jdbj.test.query;
 
+import com.github.randyp.jdbj.*;
 import com.github.randyp.jdbj.lambda.ResultSetMapper;
+import com.github.randyp.jdbj.student.NewStudent;
+import com.github.randyp.jdbj.student.Student;
+import com.github.randyp.jdbj.student.StudentTest;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -10,7 +14,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class BatchedExecuteInsertTest extends StudentTest {
+public abstract class BatchedExecuteInsertTest extends StudentTest {
 
     //can only test with one batch, as keys are only available from last batch in H2
     @Test
@@ -22,14 +26,14 @@ public class BatchedExecuteInsertTest extends StudentTest {
         BatchedExecuteInsert<Long> insertQuery = JDBJ.resource(Student.insert).insert(keyMapper)
                 .asBatch()
                 .startBatch()
-                .bindString(":first_name", newStudent.firstName)
-                .bindString(":last_name", newStudent.lastName)
-                .bindBigDecimal(":gpa", newStudent.gpa)
+                .bindString(":first_name", newStudent.getFirstName())
+                .bindString(":last_name", newStudent.getLastName())
+                .bindBigDecimal(":gpa", newStudent.getGpa())
                 .endBatch();
 
         final List<Long> keys;
         final List<Student> actual;
-        try (Connection connection = db.getConnection()) {
+        try (Connection connection = db().getConnection()) {
             keys = insertQuery.execute(connection);
             actual = Student.selectAll.execute(connection);
         }
@@ -45,7 +49,7 @@ public class BatchedExecuteInsertTest extends StudentTest {
                 .insert(keyMapper)
                 .asBatch();
 
-        try (Connection connection = db.getConnection()) {
+        try (Connection connection = db().getConnection()) {
             insertQuery.execute(connection);
         }
     }
@@ -59,8 +63,8 @@ public class BatchedExecuteInsertTest extends StudentTest {
                 .insert(keyMapper)
                 .asBatch()
                 .startBatch()
-                .bindString(":first_name", student.firstName)
-                .bindString(":last_name", student.lastName)
+                .bindString(":first_name", student.getFirstName())
+                .bindString(":last_name", student.getLastName())
                 .endBatch();
     }
 
@@ -73,12 +77,11 @@ public class BatchedExecuteInsertTest extends StudentTest {
                 .insert(rs -> rs.getLong(1))
                 .asBatch()
                 .startBatch()
-                .bindString(":first_name", student.firstName)
-                .bindString(":last_name", student.lastName)
-                .bindBigDecimal(":gpa", student.gpa);
+                .bindString(":first_name", student.getFirstName())
+                .bindString(":last_name", student.getLastName())
+                .bindBigDecimal(":gpa", student.getGpa());
 
         batch.endBatch();
-        batch.bindString(":first_name", student.firstName);
+        batch.bindString(":first_name", student.getFirstName());
     }
-
 }

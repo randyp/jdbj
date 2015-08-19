@@ -45,6 +45,22 @@ public class QueriesTest {
         }
     };
 
+    public static class BatchedExecuteInsert extends BatchedExecuteInsertTest {
+
+        @Override
+        public DataSource db() {
+            return db;
+        }
+    }
+
+    public static class BatchedExecuteUpdate extends BatchedExecuteUpdateTest {
+
+        @Override
+        public DataSource db() {
+            return db;
+        }
+    }
+
     public static class ExecuteInsert extends ExecuteInsertTest {
 
         @Override
@@ -86,6 +102,14 @@ public class QueriesTest {
     }
 
     public static class ExecuteUpdate extends ExecuteUpdateTest {
+
+        @Override
+        public DataSource db() {
+            return db;
+        }
+    }
+
+    public static class Transaction extends TransactionTest {
 
         @Override
         public DataSource db() {

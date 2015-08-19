@@ -1,12 +1,8 @@
 package com.github.randyp.jdbj.test.query;
 
 import com.github.randyp.jdbj.JDBJ;
-import com.github.randyp.jdbj.db.h2_1_4.H2Rule;
 import com.github.randyp.jdbj.test.binding.value.DBSupplier;
-import org.junit.ClassRule;
 import org.junit.Test;
-
-import java.sql.Connection;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

@@ -1,5 +1,9 @@
-package com.github.randyp.jdbj;
+package com.github.randyp.jdbj.test.query;
 
+import com.github.randyp.jdbj.BatchedExecuteUpdate;
+import com.github.randyp.jdbj.JDBJ;
+import com.github.randyp.jdbj.student.Student;
+import com.github.randyp.jdbj.student.StudentTest;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -10,7 +14,7 @@ import java.util.List;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
-public class BatchedExecuteUpdateTest extends StudentTest {
+public abstract class BatchedExecuteUpdateTest extends StudentTest {
 
     @Test
     public void insertBatch() throws Exception {
@@ -22,15 +26,15 @@ public class BatchedExecuteUpdateTest extends StudentTest {
         BatchedExecuteUpdate insertQuery = JDBJ.resource(Student.insert_id).update().asBatch();
         for (Student student : expected) {
             insertQuery.startBatch()
-                    .bindLong(":id", student.id)
-                    .bindString(":first_name", student.firstName)
-                    .bindString(":last_name", student.lastName)
-                    .bindBigDecimal(":gpa", student.gpa)
+                    .bindLong(":id", student.getId())
+                    .bindString(":first_name", student.getFirstName())
+                    .bindString(":last_name", student.getLastName())
+                    .bindBigDecimal(":gpa", student.getGpa())
                     .endBatch();
         }
 
         final List<Student> actual;
-        try (Connection connection = db.getConnection()) {
+        try (Connection connection = db().getConnection()) {
             assertArrayEquals(new int[]{1, 1}, insertQuery.execute(connection));
             actual = Student.selectAll.execute(connection);
         }
@@ -43,7 +47,7 @@ public class BatchedExecuteUpdateTest extends StudentTest {
                 .update()
                 .asBatch();
 
-        try (Connection connection = db.getConnection()) {
+        try (Connection connection = db().getConnection()) {
             insertQuery.execute(connection);
         }
     }
@@ -56,9 +60,9 @@ public class BatchedExecuteUpdateTest extends StudentTest {
                 .update()
                 .asBatch()
                 .startBatch()
-                .bindLong(":id", student.id)
-                .bindString(":first_name", student.firstName)
-                .bindString(":last_name", student.lastName)
+                .bindLong(":id", student.getId())
+                .bindString(":first_name", student.getFirstName())
+                .bindString(":last_name", student.getLastName())
                 .endBatch();
     }
 
@@ -70,13 +74,12 @@ public class BatchedExecuteUpdateTest extends StudentTest {
                 .update()
                 .asBatch()
                 .startBatch()
-                .bindLong(":id", student.id)
-                .bindString(":first_name", student.firstName)
-                .bindString(":last_name", student.lastName)
-                .bindBigDecimal(":gpa", student.gpa);
+                .bindLong(":id", student.getId())
+                .bindString(":first_name", student.getFirstName())
+                .bindString(":last_name", student.getLastName())
+                .bindBigDecimal(":gpa", student.getGpa());
 
         batch.endBatch();
-        batch.bindLong(":id", student.id);
+        batch.bindLong(":id", student.getId());
     }
-
 }

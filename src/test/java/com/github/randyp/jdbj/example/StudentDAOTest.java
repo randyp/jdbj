@@ -1,10 +1,13 @@
 package com.github.randyp.jdbj.example;
 
-import com.github.randyp.jdbj.NewStudent;
-import com.github.randyp.jdbj.Student;
-import com.github.randyp.jdbj.StudentTest;
+import com.github.randyp.jdbj.student.NewStudent;
+import com.github.randyp.jdbj.student.Student;
+import com.github.randyp.jdbj.student.StudentTest;
+import com.github.randyp.jdbj.db.h2_1_4.H2Rule;
+import org.junit.ClassRule;
 import org.junit.Test;
 
+import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Arrays;
@@ -16,6 +19,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class StudentDAOTest extends StudentTest {
+
+    @ClassRule
+    public static final H2Rule db = dbRule();
+
+    @Override
+    public DataSource db() {
+        return db;
+    }
 
     @Test
      public void insertOneSelectOne() throws Exception {

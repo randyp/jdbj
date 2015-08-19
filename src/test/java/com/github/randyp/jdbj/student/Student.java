@@ -1,4 +1,8 @@
-package com.github.randyp.jdbj;
+package com.github.randyp.jdbj.student;
+
+import com.github.randyp.jdbj.ExecuteQuery;
+import com.github.randyp.jdbj.JDBJ;
+import com.github.randyp.jdbj.SmartResultSet;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;

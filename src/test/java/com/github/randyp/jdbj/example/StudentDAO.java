@@ -1,6 +1,8 @@
 package com.github.randyp.jdbj.example;
 
 import com.github.randyp.jdbj.*;
+import com.github.randyp.jdbj.student.NewStudent;
+import com.github.randyp.jdbj.student.Student;
 
 import java.sql.Connection;
 import java.sql.SQLException;
