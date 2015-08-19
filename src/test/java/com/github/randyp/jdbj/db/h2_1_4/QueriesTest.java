@@ -3,6 +3,7 @@ package com.github.randyp.jdbj.db.h2_1_4;
 import com.github.randyp.jdbj.test.query.ExecuteQueryRunnableTest;
 import com.github.randyp.jdbj.test.query.ExecuteQueryTest;
 import com.github.randyp.jdbj.test.query.ExecuteScriptTest;
+import com.github.randyp.jdbj.test.query.ExecuteStatementTest;
 import org.junit.ClassRule;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
@@ -59,6 +60,14 @@ public class QueriesTest {
     }
 
     public static class ExecuteScript extends ExecuteScriptTest {
+
+        @Override
+        public DataSource db() {
+            return db;
+        }
+    }
+
+    public static class ExecuteStatement extends ExecuteStatementTest {
 
         @Override
         public DataSource db() {
