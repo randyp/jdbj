@@ -80,4 +80,11 @@ public class QueriesTest {
         }
     }
 
+    public static class ExecuteUpdate extends ExecuteUpdateTest {
+
+        @Override
+        public DataSource db() {
+            return db;
+        }
+    }
 }
