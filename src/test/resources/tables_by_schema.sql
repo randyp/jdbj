@@ -1,1 +1,1 @@
-SELECT ID, TABLE_SCHEMA, TABLE_NAME from information_schema.tables WHERE TABLE_SCHEMA = :table_schema
+SELECT table_schema, table_name from information_schema.tables WHERE LOWER(table_schema) = :table_schema
