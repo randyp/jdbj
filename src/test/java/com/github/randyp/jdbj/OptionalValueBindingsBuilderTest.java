@@ -1,5 +1,6 @@
 package com.github.randyp.jdbj;
 
+import com.github.randyp.jdbj.db.h2_1_4.H2Rule;
 import com.github.randyp.jdbj.lambda.ResultSetMapper;
 import com.github.randyp.jdbj.optional.OptionalBoolean;
 import com.github.randyp.jdbj.optional.OptionalByte;

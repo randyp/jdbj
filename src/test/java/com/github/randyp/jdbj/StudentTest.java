@@ -1,5 +1,6 @@
 package com.github.randyp.jdbj;
 
+import com.github.randyp.jdbj.db.h2_1_4.H2Rule;
 import org.junit.After;
 import org.junit.ClassRule;
 

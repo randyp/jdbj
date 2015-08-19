@@ -1,4 +1,4 @@
-package com.github.randyp.jdbj.postgres9_4;
+package com.github.randyp.jdbj.db.postgres_9_4;
 
 import org.junit.rules.ExternalResource;
 
@@ -11,12 +11,12 @@ import java.sql.SQLFeatureNotSupportedException;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-public class DBRule extends ExternalResource implements DataSource {
+public class PGRule extends ExternalResource implements DataSource {
 
-    private final String url = "jdbc:postgresql://localhost:5432/jdbj";;
+    private final String url = "jdbc:postgresql://localhost:5432/jdbj";
     private final Properties defaultProperties = new Properties();
 
-    public DBRule() {
+    public PGRule() {
         defaultProperties.setProperty("user", "jdbj");
         defaultProperties.setProperty("password", "jdbj");
     }

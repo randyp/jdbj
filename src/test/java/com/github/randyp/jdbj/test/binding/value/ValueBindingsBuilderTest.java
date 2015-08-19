@@ -1,6 +1,7 @@
-package com.github.randyp.jdbj.postgres9_4;
+package com.github.randyp.jdbj.test.binding.value;
 
 import com.github.randyp.jdbj.*;
+import com.github.randyp.jdbj.db.h2_1_4.H2Rule;
 import com.github.randyp.jdbj.lambda.ResultSetMapper;
 import org.junit.ClassRule;
 import org.junit.Ignore;
@@ -16,15 +17,17 @@ import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.sql.*;
 import java.util.GregorianCalendar;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 
 @RunWith(Enclosed.class)
-public class ValueBindingsBuilderIT {
+public abstract class ValueBindingsBuilderTest {
 
     @ClassRule
-    public static final DBRule db = new DBRule();
+    public static final H2Rule db = new H2Rule();
 
+    /*
     public static class BindArray { //lower case so we don't capture java.sql.Array class
 
         @Test
@@ -32,9 +35,9 @@ public class ValueBindingsBuilderIT {
             final String[] expected = {"a", "b", "c"};
 
             try (Connection connection = db.getConnection()) {
-                final String[] selected = new TestBuilder("varchar[]")
+                final String[] selected = new TestBuilder()
                         .bindArray(":binding", connection.createArrayOf("varchar", expected))
-                        .execute(connection, rs -> (String[]) rs.getSQLArray("bound").getArray());
+                        .execute(connection, rs -> (String[]) rs.getSQLArray(1).getArray());
                 assertArrayEquals(expected, selected);
             }
         }
@@ -42,7 +45,7 @@ public class ValueBindingsBuilderIT {
         @Test
         public void bindNull() throws Exception {
             try (Connection connection = db.getConnection()) {
-                final String[] selected = new TestBuilder("varchar[]")
+                final String[] selected = new TestBuilder()
                         .bindArray(":binding", null)
                         .execute(connection, rs -> {
                             final Array array = rs.getSQLArray(1);
@@ -52,8 +55,30 @@ public class ValueBindingsBuilderIT {
             }
         }
     }
+    */
 
     public static class BindAsciiStream {
+        @Test
+        public void inputStream() throws Exception {
+            final String expected = "abcde";
+            try (Connection connection = db.getConnection()) {
+                final String selected = new TestBuilder()
+                        .bindAsciiStream(":binding", new ByteArrayInputStream(expected.getBytes(Charset.forName("ascii"))))
+                        .execute(connection, rs -> rs.getString(1));
+                assertEquals(expected, selected);
+            }
+        }
+
+        @Test
+        public void inputStreamNull() throws Exception {
+            try (Connection connection = db.getConnection()) {
+                final String selected = new TestBuilder()
+                        .bindAsciiStream(":binding", null)
+                        .execute(connection, rs -> rs.getString(1));
+                assertNull(selected);
+            }
+        }
+
         @Test
         public void inputStreamLength() throws Exception {
             final String expected = "abcde";
@@ -70,6 +95,27 @@ public class ValueBindingsBuilderIT {
             try (Connection connection = db.getConnection()) {
                 final String selected = new TestBuilder()
                         .bindAsciiStream(":binding", null, 5)
+                        .execute(connection, rs -> rs.getString(1));
+                assertNull(selected);
+            }
+        }
+
+        @Test
+        public void inputStreamLengthLong() throws Exception {
+            final String expected = "abcde";
+            try (Connection connection = db.getConnection()) {
+                final String selected = new TestBuilder()
+                        .bindAsciiStream(":binding", new ByteArrayInputStream(expected.getBytes(Charset.forName("ascii"))), (long) expected.length())
+                        .execute(connection, rs -> rs.getString(1));
+                assertEquals(expected, selected);
+            }
+        }
+
+        @Test
+        public void inputStreamLengthLongNull() throws Exception {
+            try (Connection connection = db.getConnection()) {
+                final String selected = new TestBuilder()
+                        .bindAsciiStream(":binding", null, 5L)
                         .execute(connection, rs -> rs.getString(1));
                 assertNull(selected);
             }
@@ -99,38 +145,39 @@ public class ValueBindingsBuilderIT {
         }
     }
 
-    @Ignore //how do we do this?
     public static class BindBinaryStream {
 
         @Test
         public void inputStream() throws Exception {
-            final byte[] expected = "abcde".getBytes();
+            final String expected = "abcde";
             try (Connection connection = db.getConnection()) {
-                final byte[] selected = new TestBuilder("bytea")
-                        .bindBinaryStream(":binding", new ByteArrayInputStream(expected))
-                        .execute(connection, rs -> rs.getBytes(1));
-                assertArrayEquals(expected, selected);
+                final String selected = new TestBuilder()
+                        .bindBinaryStream(":binding", new ByteArrayInputStream(expected.getBytes()))
+                        .execute(connection, rs -> new String(rs.getBytes(1)));
+                assertEquals(expected, selected);
             }
         }
 
-        @Ignore("appears to be broken in postgres because NPE")
         @Test
         public void inputStreamNull() throws Exception {
             try (Connection connection = db.getConnection()) {
-                final byte[] selected = new TestBuilder("bytea")
+                final String selected = new TestBuilder()
                         .bindBinaryStream(":binding", null)
-                        .execute(connection, rs -> rs.getBytes(1));
+                        .execute(connection, rs -> {
+                            final byte[] bytes = rs.getBytes(1);
+                            return bytes == null ? null : new String(bytes);
+                        });
                 assertNull(selected);
             }
         }
 
         @Test
         public void inputLengthStream() throws Exception {
-            final byte[] expected = "abcde".getBytes();
+            final String expected = "abcde";
             try (Connection connection = db.getConnection()) {
-                final byte[] selected = new TestBuilder("bytea")
-                        .bindBinaryStream(":binding", new ByteArrayInputStream(expected), expected.length)
-                        .execute(connection, rs -> rs.getBytes(1));
+                final String selected = new TestBuilder()
+                        .bindBinaryStream(":binding", new ByteArrayInputStream(expected.getBytes()), 5)
+                        .execute(connection, rs -> new String(rs.getBytes(1)));
                 assertEquals(expected, selected);
             }
         }
@@ -138,20 +185,23 @@ public class ValueBindingsBuilderIT {
         @Test
         public void inputLengthStreamNull() throws Exception {
             try (Connection connection = db.getConnection()) {
-                final byte[] selected = new TestBuilder("bytea")
+                final String selected = new TestBuilder()
                         .bindBinaryStream(":binding", null, 5)
-                        .execute(connection, rs -> rs.getBytes(1));
+                        .execute(connection, rs -> {
+                            final byte[] bytes = rs.getBytes(1);
+                            return bytes == null ? null : new String(bytes);
+                        });
                 assertNull(selected);
             }
         }
 
         @Test
         public void inputLengthLongStream() throws Exception {
-            final byte[] expected = "abcde".getBytes();
+            final String expected = "abcde";
             try (Connection connection = db.getConnection()) {
-                final byte[] selected = new TestBuilder("bytea")
-                        .bindBinaryStream(":binding", new ByteArrayInputStream(expected), (long) expected.length)
-                        .execute(connection, rs -> rs.getBytes(1));
+                final String selected = new TestBuilder()
+                        .bindBinaryStream(":binding", new ByteArrayInputStream(expected.getBytes()), 5L)
+                        .execute(connection, rs -> new String(rs.getBytes(1)));
                 assertEquals(expected, selected);
             }
         }
@@ -159,27 +209,29 @@ public class ValueBindingsBuilderIT {
         @Test
         public void inputLengthLongStreamNull() throws Exception {
             try (Connection connection = db.getConnection()) {
-                final byte[] selected = new TestBuilder("bytea")
+                final String selected = new TestBuilder()
                         .bindBinaryStream(":binding", null, 5L)
-                        .execute(connection, rs->rs.getBytes(1));
+                        .execute(connection, rs -> {
+                            final byte[] bytes = rs.getBytes(1);
+                            return bytes == null ? null : new String(bytes);
+                        });
                 assertNull(selected);
             }
         }
     }
 
-    @Ignore
     public static class BindBlob {
 
         @Test
         public void value() throws Exception {
-            final byte[] expected = "abcde".getBytes();
+            final String expected = "abcde";
             try (Connection connection = db.getConnection()) {
                 final Blob blob = connection.createBlob();
-                blob.setBytes(1, expected);
-                final byte[] selected = new TestBuilder()
+                blob.setBytes(1, expected.getBytes());
+                final String selected = new TestBuilder()
                         .bindBlob(":binding", blob)
-                        .execute(connection, rs -> rs.getBytes(1));
-                assertArrayEquals(expected, selected);
+                        .execute(connection, rs -> new String(rs.getBytes(1)));
+                assertEquals(expected, selected);
             }
         }
 
@@ -198,12 +250,12 @@ public class ValueBindingsBuilderIT {
 
         @Test
         public void inputStream() throws Exception {
-            final byte[] expected = "abcde".getBytes();
+            final String expected = "abcde";
             try (Connection connection = db.getConnection()) {
-                final byte[] selected = new TestBuilder()
-                        .bindBlob(":binding", new ByteArrayInputStream(expected))
-                        .execute(connection, rs -> rs.getBytes(1));
-                assertArrayEquals(expected, selected);
+                final String selected = new TestBuilder()
+                        .bindBlob(":binding", new ByteArrayInputStream(expected.getBytes()))
+                        .execute(connection, rs -> new String(rs.getBytes(1)));
+                assertEquals(expected, selected);
             }
         }
 
@@ -222,12 +274,12 @@ public class ValueBindingsBuilderIT {
 
         @Test
         public void inputStreamLength() throws Exception {
-            final byte[] expected = "abcde".getBytes();
+            final String expected = "abcde";
             try (Connection connection = db.getConnection()) {
-                final byte[] selected = new TestBuilder()
-                        .bindBlob(":binding", new ByteArrayInputStream(expected), (long) expected.length)
-                        .execute(connection, rs -> rs.getBytes(1));
-                assertArrayEquals(expected, selected);
+                final String selected = new TestBuilder()
+                        .bindBlob(":binding", new ByteArrayInputStream(expected.getBytes()), (long) expected.length())
+                        .execute(connection, rs -> new String(rs.getBytes(1)));
+                assertEquals(expected, selected);
             }
         }
 
@@ -240,39 +292,6 @@ public class ValueBindingsBuilderIT {
                             final byte[] bytes = rs.getBytes(1);
                             return bytes == null ? null : new String(bytes);
                         });
-                assertNull(selected);
-            }
-        }
-    }
-
-    public static class BindBoolean {
-
-        @Test
-        public void False() throws Exception {
-            try (Connection connection = db.getConnection()) {
-                final Boolean selected = new TestBuilder()
-                        .bindBoolean(":binding", Boolean.FALSE)
-                        .execute(connection, rs -> rs.getBoolean(1));
-                assertFalse(selected);
-            }
-        }
-
-        @Test
-        public void True() throws Exception {
-            try (Connection connection = db.getConnection()) {
-                final Boolean selected = new TestBuilder()
-                        .bindBoolean(":binding", Boolean.TRUE)
-                        .execute(connection, rs -> rs.getBoolean(1));
-                assertTrue(selected);
-            }
-        }
-
-        @Test
-        public void Null() throws Exception {
-            try (Connection connection = db.getConnection()) {
-                final Boolean selected = new TestBuilder()
-                        .bindBoolean(":binding", null)
-                        .execute(connection, rs -> rs.getBoolean(1));
                 assertNull(selected);
             }
         }
@@ -338,7 +357,7 @@ public class ValueBindingsBuilderIT {
             }
         }
     }
-    @Ignore
+
     public static class BindBytes {
 
         @Test
@@ -368,6 +387,27 @@ public class ValueBindingsBuilderIT {
 
     public static class BindCharacterStream {
         @Test
+        public void reader() throws Exception {
+            final String expected = "abcde";
+            try (Connection connection = db.getConnection()) {
+                final String selected = new TestBuilder()
+                        .bindCharacterStream(":binding", new StringReader(expected))
+                        .execute(connection, rs -> rs.getString(1));
+                assertEquals(expected, selected);
+            }
+        }
+
+        @Test
+        public void readerNull() throws Exception {
+            try (Connection connection = db.getConnection()) {
+                final String selected = new TestBuilder()
+                        .bindCharacterStream(":binding", null)
+                        .execute(connection, rs -> rs.getString(1));
+                assertNull(selected);
+            }
+        }
+
+        @Test
         public void readerLength() throws Exception {
             final String expected = "abcde";
             try (Connection connection = db.getConnection()) {
@@ -387,9 +427,29 @@ public class ValueBindingsBuilderIT {
                 assertNull(selected);
             }
         }
+
+        @Test
+        public void readerLengthLong() throws Exception {
+            final String expected = "abcde";
+            try (Connection connection = db.getConnection()) {
+                final String selected = new TestBuilder()
+                        .bindCharacterStream(":binding", new StringReader(expected), 5L)
+                        .execute(connection, rs -> rs.getString(1));
+                assertEquals(expected, selected);
+            }
+        }
+
+        @Test
+        public void readerLengthLongNull() throws Exception {
+            try (Connection connection = db.getConnection()) {
+                final String selected = new TestBuilder()
+                        .bindCharacterStream(":binding", null, 5L)
+                        .execute(connection, rs -> rs.getString(1));
+                assertNull(selected);
+            }
+        }
     }
 
-    /*
     public static class BindClob {
 
         @Test
@@ -466,7 +526,6 @@ public class ValueBindingsBuilderIT {
             }
         }
     }
-    */
 
     public static class BindDate extends HasExpectedTimeSinceEpoch {
 
@@ -670,7 +729,51 @@ public class ValueBindingsBuilderIT {
         }
     }
 
-    @Ignore
+    public static class BindNCharacterStream {
+
+        @Test
+        public void reader() throws Exception {
+            final String expected = "abcde";
+            try (Connection connection = db.getConnection()) {
+                final String selected = new TestBuilder()
+                        .bindNCharacterStream(":binding", new StringReader(expected))
+                        .execute(connection, rs -> rs.getString(1));
+                assertEquals(expected, selected);
+            }
+        }
+
+        @Test
+        public void readerNull() throws Exception {
+            try (Connection connection = db.getConnection()) {
+                final String selected = new TestBuilder()
+                        .bindNCharacterStream(":binding", null)
+                        .execute(connection, rs -> rs.getString(1));
+                assertNull(selected);
+            }
+        }
+
+        @Test
+        public void readerLength() throws Exception {
+            final String expected = "abcde";
+            try (Connection connection = db.getConnection()) {
+                final String selected = new TestBuilder()
+                        .bindNCharacterStream(":binding", new StringReader(expected), 5L)
+                        .execute(connection, rs -> rs.getString(1));
+                assertEquals(expected, selected);
+            }
+        }
+
+        @Test
+        public void readerNullLength() throws Exception {
+            try (Connection connection = db.getConnection()) {
+                final String selected = new TestBuilder()
+                        .bindNCharacterStream(":binding", null, 5L)
+                        .execute(connection, rs -> rs.getString(1));
+                assertNull(selected);
+            }
+        }
+    }
+
     public static class BindNClob {
 
         @Test
@@ -733,6 +836,30 @@ public class ValueBindingsBuilderIT {
             try (Connection connection = db.getConnection()) {
                 final String selected = new TestBuilder()
                         .bindNClob(":binding", null, 5L)
+                        .execute(connection, rs -> rs.getString(1));
+                assertNull(selected);
+            }
+        }
+    }
+
+    public static class BindNString {
+
+        @Test
+        public void value() throws Exception {
+            final String expected = "abcde";
+            try (Connection connection = db.getConnection()) {
+                final String selected = new TestBuilder()
+                        .bindNString(":binding", expected)
+                        .execute(connection, rs -> rs.getNString(1));
+                assertEquals(expected, selected);
+            }
+        }
+
+        @Test
+        public void valueNull() throws Exception {
+            try (Connection connection = db.getConnection()) {
+                final String selected = new TestBuilder()
+                        .bindNString(":binding", null)
                         .execute(connection, rs -> rs.getString(1));
                 assertNull(selected);
             }
@@ -825,6 +952,52 @@ public class ValueBindingsBuilderIT {
                 assertNull(selected);
             }
         }
+
+        @Ignore
+        @Test
+        public void valueSQLType() throws Exception {
+            final String expected = "abcde";
+            try (Connection connection = db.getConnection()) {
+                final String selected = new TestBuilder()
+                        .bindObject(":binding", expected, JDBCType.VARCHAR)
+                        .execute(connection, rs -> rs.getObject(1).toString());
+                assertEquals(expected, selected);
+            }
+        }
+
+        @Ignore
+        @Test
+        public void valueNullSQLType() throws Exception {
+            try (Connection connection = db.getConnection()) {
+                final String selected = new TestBuilder()
+                        .bindObject(":binding", null, JDBCType.VARCHAR)
+                        .execute(connection, rs -> rs.getString(1));
+                assertNull(selected);
+            }
+        }
+
+        @Ignore //not supported in h2
+        @Test
+        public void valueSQLTypeLength() throws Exception {
+            final String expected = "abcde";
+            try (Connection connection = db.getConnection()) {
+                final String selected = new TestBuilder()
+                        .bindObject(":binding", expected, JDBCType.VARCHAR, expected.length())
+                        .execute(connection, rs -> rs.getObject(1).toString());
+                assertEquals(expected, selected);
+            }
+        }
+
+        @Ignore //not supported in h2
+        @Test
+        public void valueNullSQLTypeLength() throws Exception {
+            try (Connection connection = db.getConnection()) {
+                final String selected = new TestBuilder()
+                        .bindObject(":binding", null, JDBCType.VARCHAR, 5)
+                        .execute(connection, rs -> rs.getString(1));
+                assertNull(selected);
+            }
+        }
     }
 
     public static class BindShort {
@@ -887,6 +1060,7 @@ public class ValueBindingsBuilderIT {
         }
     }
 
+    /*
     public static class BindSQLXML {
 
         @Test
@@ -915,6 +1089,7 @@ public class ValueBindingsBuilderIT {
             }
         }
     }
+    */
 
     public static class BindTime extends HasExpectedTimeOfDay {
 
@@ -1008,14 +1183,77 @@ public class ValueBindingsBuilderIT {
 
     }
 
+    /*
+    public static class BindURL {
+
+        @Test
+        public void value() throws Exception {
+            final URL expected = new URL("http", "google.com", 8080, "/");
+            try (Connection connection = db.getConnection()) {
+                final URL selected = new TestBuilder()
+                        .bindURL(":binding", expected)
+                        .execute(connection, rs -> rs.getURL(1));
+                assertEquals(expected, selected);
+            }
+        }
+
+        @Test
+        public void valueNull() throws Exception {
+            try (Connection connection = db.getConnection()) {
+                final URL selected = new TestBuilder()
+                        .bindURL(":binding", null)
+                        .execute(connection, rs -> rs.getURL(1));
+                assertNull(selected);
+            }
+        }
+    }
+    */
+
+    public static class GetMetadata {
+
+        @Test
+        public void get() throws Exception {
+            try (Connection connection = db.getConnection();
+                 PreparedStatement ps = connection.prepareStatement("SELECT id, table_name FROM INFORMATION_SCHEMA.TABLES");
+                 SmartResultSet rs = new SmartResultSet(ps.executeQuery())) {
+                assertEquals(2, rs.getMetaData().getColumnCount());
+            }
+        }
+    }
+
+    public static class FindColumn {
+
+        @Test
+        public void find() throws Exception {
+            try (Connection connection = db.getConnection();
+                 PreparedStatement ps = connection.prepareStatement("SELECT id, table_name FROM INFORMATION_SCHEMA.TABLES");
+                 SmartResultSet rs = new SmartResultSet(ps.executeQuery())) {
+                assertEquals(1, rs.findColumn("id"));
+                assertEquals(2, rs.findColumn("table_name"));
+            }
+        }
+    }
+
+    public static class GetWarnings {
+
+        @Test
+        public void none() throws Exception {
+            try (Connection connection = db.getConnection();
+                 PreparedStatement ps = connection.prepareStatement("SELECT id, table_name FROM INFORMATION_SCHEMA.TABLES");
+                 SmartResultSet rs = new SmartResultSet(ps.executeQuery())) {
+                final SQLWarning warnings = rs.getWarnings();
+                assertNull(warnings);
+            }
+        }
+    }
+
+    private static final NamedParameterStatement statement =
+            NamedParameterStatement.make("SELECT :binding as bound");
+
     private static class TestBuilder extends PositionalBindingsBuilder<TestBuilder> {
 
         TestBuilder() {
-            this("VARCHAR");
-        }
-
-        TestBuilder(String castType) {
-            this(NamedParameterStatement.make("SELECT CAST(:binding AS " + castType + ") as bound"), PositionalBindings.empty());
+            this(ValueBindingsBuilderTest.statement, PositionalBindings.empty());
         }
 
         TestBuilder(NamedParameterStatement statement, PositionalBindings bindings) {
@@ -1025,13 +1263,13 @@ public class ValueBindingsBuilderIT {
         <R> R execute(Connection connection, ResultSetMapper<R> mapper) throws SQLException {
             checkAllBindingsPresent();
 
-            R value = null;
+            final R value;
             try (PreparedStatement ps = connection.prepareStatement(buildSql())) {
                 bindToStatement(ps);
                 try (SmartResultSet rs = new SmartResultSet(ps.executeQuery())) {
-                    if(rs.next()){
-                        value = mapper.map(rs);
-                    }
+                    assertTrue(rs.next());
+                    value = mapper.map(rs);
+                    assertFalse(rs.next());
                 }
             }
             return value;

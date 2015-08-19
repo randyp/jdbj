@@ -200,10 +200,6 @@ public interface ValueBindingsBuilder<E> {
         return bind(name, pc -> pc.setObject(x, targetSqlType, scaleOrLength));
     }
 
-    default E bindRef(String name, @Nullable Ref x) {
-        return bind(name, pc -> pc.setRef(x));
-    }
-
     default E bindShort(String name, Short x) {
         return bind(name, pc -> pc.setShort(x));
     }

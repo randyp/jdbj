@@ -1,5 +1,6 @@
-package com.github.randyp.jdbj.postgres9_4;
+package com.github.randyp.jdbj.db.postgres_9_4.deprecated;
 
+import com.github.randyp.jdbj.db.postgres_9_4.PGRule;
 import org.junit.After;
 import org.junit.ClassRule;
 
@@ -10,7 +11,7 @@ import java.sql.SQLException;
 public abstract class StudentTest {
 
     @ClassRule
-    public static DBRule db = new DBRule(){
+    public static PGRule db = new PGRule(){
 
         @Override
         protected void before() throws Throwable {

@@ -227,11 +227,6 @@ public interface OptionalValueBindingsBuilder<E> extends DefaultValueBindingsBui
         return x.isPresent() ? bindObject(name, x.get(), targetSqlType, scaleOrLength) : required;
     }
 
-    default E bindOptionalRef(String name, Optional<Ref> x) {
-        final E required = requireDefaultedBindingForOptional(name);
-        return x.isPresent() ? bindRef(name, x.get()) : required;
-    }
-
     default E bindOptionalShort(String name, Optional<Short> x) {
         final E required = requireDefaultedBindingForOptional(name);
         return x.isPresent() ? bindShortPrimitive(name, x.get()) : required;

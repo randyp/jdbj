@@ -1,4 +1,4 @@
-package com.github.randyp.jdbj;
+package com.github.randyp.jdbj.db.h2_1_4;
 
 import org.junit.rules.ExternalResource;
 

@@ -4,8 +4,8 @@ jdk:
 branches:
   only:
     - master
+addons:
+  postgresql: "9.4"
 sudo: false
 install: mvn -DskipTests=true -Dbasepom.check.skip-all=true -B install
-script: mvn -B verify
-after_success:
-  - mvn clean test jacoco:report coveralls:report
+script: ./travis_script.sh

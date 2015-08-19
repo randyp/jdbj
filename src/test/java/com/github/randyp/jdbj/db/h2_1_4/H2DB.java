@@ -1,4 +1,4 @@
-package com.github.randyp.jdbj;
+package com.github.randyp.jdbj.db.h2_1_4;
 
 import org.h2.jdbcx.JdbcConnectionPool;
 
@@ -10,7 +10,6 @@ import java.sql.SQLFeatureNotSupportedException;
 import java.util.logging.Logger;
 
 public class H2DB implements DataSource, AutoCloseable {
-
 
     private final JdbcConnectionPool connectionPool;
 

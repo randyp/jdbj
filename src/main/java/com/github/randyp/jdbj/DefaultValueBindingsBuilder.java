@@ -198,10 +198,6 @@ public interface DefaultValueBindingsBuilder<E> extends ValueBindingsBuilder<E> 
         return bindDefault(name, pc -> pc.setObject(x, targetSqlType, scaleOrLength));
     }
 
-    default E bindDefaultRef(String name, @Nullable Ref x) {
-        return bindDefault(name, pc -> pc.setRef(x));
-    }
-
     default E bindDefaultShort(String name, Short x) {
         return bindDefault(name, pc -> pc.setShort(x));
     }

@@ -1,4 +1,4 @@
-package com.github.randyp.jdbj.postgres9_4;
+package com.github.randyp.jdbj.db.postgres_9_4.deprecated;
 
 import com.github.randyp.jdbj.*;
 import com.github.randyp.jdbj.lambda.ResultSetMapper;
