@@ -6,6 +6,9 @@ branches:
     - master
 addons:
   postgresql: "9.4"
+cache:
+  directories:
+    - $HOME/.m2
 sudo: false
 install: mvn -DskipTests=true -Dbasepom.check.skip-all=true -B install
 script: ./travis_script.sh
