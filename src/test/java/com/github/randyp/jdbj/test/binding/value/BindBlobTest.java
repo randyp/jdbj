@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.sql.Blob;
 
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 public abstract class BindBlobTest implements DBSupplier {
@@ -19,6 +20,7 @@ public abstract class BindBlobTest implements DBSupplier {
     public void value() throws Exception {
         final byte[] selected = JDBJ.returningTransaction(db(), connection -> {
             final Blob blob = connection.createBlob();
+            assertNotNull("Driver created null blob", blob);
             blob.setBytes(1, expected);
             return builder()
                     .bindBlob(":binding", blob)
@@ -31,6 +33,7 @@ public abstract class BindBlobTest implements DBSupplier {
     public void valueNull() throws Exception {
         final byte[] selected = JDBJ.returningTransaction(db(), connection -> {
             final Blob blob = connection.createBlob();
+            assertNotNull("Driver created null blob", blob);
             blob.setBytes(1, null);
             return builder()
                     .bindBlob(":binding", blob)

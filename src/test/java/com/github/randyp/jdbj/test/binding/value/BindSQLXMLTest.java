@@ -16,6 +16,7 @@ public abstract class BindSQLXMLTest implements DBSupplier {
     public void value() throws Exception {
         try (Connection connection = db().getConnection()) {
             final SQLXML xml = connection.createSQLXML();
+            assertNotNull("Driver returned null xml", xml);
             xml.setString(expected);
             final String selected = builder()
                     .bindSQLXML(":binding", xml)

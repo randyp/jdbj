@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.NClob;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 public abstract class BindNClobTest implements DBSupplier {
@@ -19,6 +20,7 @@ public abstract class BindNClobTest implements DBSupplier {
     public void value() throws Exception {
         try (Connection connection = db().getConnection()) {
             final NClob nClob = connection.createNClob();
+            assertNotNull("Driver created null NClob", nClob);
             nClob.setString(1L, expected);
             final String selected = builder()
                     .bindNClob(":binding", nClob)

@@ -55,7 +55,7 @@ public abstract class BindBinaryStreamTest implements DBSupplier {
     @Test
     public void inputLengthLongStreamNull() throws Exception {
         final byte[] selected = builder()
-                .bindBinaryStream(":binding", null, 5L)
+                .bindBinaryStream(":binding", null, (long) expected.length)
                 .execute(db(), rs -> rs.getBytes(1));
         assertNull(selected);
     }

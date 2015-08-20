@@ -3,10 +3,8 @@ package com.github.randyp.jdbj.db.postgres_9_4;
 import com.github.randyp.jdbj.test.SimpleBuilder;
 import com.github.randyp.jdbj.test.binding.value.*;
 import org.junit.ClassRule;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
 import javax.sql.DataSource;
@@ -416,9 +414,6 @@ public class ValueBindingBuilderTest {
     }
 
     public static class BindURL extends BindURLTest {
-
-        @Rule
-        public ExpectedException thrown = ExpectedException.none();
 
         @Override
         public DataSource db() {

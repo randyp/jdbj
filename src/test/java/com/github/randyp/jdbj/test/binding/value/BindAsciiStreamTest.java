@@ -41,7 +41,7 @@ public abstract class BindAsciiStreamTest implements DBSupplier {
     @Test
     public void streamNullLength() throws Exception {
         final String selected = builder()
-                .bindAsciiStream(":binding", null, 5)
+                .bindAsciiStream(":binding", null, 0)
                 .execute(db(), rs -> rs.getString(1));
         assertNull(selected);
     }
