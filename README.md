@@ -32,7 +32,7 @@ try (Stream<Student> stream = streamQuery.execute(db)) {
 * Java8 lambda interface for bindings, transactions
 * Fetch-forward read-only cursors, always
 * Script Execution, with parameters
-* Integration tests with lastest postgres,h2,derby,sqllite,mysql
+* Comprehensive test suites for lastest postgres,h2,derby,sqllite,mysql
 
 #### Examples
 A full set of examples is being developed in [jdbj-examples](https://github.com/randyp/jdbj-examples), but here are some quick examples.
@@ -63,18 +63,15 @@ In addition, many other convenience libraries try to hide the binding code behin
 #### Guiding Principles
 * No *connection handles* - just use the Connection as an argument
 * Bubble up the SQLException, or wrap if not possible (eg. java.util.Stream#tryAdvance)
-* Immutable builders to capture the query intent, BatchedInsert Builders are mutable
+* Immutable builders to capture the query intent (exceptions are Batched Query Builders, which are mutable)
 * Use PreparedColumn to hide PreparedStatement
 * Named Parameters only, no Positional Parameters
-* Fetch-forward, read-only cursors
+* Fetch-forward, read-only cursors for read only queries
 * No type guessing - you specified the type when you called `something.bindLong(":id", 10)`
 * No external dependencies (where did my guava go?)
 
 #### Credits
-To the [jdbi team](http://jdbi.org/) for authoring jdbi, as much of jdbj is based on jdbi. Also:
-``` java
-System.out.println("jdb" + ((char) ('i' + 1)));
-```
+To Carmine Mangione for showing me how to use jdbc, and to the [jdbi team](http://jdbi.org/) for authoring jdbi, as some of jdbj is based on jdbi.
 
 #### Release
 ``` sh
