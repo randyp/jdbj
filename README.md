@@ -53,7 +53,7 @@ Just click on the Maven Central badge above. Can download from there or grab the
 ```
 
 #### Versioning
-jdbj is not following any semantic versioning scheme yet, and will not until version 1, which we'll release once we have a user base. Expect us to break interfaces.
+jdbj is not following any semantic versioning scheme yet. After we have some users we'll release version 1 and follow apache versioning. Until then, expect us to break interfaces.
 
 #### Why?
 Other jdbc convenience libraries follow the "create statement, bind parameters, execute query, map results" pattern that we inherited from older procedural code. For many web applications we've found a better pattern: "build, build, execute". We get to reuse build steps across most requests and only do the minimum amount of query building for each request.
