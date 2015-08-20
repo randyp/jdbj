@@ -56,6 +56,16 @@ public class Student extends NewStudent {
         return result;
     }
 
+    @Override
+    public String toString() {
+        return "Student{" +
+                "id=" + id +
+                ",first_name=" + getFirstName() +
+                ",last_name=" + getLastName() +
+                ",gpa=" + getGpa() +
+                '}';
+    }
+
     public static class Compare {
 
         public static Comparator<Student> FIRST_NAME = (o1, o2) -> o1.firstName.compareTo(o2.firstName);

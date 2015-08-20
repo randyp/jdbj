@@ -22,7 +22,7 @@ public class NewStudent {
         }
         this.firstName = firstName;
         this.lastName = lastName;
-        this.gpa = gpa;
+        this.gpa = gpa.setScale(2, BigDecimal.ROUND_DOWN);
     }
 
     public String getFirstName() {

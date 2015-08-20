@@ -1,6 +1,9 @@
 package com.github.randyp.jdbj.test.query;
 
-import com.github.randyp.jdbj.*;
+import com.github.randyp.jdbj.ExecuteUpdate;
+import com.github.randyp.jdbj.FakeConnection;
+import com.github.randyp.jdbj.FakeDataSource;
+import com.github.randyp.jdbj.JDBJ;
 import com.github.randyp.jdbj.student.NewStudent;
 import com.github.randyp.jdbj.student.Student;
 import com.github.randyp.jdbj.student.StudentTest;
@@ -10,19 +13,30 @@ import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.*;
 
 public abstract class TransactionTest extends StudentTest {
 
-    final NewStudent student = new NewStudent("Ada", "Dada", new BigDecimal("3.1"));
+    protected final NewStudent student = new NewStudent("Ada", "Dada", new BigDecimal("3.1"));
 
-    final ExecuteUpdate executeUpdate = JDBJ.resource(Student.insert).update()
+    protected final ExecuteUpdate executeUpdate = JDBJ.resource(Student.insert).update()
             .bindString(":first_name", student.getFirstName())
             .bindString(":last_name", student.getLastName())
             .bindBigDecimal(":gpa", student.getGpa());
+
+    protected final int highIsolation;
+    protected final int lowIsolation;
+
+    public TransactionTest() {
+        this( Connection.TRANSACTION_SERIALIZABLE, Connection.TRANSACTION_READ_UNCOMMITTED);
+    }
+
+    public TransactionTest(int highIsolation, int lowIsolation) {
+        this.highIsolation = highIsolation;
+        this.lowIsolation = lowIsolation;
+    }
 
     @Test
     public void committed() throws Exception {
@@ -46,7 +60,7 @@ public abstract class TransactionTest extends StudentTest {
 
     @Test
     public void returningWithIsolation() throws Exception {
-        final List<Student> actual = JDBJ.returningTransaction(db(), Connection.TRANSACTION_SERIALIZABLE, connection -> {
+        final List<Student> actual = JDBJ.returningTransaction(db(), highIsolation, connection -> {
             assertEquals(1, executeUpdate.execute(connection));
             return Student.selectAll.execute(connection);
         });
@@ -88,30 +102,32 @@ public abstract class TransactionTest extends StudentTest {
     @Test
     public void transactionIsolationReset() throws Exception {
         try (Connection connection = db().getConnection()) {
-            final int originalIsolation = Connection.TRANSACTION_READ_UNCOMMITTED;
+            final int originalIsolation = lowIsolation;
 
+            //noinspection MagicConstant
             connection.setTransactionIsolation(originalIsolation);
+            assertEquals(originalIsolation, connection.getTransactionIsolation());
             DataSource fakeDataSource = new FakeDataSource<>(() -> new FakeConnection(connection));
 
-            JDBJ.transaction(fakeDataSource, Connection.TRANSACTION_SERIALIZABLE, c -> {
-                assertEquals(Connection.TRANSACTION_SERIALIZABLE, c.getTransactionIsolation());
+            JDBJ.transaction(fakeDataSource, highIsolation, c -> {
+                assertEquals(highIsolation, c.getTransactionIsolation());
                 assertEquals(1, executeUpdate.execute(c));
             });
             assertEquals(originalIsolation, connection.getTransactionIsolation());
         }
     }
 
-
     @Test
     public void transactionIsolationNotResetIfNotProvided() throws Exception {
         try (Connection connection = db().getConnection()) {
-            final int originalIsolation = Connection.TRANSACTION_READ_UNCOMMITTED;
+            final int originalIsolation = lowIsolation;
 
+            //noinspection MagicConstant
             connection.setTransactionIsolation(originalIsolation);
             DataSource fakeDataSource = new FakeDataSource<>(() -> new FakeConnection(connection));
 
             JDBJ.transaction(fakeDataSource, c -> {
-                assertEquals(Connection.TRANSACTION_READ_UNCOMMITTED, c.getTransactionIsolation());
+                assertEquals(originalIsolation, c.getTransactionIsolation());
                 assertEquals(1, executeUpdate.execute(c));
             });
             assertEquals(originalIsolation, connection.getTransactionIsolation());
@@ -152,13 +168,13 @@ public abstract class TransactionTest extends StudentTest {
     @Test
     public void exceptDuringIsolationResetIgnored() throws Exception {
         try (Connection connection = db().getConnection()) {
-            connection.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
+            connection.setTransactionIsolation(lowIsolation);
             DataSource fakeDataSource = new FakeDataSource<>(() -> new FakeConnection(connection) {
                 @Override
                 public void setTransactionIsolation(int level) throws SQLException {
                     final int beforeSet = connection.getTransactionIsolation();
                     super.setTransactionIsolation(level);
-                    if (beforeSet == Connection.TRANSACTION_READ_COMMITTED) {
+                    if (beforeSet == highIsolation) {
                         throw new SQLException("should be ignored");
                     }
                 }
@@ -168,7 +184,7 @@ public abstract class TransactionTest extends StudentTest {
                     connection.close();
                 }
             });
-            JDBJ.transaction(fakeDataSource, Connection.TRANSACTION_SERIALIZABLE, c -> assertEquals(1, executeUpdate.execute(c)));
+            JDBJ.transaction(fakeDataSource, highIsolation, c -> assertEquals(1, executeUpdate.execute(c)));
             assertTrue(connection.isClosed());
         }
     }

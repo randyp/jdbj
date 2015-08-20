@@ -16,7 +16,7 @@ public abstract class BindBigDecimalTest implements DBSupplier {
     public void value() throws Exception {
         final BigDecimal selected = builder()
                 .bindBigDecimal(":binding", expected)
-                .execute(db(), rs -> rs.getBigDecimal(1));
+                .execute(db(), rs -> rs.getBigDecimal(1).setScale(expected.scale(), BigDecimal.ROUND_FLOOR));
         assertEquals(expected, selected);
     }
 

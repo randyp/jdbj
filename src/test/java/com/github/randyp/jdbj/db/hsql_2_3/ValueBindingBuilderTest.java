@@ -1,4 +1,4 @@
-package com.github.randyp.jdbj.db.derby_10_11;
+package com.github.randyp.jdbj.db.hsql_2_3;
 
 import com.github.randyp.jdbj.ExecuteUpdate;
 import com.github.randyp.jdbj.JDBJ;
@@ -17,13 +17,12 @@ import javax.sql.DataSource;
 import java.io.Reader;
 import java.net.URL;
 import java.sql.*;
-import java.util.GregorianCalendar;
 
 @RunWith(Enclosed.class)
 public class ValueBindingBuilderTest {
 
     @ClassRule
-    public static final DerbyRule db = new DerbyRule() {
+    public static final HSqlRule db = new HSqlRule() {
         @Override
         protected void before() throws Throwable {
             super.before();
@@ -32,8 +31,7 @@ public class ValueBindingBuilderTest {
                 try (PreparedStatement ps = connection.prepareStatement("CREATE TABLE binding(bound VARCHAR(500))")) {
                     ps.execute();
                 }
-
-                try (PreparedStatement ps = connection.prepareStatement("CREATE TABLE binding_blob(bound BLOB)")) {
+                try (PreparedStatement ps = connection.prepareStatement("CREATE TABLE binding_timestamp(bound TIMESTAMP WITH TIME ZONE)")) {
                     ps.execute();
                 }
             }
@@ -48,7 +46,7 @@ public class ValueBindingBuilderTest {
         private void cleanup() {
             try {
                 try (Connection connection = getConnection()) {
-                    try (PreparedStatement ps = connection.prepareStatement("DROP TABLE binding_blob")) {
+                    try (PreparedStatement ps = connection.prepareStatement("DROP TABLE binding_timestamp")) {
                         ps.execute();
                     } catch (SQLException e) {
                         //ignore
@@ -68,15 +66,24 @@ public class ValueBindingBuilderTest {
 
     public static final NamedParameterStatement statement = NamedParameterStatement.make("SELECT bound FROM binding WHERE :binding <> 'A' OR :binding IS NULL");
 
+    public static final NamedParameterStatement statement_timestamp = NamedParameterStatement.make("SELECT bound FROM binding_timestamp WHERE :binding <> '1970-01-01 00:00:00' OR :binding IS NULL");
+
     public static ExecuteUpdate update = JDBJ.update("INSERT INTO binding(bound) VALUES(:binding)");
 
+    public static ExecuteUpdate update_timestamp = JDBJ.update("INSERT INTO binding_timestamp(bound) VALUES(:binding)");
+
     public static void clearBindings() throws Exception {
-        try (Connection connection = db.getConnection();
-             PreparedStatement ps = connection.prepareStatement("DELETE FROM binding")) {
-            ps.execute();
+        try (Connection connection = db.getConnection()) {
+            try (PreparedStatement ps = connection.prepareStatement("DELETE FROM binding")) {
+                ps.execute();
+            }
+            try (PreparedStatement ps = connection.prepareStatement("DELETE FROM binding_timestamp")) {
+                ps.execute();
+            }
         }
     }
 
+    /*
     public static class BindArray extends BindArrayTest {
 
         @After
@@ -92,7 +99,7 @@ public class ValueBindingBuilderTest {
         @Test(expected = SQLFeatureNotSupportedException.class)
         @Override
         public void value() throws Exception {
-            try(Connection connection = db.getConnection()){
+            try (Connection connection = db.getConnection()) {
                 final Array array = connection.createArrayOf("varchar", expected);
                 update.bindArray(":binding", array).execute(connection);
             }
@@ -111,8 +118,12 @@ public class ValueBindingBuilderTest {
             return new SimpleBuilder(statement);
         }
     }
+    */
 
     public static class BindAsciiStream extends BindAsciiStreamTest {
+
+        @Rule
+        public ExpectedException thrown = ExpectedException.none();
 
         @After
         public void tearDown() throws Exception {
@@ -125,7 +136,7 @@ public class ValueBindingBuilderTest {
         }
 
 
-        @Test(expected = SQLException.class) //appears to be bug in driver
+        @Test
         @Override
         public void stream() throws Exception {
             update.bindAsciiStream(":binding", expectedStream()).execute(db);
@@ -135,6 +146,8 @@ public class ValueBindingBuilderTest {
         @Test
         @Override
         public void streamNull() throws Exception {
+            thrown.expect(SQLException.class);
+            thrown.expectMessage("Invalid argument in JDBC call: x: null");
             update.bindAsciiStream(":binding", null).execute(db);
             super.streamNull();
         }
@@ -149,6 +162,8 @@ public class ValueBindingBuilderTest {
         @Test
         @Override
         public void streamNullLength() throws Exception {
+            thrown.expect(SQLException.class);
+            thrown.expectMessage("Invalid argument in JDBC call: x: null");
             update.bindAsciiStream(":binding", null, expected.length()).execute(db);
             super.streamNullLength();
         }
@@ -163,6 +178,8 @@ public class ValueBindingBuilderTest {
         @Test
         @Override
         public void streamNullLengthLong() throws Exception {
+            thrown.expect(SQLException.class);
+            thrown.expectMessage("Invalid argument in JDBC call: x: null");
             update.bindAsciiStream(":binding", null, (long) expected.length()).execute(db);
             super.streamNullLengthLong();
         }
@@ -449,6 +466,7 @@ public class ValueBindingBuilderTest {
 //        }
 //    }
 
+    /*
     public static class BindDate extends BindDateTest {
 
         @After
@@ -494,6 +512,7 @@ public class ValueBindingBuilderTest {
             return new SimpleBuilder(statement);
         }
     }
+    */
 
     public static class BindDouble extends BindDoubleTest {
 
@@ -660,6 +679,9 @@ public class ValueBindingBuilderTest {
 
     public static class BindNCharacterStream extends BindNCharacterStreamTest {
 
+        @Rule
+        public ExpectedException thrown = ExpectedException.none();
+
         @After
         public void tearDown() throws Exception {
             clearBindings();
@@ -670,30 +692,36 @@ public class ValueBindingBuilderTest {
             return db;
         }
 
-        @Test(expected = SQLFeatureNotSupportedException.class)
+        @Test
         @Override
         public void reader() throws Exception {
             update.bindNCharacterStream(":binding", expectedReader()).execute(db);
             super.reader();
         }
 
-        @Test(expected = SQLFeatureNotSupportedException.class)
+        @Test
         @Override
         public void readerNull() throws Exception {
+            thrown.expect(SQLException.class);
+            thrown.expectMessage("InputStream error: java.lang.NullPointerException");
             update.bindNCharacterStream(":binding", null).execute(db);
             super.readerNull();
         }
 
-        @Test(expected = SQLFeatureNotSupportedException.class)
+        @Test
         @Override
         public void readerLength() throws Exception {
+            thrown.expect(SQLException.class);
+            thrown.expectMessage("InputStream error: java.io.EOFException");
             update.bindNCharacterStream(":binding", expectedReader(), expected.length()).execute(db);
             super.readerLength();
         }
 
-        @Test(expected = SQLFeatureNotSupportedException.class)
+        @Test
         @Override
         public void readerNullLength() throws Exception {
+            thrown.expect(SQLException.class);
+            thrown.expectMessage("InputStream error: java.lang.NullPointerException");
             update.bindNCharacterStream(":binding", null, expected.length()).execute(db);
             super.readerNullLength();
         }
@@ -707,6 +735,9 @@ public class ValueBindingBuilderTest {
 
     public static class BindNClob extends BindNClobTest {
 
+        @Rule
+        public ExpectedException thrown = ExpectedException.none();
+
         @After
         public void tearDown() throws Exception {
             clearBindings();
@@ -717,7 +748,7 @@ public class ValueBindingBuilderTest {
             return db;
         }
 
-        @Test(expected = SQLFeatureNotSupportedException.class)
+        @Test
         @Override
         public void value() throws Exception {
             try (Connection connection = db.getConnection()) {
@@ -728,37 +759,43 @@ public class ValueBindingBuilderTest {
             super.value();
         }
 
-        @Test(expected = SQLFeatureNotSupportedException.class)
+        @Test
         @Override
         public void valueNull() throws Exception {
             update.bindNClob(":binding", (NClob) null).execute(db);
             super.valueNull();
         }
 
-        @Test(expected = SQLFeatureNotSupportedException.class)
+        @Test
         @Override
         public void reader() throws Exception {
             update.bindNClob(":binding", expectedReader()).execute(db);
             super.reader();
         }
 
-        @Test(expected = SQLFeatureNotSupportedException.class)
+        @Test
         @Override
         public void readerNull() throws Exception {
+            thrown.expect(SQLException.class);
+            thrown.expectMessage("InputStream error: java.lang.NullPointerException");
             update.bindNClob(":binding", (Reader) null).execute(db);
             super.readerNull();
         }
 
-        @Test(expected = SQLFeatureNotSupportedException.class)
+        @Test
         @Override
         public void readerLength() throws Exception {
+            thrown.expect(SQLException.class);
+            thrown.expectMessage("InputStream error: java.io.EOFException");
             update.bindNClob(":binding", expectedReader(), expected.length()).execute(db);
             super.readerLength();
         }
 
-        @Test(expected = SQLFeatureNotSupportedException.class)
+        @Test
         @Override
         public void readerNullLength() throws Exception {
+            thrown.expect(SQLException.class);
+            thrown.expectMessage("InputStream error: java.lang.NullPointerException");
             update.bindNClob(":binding", null, expected.length()).execute(db);
             super.readerNullLength();
         }
@@ -781,14 +818,14 @@ public class ValueBindingBuilderTest {
             return db;
         }
 
-        @Test(expected = SQLFeatureNotSupportedException.class)
+        @Test
         @Override
         public void value() throws Exception {
             update.bindNString(":binding", expected).execute(db);
             super.value();
         }
 
-        @Test(expected = SQLFeatureNotSupportedException.class)
+        @Test
         @Override
         public void Null() throws Exception {
             update.bindNString(":binding", null).execute(db);
@@ -887,28 +924,28 @@ public class ValueBindingBuilderTest {
             super.valueNullTypeLength();
         }
 
-        @Test
+        @Test(expected = SQLFeatureNotSupportedException.class)
         @Override
         public void valueSQLType() throws Exception {
             update.bindObject(":binding", expected, JDBCType.VARCHAR).execute(db);
             super.valueSQLType();
         }
 
-        @Test
+        @Test(expected = SQLFeatureNotSupportedException.class)
         @Override
         public void valueNullSQLType() throws Exception {
             update.bindObject(":binding", null, JDBCType.VARCHAR).execute(db);
             super.valueNullSQLType();
         }
 
-        @Test
+        @Test(expected = SQLFeatureNotSupportedException.class)
         @Override
         public void valueSQLTypeLength() throws Exception {
             update.bindObject(":binding", expected, JDBCType.VARCHAR, 5).execute(db);
             super.valueSQLTypeLength();
         }
 
-        @Test
+        @Test(expected = SQLFeatureNotSupportedException.class)
         @Override
         public void valueNullSQLTypeLength() throws Exception {
             update.bindObject(":binding", null, JDBCType.VARCHAR, 5).execute(db);
@@ -1023,6 +1060,7 @@ public class ValueBindingBuilderTest {
         }
     }
 
+    /*
     public static class BindTime extends BindTimeTest {
 
         @After
@@ -1069,6 +1107,7 @@ public class ValueBindingBuilderTest {
         }
     }
 
+
     public static class BindTimestamp extends BindTimestampTest {
 
         @Override
@@ -1084,36 +1123,37 @@ public class ValueBindingBuilderTest {
         @Test
         @Override
         public void value() throws Exception {
-            update.bindTimestamp(":binding", expectedTimestamp).execute(db);
+            update_timestamp.bindTimestamp(":binding", expectedTimestamp).execute(db);
             super.value();
         }
 
         @Test
         @Override
         public void valueNull() throws Exception {
-            update.bindTimestamp(":binding", null).execute(db);
+            update_timestamp.bindTimestamp(":binding", null).execute(db);
             super.valueNull();
         }
 
         @Test
         @Override
         public void valueCalendar() throws Exception {
-            update.bindTimestamp(":binding", new Timestamp(expectedTime), GregorianCalendar.getInstance()).execute(db);
+            update_timestamp.bindTimestamp(":binding", new Timestamp(expectedTime), GregorianCalendar.getInstance()).execute(db);
             super.valueCalendar();
         }
 
         @Test
         @Override
         public void valueCalendarNull() throws Exception {
-            update.bindTimestamp(":binding", null, GregorianCalendar.getInstance()).execute(db);
+            update_timestamp.bindTimestamp(":binding", null, GregorianCalendar.getInstance()).execute(db);
             super.valueCalendarNull();
         }
 
         @Override
         public SimpleBuilder builder() {
-            return new SimpleBuilder(statement);
+            return new SimpleBuilder(statement_timestamp);
         }
     }
+    */
 
     public static class BindURL extends BindURLTest {
 
