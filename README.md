@@ -63,7 +63,7 @@ In addition, many other convenience libraries try to hide the binding code behin
 #### Guiding Principles
 * No *connection handles* - just use the Connection as an argument
 * Bubble up the SQLException, or wrap if not possible (eg. java.util.Stream#tryAdvance)
-* Immutable builders to capture the query intent (exceptions are Batched Query Builders, which are mutable)
+* Immutable builders to capture the query intent (except Batched Builders, which are mutable)
 * Use PreparedColumn to hide PreparedStatement
 * Named Parameters only, no Positional Parameters
 * Fetch-forward, read-only cursors for read only queries
