@@ -13,6 +13,8 @@ public class DerbyRule extends ExternalResource implements DataSource {
     private final String url = "jdbc:derby:jdbj;create=true";
     private final Properties defaultProperties = new Properties();
 
+    private boolean open;
+
     public DerbyRule() {
         defaultProperties.setProperty("user", "jdbj");
         defaultProperties.setProperty("password", "jdbj");
@@ -71,5 +73,21 @@ public class DerbyRule extends ExternalResource implements DataSource {
     @Override
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    protected void before() throws Throwable {
+        open = true;
+    }
+
+    @Override
+    protected void after() {
+        open = false;
+    }
+
+    private void checkOpen() {
+        if(!open){
+            throw new IllegalStateException("Accessing db outsite of tests");
+        }
     }
 }

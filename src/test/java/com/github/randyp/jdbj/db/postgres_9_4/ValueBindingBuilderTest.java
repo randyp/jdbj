@@ -124,8 +124,8 @@ public class ValueBindingBuilderTest {
         }
 
         @Override
-        public String getCastType() {
-            return "bytea";
+        public SimpleBuilder builder() {
+            return new SimpleBuilder("bytea");
         }
     }
 

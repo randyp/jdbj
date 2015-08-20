@@ -1,4 +1,4 @@
-package com.github.randyp.jdbj.db.postgres_9_4;
+package com.github.randyp.jdbj.db.mysql_5_1;
 
 import org.junit.rules.ExternalResource;
 
@@ -11,26 +11,24 @@ import java.sql.SQLFeatureNotSupportedException;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-public class PGRule extends ExternalResource implements DataSource {
+public class MySqlRule extends ExternalResource implements DataSource {
 
-    private final String url = "jdbc:postgresql://localhost:5432/jdbj";
+    private final String url = "jdbc:mysql://localhost:3306/jdbj";
     private final Properties defaultProperties = new Properties();
-    private boolean open = false;
+    private boolean open;
 
-    public PGRule() {
+    public MySqlRule() {
         defaultProperties.setProperty("user", "jdbj");
         defaultProperties.setProperty("password", "jdbj");
     }
 
     @Override
     public Connection getConnection() throws SQLException {
-        checkOpen();
         return DriverManager.getConnection(url, defaultProperties);
     }
 
     @Override
     public Connection getConnection(String username, String password) throws SQLException {
-        checkOpen();
         final Properties properties = new Properties(defaultProperties);
         properties.setProperty("user", username);
         properties.setProperty("password", password);

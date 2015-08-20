@@ -12,7 +12,7 @@ public abstract class BindByteArrayTest implements DBSupplier {
 
     @Test
     public void value() throws Exception {
-        final byte[] selected = new SimpleBuilder(getCastType())
+        final byte[] selected = builder()
                 .bindByteArray(":binding", expected)
                 .execute(db(), rs -> rs.getBytes(1));
         assertArrayEquals(expected, selected);
@@ -20,14 +20,13 @@ public abstract class BindByteArrayTest implements DBSupplier {
 
     @Test
     public void valueNull() throws Exception {
-        final byte[] selected = new SimpleBuilder(getCastType())
+        final byte[] selected = builder()
                 .bindByteArray(":binding", null)
                 .execute(db(), rs -> rs.getBytes(1));
         assertNull(selected);
     }
 
-    public String getCastType() {
-        return "varchar";
+    public SimpleBuilder builder() {
+        return new SimpleBuilder("varchar");
     }
-
 }

@@ -86,7 +86,7 @@ mvn release:clean release:prepare -B && mvn release:perform
 * [x] Derby Integration Tests
 * [x] SQLLite Integration Tests
 * [ ] Mysql Integration Tests
-* [ ] Hacky-yet-compatible batch insert query
+* [ ] Hacky-yet-compatible batch insert & update queries
 
 #### 0.1.6
 * [ ] Somehow remove most antlr classes we don't need from shading process...

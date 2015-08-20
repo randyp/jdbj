@@ -20,7 +20,11 @@ public abstract class BindSQLXMLTest implements DBSupplier {
             xml.setString(expected);
             final String selected = builder()
                     .bindSQLXML(":binding", xml)
-                    .execute(connection, rs -> rs.getSQLXML(1).getString());
+                    .execute(connection, rs -> {
+                        final SQLXML sqlxml = rs.getSQLXML(1);
+                        assertNotNull("Driver returned null sqlxml", sqlxml);
+                        return sqlxml.getString();
+                    });
             assertEquals(expected, selected);
         }
     }
