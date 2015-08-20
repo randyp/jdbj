@@ -31,7 +31,6 @@ try (Stream<Student> stream = streamQuery.execute(db)) {
 * Null-Safe fetching of (Boolean|Byte|Double|Float|Integer|Long|Short)
 * Java8 lambda interface for bindings, transactions
 * Fetch-forward read-only cursors, always
-* Utilities for best practices
 * Script Execution, with parameters
 * Integration tests with lastest postgres,h2,derby,sqllite,mysql
 
