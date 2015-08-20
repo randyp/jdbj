@@ -71,7 +71,9 @@ In addition, many other convenience libraries try to hide the binding code behin
 * No external dependencies (where did my guava go?)
 
 #### Credits
-To Carmine Mangione for showing me how to use jdbc, and to the [jdbi team](http://jdbi.org/) for authoring jdbi, as some of jdbj is based on jdbi.
+Thank you to:
+* Carmine Mangione for showing me that it is OK to use jdbc
+* [jdbi team](http://jdbi.org/) for authoring jdbi, as some of jdbj is based on jdbi.
 
 #### Release
 ``` sh
