@@ -85,7 +85,7 @@ mvn release:clean release:prepare -B && mvn release:perform
 #### 0.1.5 Todo
 * [x] Derby Integration Tests
 * [x] SQLLite Integration Tests
-* [ ] Mysql Integration Tests
+* [x] Mysql Integration Tests
 * [ ] Hacky-yet-compatible batch insert & update queries
 
 #### 0.1.6
