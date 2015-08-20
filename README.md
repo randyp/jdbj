@@ -33,6 +33,7 @@ try (Stream<Student> stream = streamQuery.execute(db)) {
 * Fetch-forward read-only cursors, always
 * Utilities for best practices
 * Script Execution, with parameters
+* Integration tests with lastest postgres,h2,derby,sqllite
 
 #### Examples
 A full set of examples is being developed in [jdbj-examples](https://github.com/randyp/jdbj-examples), but here are some quick examples.
@@ -82,8 +83,8 @@ mvn release:clean release:prepare -B && mvn release:perform
 ```
 
 #### 0.1.5 Todo
-* [ ] Derby Integration Tests
-* [ ] SQLLite Integration Tests
+* [x] Derby Integration Tests
+* [x] SQLLite Integration Tests
 * [ ] Mysql Integration Tests
 * [ ] Hacky-yet-compatible batch insert query
 
