@@ -33,7 +33,7 @@ try (Stream<Student> stream = streamQuery.execute(db)) {
 * Fetch-forward read-only cursors, always
 * Utilities for best practices
 * Script Execution, with parameters
-* Integration tests with lastest postgres,h2,derby,sqllite
+* Integration tests with lastest postgres,h2,derby,sqllite,mysql
 
 #### Examples
 A full set of examples is being developed in [jdbj-examples](https://github.com/randyp/jdbj-examples), but here are some quick examples.
