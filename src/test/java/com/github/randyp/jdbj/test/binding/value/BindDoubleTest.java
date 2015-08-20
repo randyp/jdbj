@@ -8,10 +8,11 @@ import static org.junit.Assert.assertNull;
 
 public abstract class BindDoubleTest implements DBSupplier{
 
+    protected final Double expected = 1.2;
+
     @Test
     public void value() throws Exception {
-        final Double expected = 1.2;
-        final Double selected = new SimpleBuilder()
+        final Double selected = builder()
                 .bindDouble(":binding", expected)
                 .execute(db(), rs -> rs.getDouble(1));
         assertEquals(expected, selected, 0.0);
@@ -19,7 +20,7 @@ public abstract class BindDoubleTest implements DBSupplier{
 
     @Test
     public void Null() throws Exception {
-        final Double selected = new SimpleBuilder()
+        final Double selected = builder()
                 .bindDouble(":binding", null)
                 .execute(db(), rs -> rs.getDouble(1));
         assertNull(selected);
@@ -27,10 +28,13 @@ public abstract class BindDoubleTest implements DBSupplier{
 
     @Test
     public void primitive() throws Exception {
-        final double expected = 1.2;
-        final double selected = new SimpleBuilder()
+        final double selected = builder()
                 .bindDoublePrimitive(":binding", expected)
                 .execute(db(), rs -> rs.getDoublePrimitive(1));
         assertEquals(expected, selected, 0.0);
+    }
+
+    public SimpleBuilder builder() {
+        return new SimpleBuilder();
     }
 }

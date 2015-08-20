@@ -343,7 +343,7 @@ public class DefaultCollectionBindingsBuilderTest {
     public static class BindTimes extends HasExpectedTimeOfDay {
         @Test
         public void values() throws Exception {
-            final Time[] expected = {new Time(expectedTime), new Time(expectedTime)};
+            final Time[] expected = {new Time(expectedMillis), new Time(expectedMillis)};
             final Object[] selected = new SimpleBuilder()
                     .bindDefaultTimes(":binding", Arrays.asList(expected))
                     .execute(db, rs -> (Object[]) rs.getObject(1));
@@ -352,7 +352,7 @@ public class DefaultCollectionBindingsBuilderTest {
 
         @Test
         public void valuesAndCal() throws Exception {
-            final Time[] expected = {new Time(expectedTime), new Time(expectedTime)};
+            final Time[] expected = {new Time(expectedMillis), new Time(expectedMillis)};
             final Object[] selected = new SimpleBuilder()
                     .bindDefaultTimes(":binding", Arrays.asList(expected), GregorianCalendar.getInstance())
                     .execute(db, rs -> (Object[]) rs.getObject(1));

@@ -11,7 +11,7 @@ public abstract class BindBooleanTest implements DBSupplier {
 
     @Test
     public void False() throws Exception {
-        final Boolean selected = new SimpleBuilder()
+        final Boolean selected = builder()
                 .bindBoolean(":binding", Boolean.FALSE)
                 .execute(db(), rs -> rs.getBoolean(1));
         assertFalse(selected);
@@ -19,7 +19,7 @@ public abstract class BindBooleanTest implements DBSupplier {
 
     @Test
     public void True() throws Exception {
-        final Boolean selected = new SimpleBuilder()
+        final Boolean selected = builder()
                 .bindBoolean(":binding", Boolean.TRUE)
                 .execute(db(), rs -> rs.getBoolean(1));
         assertTrue(selected);
@@ -28,7 +28,7 @@ public abstract class BindBooleanTest implements DBSupplier {
 
     @Test
     public void Null() throws Exception {
-        final Boolean selected = new SimpleBuilder()
+        final Boolean selected = builder()
                 .bindBoolean(":binding", null)
                 .execute(db(), rs -> rs.getBoolean(1));
         assertNull(selected);
@@ -36,7 +36,7 @@ public abstract class BindBooleanTest implements DBSupplier {
 
     @Test
     public void primitiveFalse() throws Exception {
-        final boolean selected = new SimpleBuilder()
+        final boolean selected = builder()
                 .bindBooleanPrimitive(":binding", false)
                 .execute(db(), rs -> rs.getBooleanPrimitive(1));
         assertFalse(selected);
@@ -44,9 +44,13 @@ public abstract class BindBooleanTest implements DBSupplier {
 
     @Test
     public void primitiveTrue() throws Exception {
-        final boolean selected = new SimpleBuilder()
+        final boolean selected = builder()
                 .bindBooleanPrimitive(":binding", true)
                 .execute(db(), rs -> rs.getBooleanPrimitive(1));
         assertTrue(selected);
+    }
+
+    public SimpleBuilder builder() {
+        return new SimpleBuilder();
     }
 }

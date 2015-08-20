@@ -8,10 +8,11 @@ import static org.junit.Assert.assertNull;
 
 public abstract class BindFloatTest implements DBSupplier {
 
+    protected final Float expected = 1.2f;
+
     @Test
     public void value() throws Exception {
-        final Float expected = 1.2f;
-        final Float selected = new SimpleBuilder()
+        final Float selected = builder()
                 .bindFloat(":binding", expected)
                 .execute(db(), rs -> rs.getFloat(1));
         assertEquals(expected, selected, 0.0f);
@@ -19,7 +20,7 @@ public abstract class BindFloatTest implements DBSupplier {
 
     @Test
     public void Null() throws Exception {
-        final Float selected = new SimpleBuilder()
+        final Float selected = builder()
                 .bindFloat(":binding", null)
                 .execute(db(), rs -> rs.getFloat(1));
         assertNull(selected);
@@ -27,11 +28,14 @@ public abstract class BindFloatTest implements DBSupplier {
 
     @Test
     public void primitive() throws Exception {
-        final float expected = 1.2f;
-        final float selected = new SimpleBuilder()
+        final float selected = builder()
                 .bindFloatPrimitive(":binding", expected)
                 .execute(db(), rs -> rs.getFloatPrimitive(1));
         assertEquals(expected, selected, 0.0f);
+    }
+
+    public SimpleBuilder builder() {
+        return new SimpleBuilder();
     }
 
 }

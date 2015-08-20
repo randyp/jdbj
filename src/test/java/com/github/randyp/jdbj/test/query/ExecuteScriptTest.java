@@ -5,47 +5,44 @@ import com.github.randyp.jdbj.student.Student;
 import com.github.randyp.jdbj.student.StudentTest;
 import org.junit.Test;
 
-import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
 public abstract class ExecuteScriptTest extends StudentTest {
 
-    //can only test with one batch, as keys are only available from last batch in H2
     @Test
     public void insertTwoNoParams() throws Exception {
-        final List<Student> expected = Arrays.asList(
-                new Student(10, "Ada10", "Dada10", new BigDecimal("3.1")),
-                new Student(11L, "Ada11", "Dada11", new BigDecimal("3.2"))
-        );
-
         JDBJ.resource("student_insert_ada10_ada11.sql").script().execute(db());
         final List<Student> actual = Student.selectAll.execute(db());
-        assertEquals(expected, actual);
+        assertEquals(2, actual.size());
+        actual.sort(Student.Compare.FIRST_NAME);
+        assertEquals("Ada10", actual.get(0).getFirstName());
+        assertEquals("Ada11", actual.get(1).getFirstName());
     }
 
     @Test
     public void insertTwoParameters() throws Exception {
-        final List<Student> expected = Arrays.asList(
-                new Student(10, "Ada10", "Dada10", new BigDecimal("3.1")),
-                new Student(11L, "Ada11", "Dada11", new BigDecimal("3.2"))
-        );
+        final String ada10 = "Ada10";
+        final String ada11 = "Ada11";
 
         JDBJ.script(
-                "INSERT INTO student(id, first_name, last_name, gpa) VALUES(:id0, 'Ada10', 'Dada10', '3.1');\n" +
-                        "INSERT INTO student(id, first_name, last_name, gpa) VALUES(:id1, 'Ada11', 'Dada11', '3.2');"
-        ).bindLong(":id0", expected.get(0).getId())
-                .bindLong(":id1", expected.get(1).getId())
+                "INSERT INTO student(first_name, last_name, gpa) VALUES(:name0, 'Dada10', '3.1');\n" +
+                        "INSERT INTO student(first_name, last_name, gpa) VALUES(:name1, 'Dada11', '3.2');"
+        )
+                .bindString(":name0", ada10)
+                .bindString(":name1", ada11)
                 .execute(db());
         final List<Student> actual = Student.selectAll.execute(db());
-        assertEquals(expected, actual);
+        assertEquals(2, actual.size());
+        actual.sort(Student.Compare.FIRST_NAME);
+        assertEquals("Ada10", actual.get(0).getFirstName());
+        assertEquals("Ada11", actual.get(1).getFirstName());
     }
 
     @Test
     public void convenienceMethodOnJDBJ() throws Exception {
-        JDBJ.script("INSERT INTO student(id, first_name, last_name, gpa) VALUES (10 ,'a', 'b', '3.1');")
+        JDBJ.script("INSERT INTO student(first_name, last_name, gpa) VALUES ('a', 'b', '3.1');")
                 .execute(db());
         assertEquals(1, Student.selectAll.execute(db()).size());
     }

@@ -8,10 +8,11 @@ import static org.junit.Assert.assertNull;
 
 public abstract class BindLongTest implements DBSupplier {
 
+    protected final Long expected = 12L;
+
     @Test
     public void value() throws Exception {
-        final Long expected = 12L;
-        final Long selected = new SimpleBuilder()
+        final Long selected = builder()
                 .bindLong(":binding", expected)
                 .execute(db(), rs -> rs.getLong(1));
         assertEquals(expected, selected);
@@ -19,7 +20,7 @@ public abstract class BindLongTest implements DBSupplier {
 
     @Test
     public void Null() throws Exception {
-        final Long selected = new SimpleBuilder()
+        final Long selected = builder()
                 .bindLong(":binding", null)
                 .execute(db(), rs -> rs.getLong(1));
         assertNull(selected);
@@ -27,11 +28,14 @@ public abstract class BindLongTest implements DBSupplier {
 
     @Test
     public void primitive() throws Exception {
-        final long expected = 12L;
-        final long selected = new SimpleBuilder()
+        final long selected = builder()
                 .bindLongPrimitive(":binding", expected)
                 .execute(db(), rs -> rs.getLongPrimitive(1));
-        assertEquals(expected, selected);
+        assertEquals(expected.longValue(), selected);
+    }
+
+    public SimpleBuilder builder() {
+        return new SimpleBuilder();
     }
 
 }

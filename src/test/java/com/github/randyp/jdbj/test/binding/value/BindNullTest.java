@@ -13,7 +13,7 @@ public abstract class BindNullTest implements DBSupplier {
     @Test
     public void type() throws Exception {
         try (Connection connection = db().getConnection()) {
-            final String selected = new SimpleBuilder()
+            final String selected = builder()
                     .bindNull(":binding", Types.VARCHAR)
                     .execute(connection, rs -> rs.getString(1));
             assertNull(selected);
@@ -23,10 +23,14 @@ public abstract class BindNullTest implements DBSupplier {
     @Test
     public void typeAndName() throws Exception {
         try (Connection connection = db().getConnection()) {
-            final String selected = new SimpleBuilder()
+            final String selected = builder()
                     .bindNull(":binding", Types.VARCHAR, "varchar")
                     .execute(connection, rs -> rs.getString(1));
             assertNull(selected);
         }
+    }
+
+    public SimpleBuilder builder() {
+        return new SimpleBuilder();
     }
 }

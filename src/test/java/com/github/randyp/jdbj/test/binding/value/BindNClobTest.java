@@ -13,13 +13,14 @@ import static org.junit.Assert.assertNull;
 
 public abstract class BindNClobTest implements DBSupplier {
 
+    protected final String expected = "abcde";
+
     @Test
     public void value() throws Exception {
-        final String expected = "abcde";
         try (Connection connection = db().getConnection()) {
             final NClob nClob = connection.createNClob();
             nClob.setString(1L, expected);
-            final String selected = new SimpleBuilder()
+            final String selected = builder()
                     .bindNClob(":binding", nClob)
                     .execute(connection, rs -> rs.getNClob(1).getSubString(1L, expected.length()));
             assertEquals(expected, selected);
@@ -29,7 +30,7 @@ public abstract class BindNClobTest implements DBSupplier {
     @Test
     public void valueNull() throws Exception {
         try (Connection connection = db().getConnection()) {
-            final String selected = new SimpleBuilder()
+            final String selected = builder()
                     .bindNClob(":binding", (NClob) null)
                     .execute(connection, rs -> rs.getString(1));
             assertNull(selected);
@@ -38,10 +39,9 @@ public abstract class BindNClobTest implements DBSupplier {
 
     @Test
     public void reader() throws Exception {
-        final String expected = "abcde";
         try (Connection connection = db().getConnection()) {
-            final String selected = new SimpleBuilder()
-                    .bindNClob(":binding", new StringReader(expected))
+            final String selected = builder()
+                    .bindNClob(":binding", expectedReader())
                     .execute(connection, rs -> rs.getString(1));
             assertEquals(expected, selected);
         }
@@ -50,7 +50,7 @@ public abstract class BindNClobTest implements DBSupplier {
     @Test
     public void readerNull() throws Exception {
         try (Connection connection = db().getConnection()) {
-            final String selected = new SimpleBuilder()
+            final String selected = builder()
                     .bindNClob(":binding", (Reader) null)
                     .execute(connection, rs -> rs.getString(1));
             assertNull(selected);
@@ -59,10 +59,9 @@ public abstract class BindNClobTest implements DBSupplier {
 
     @Test
     public void readerLength() throws Exception {
-        final String expected = "abcde";
         try (Connection connection = db().getConnection()) {
-            final String selected = new SimpleBuilder()
-                    .bindNClob(":binding", new StringReader(expected), (long) expected.length())
+            final String selected = builder()
+                    .bindNClob(":binding", expectedReader(), (long) expected.length())
                     .execute(connection, rs -> rs.getString(1));
             assertEquals(expected, selected);
         }
@@ -71,10 +70,18 @@ public abstract class BindNClobTest implements DBSupplier {
     @Test
     public void readerNullLength() throws Exception {
         try (Connection connection = db().getConnection()) {
-            final String selected = new SimpleBuilder()
+            final String selected = builder()
                     .bindNClob(":binding", null, 5L)
                     .execute(connection, rs -> rs.getString(1));
             assertNull(selected);
         }
+    }
+
+    public SimpleBuilder builder() {
+        return new SimpleBuilder();
+    }
+
+    public StringReader expectedReader() {
+        return new StringReader(expected);
     }
 }

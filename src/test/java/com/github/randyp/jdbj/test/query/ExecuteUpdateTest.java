@@ -2,13 +2,13 @@ package com.github.randyp.jdbj.test.query;
 
 import com.github.randyp.jdbj.ExecuteUpdate;
 import com.github.randyp.jdbj.JDBJ;
+import com.github.randyp.jdbj.student.NewStudent;
 import com.github.randyp.jdbj.student.Student;
 import com.github.randyp.jdbj.student.StudentTest;
 import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -17,7 +17,7 @@ public abstract class ExecuteUpdateTest extends StudentTest {
 
     @Test(expected = IllegalStateException.class)
     public void insertQueryNotEnoughBindings() throws Exception {
-        final ExecuteUpdate executeUpdate = JDBJ.resource(Student.insert_id).update();
+        final ExecuteUpdate executeUpdate = JDBJ.resource(Student.insert).update();
         try (Connection connection = db().getConnection()) {
             executeUpdate.execute(connection);
         }
@@ -25,16 +25,16 @@ public abstract class ExecuteUpdateTest extends StudentTest {
 
     @Test
     public void insertOne() throws Exception {
-        final Student expected = new Student(10L, "Ada", "Dada", new BigDecimal("3.1"));
-        final ExecuteUpdate executeUpdate = JDBJ.resource(Student.insert_id).update()
-                .bindLong(":id", expected.getId())
-                .bindString(":first_name", expected.getFirstName())
-                .bindString(":last_name", expected.getLastName())
-                .bindBigDecimal(":gpa", expected.getGpa());
+        final NewStudent newStudent = new NewStudent("Ada", "Dada", new BigDecimal("3.1"));
+        final ExecuteUpdate executeUpdate = JDBJ.resource(Student.insert).update()
+                .bindString(":first_name", newStudent.getFirstName())
+                .bindString(":last_name", newStudent.getLastName())
+                .bindBigDecimal(":gpa", newStudent.getGpa());
 
         assertEquals(1, executeUpdate.execute(db()));
         final List<Student> actual = Student.selectAll.execute(db());
-        assertEquals(Collections.singletonList(expected), actual);
+        assertEquals(1, actual.size());
+        assertEquals(newStudent.getFirstName(), actual.get(0).getFirstName());
     }
 
     @Test

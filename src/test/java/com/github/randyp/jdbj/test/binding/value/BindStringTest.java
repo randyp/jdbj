@@ -8,10 +8,11 @@ import static org.junit.Assert.assertNull;
 
 public abstract class BindStringTest implements DBSupplier {
 
+    protected final String expected = "abcde";
+
     @Test
     public void value() throws Exception {
-        final String expected = "abcde";
-        final String selected = new SimpleBuilder()
+        final String selected = builder()
                 .bindString(":binding", expected)
                 .execute(db(), rs -> rs.getString(1));
         assertEquals(expected, selected);
@@ -19,10 +20,14 @@ public abstract class BindStringTest implements DBSupplier {
 
     @Test
     public void valueNull() throws Exception {
-        final String selected = new SimpleBuilder()
+        final String selected = builder()
                 .bindString(":binding", null)
                 .execute(db(), rs -> rs.getString(1));
         assertNull(selected);
+    }
+
+    public SimpleBuilder builder() {
+        return new SimpleBuilder();
     }
 
 }

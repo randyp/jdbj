@@ -13,9 +13,10 @@ import static org.junit.Assert.assertNull;
 
 public abstract class BindClobTest implements DBSupplier {
 
+    protected final String expected = "abcd";
+
     @Test
     public void value() throws Exception {
-        final String expected = "abcd";
         try (Connection connection = db().getConnection()) {
             final Clob clob = connection.createClob();
             clob.setString(1, expected);
@@ -41,7 +42,6 @@ public abstract class BindClobTest implements DBSupplier {
 
     @Test
     public void reader() throws Exception {
-        final String expected = "abcd";
         try (Connection connection = db().getConnection()) {
             final String selected = new SimpleBuilder()
                     .bindClob(":binding", new StringReader(expected))
@@ -65,7 +65,6 @@ public abstract class BindClobTest implements DBSupplier {
 
     @Test
     public void readerLength() throws Exception {
-        final String expected = "abcd";
         try (Connection connection = db().getConnection()) {
             final String selected = new SimpleBuilder()
                     .bindClob(":binding", new StringReader(expected), (long) expected.length())

@@ -12,12 +12,12 @@ public abstract class ExecuteQueryRunnableTest implements DBSupplier {
     @Test
     public void selectRunExecute() throws Exception {
         final String[] firstColumnName = {null};
-        JDBJ.string("SELECT table_catalog FROM information_schema.tables")
+        JDBJ.string("SELECT table_name FROM information_schema.tables")
                 .query()
                 .runnable(rs -> firstColumnName[0] = rs.getMetaData().getColumnName(1).toLowerCase())
                 .execute(db());
 
-        assertEquals("table_catalog", firstColumnName[0]);
+        assertEquals("table_name", firstColumnName[0]);
     }
 
     @Test
@@ -49,6 +49,6 @@ public abstract class ExecuteQueryRunnableTest implements DBSupplier {
                 })
                 .execute(db());
 
-        assertTrue(count[0] > 20);
+        assertTrue(count[0] > 1);
     }
 }

@@ -8,9 +8,10 @@ import static org.junit.Assert.assertNull;
 
 public abstract class BindByteArrayTest implements DBSupplier {
 
+    protected final byte[] expected = "abcde".getBytes();
+
     @Test
     public void value() throws Exception {
-        final byte[] expected = "abcde".getBytes();
         final byte[] selected = new SimpleBuilder(getCastType())
                 .bindByteArray(":binding", expected)
                 .execute(db(), rs -> rs.getBytes(1));

@@ -10,9 +10,10 @@ import static org.junit.Assert.assertNull;
 
 public abstract class BindCharacterStreamTest implements DBSupplier {
 
+    protected final String expected = "abcde";
+
     @Test
     public void reader() throws Exception {
-        final String expected = "abcde";
         final String selected = new SimpleBuilder()
                 .bindCharacterStream(":binding", new StringReader(expected))
                 .execute(db(), rs -> rs.getString(1));
@@ -29,7 +30,6 @@ public abstract class BindCharacterStreamTest implements DBSupplier {
 
     @Test
     public void readerLength() throws Exception {
-        final String expected = "abcde";
         final String selected = new SimpleBuilder()
                 .bindCharacterStream(":binding", new StringReader(expected), 5)
                 .execute(db(), rs -> rs.getString(1));
@@ -46,7 +46,6 @@ public abstract class BindCharacterStreamTest implements DBSupplier {
 
     @Test
     public void readerLengthLong() throws Exception {
-        final String expected = "abcde";
         final String selected = new SimpleBuilder()
                 .bindCharacterStream(":binding", new StringReader(expected), 5L)
                 .execute(db(), rs -> rs.getString(1));

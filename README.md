@@ -78,7 +78,7 @@ System.out.println("jdb" + ((char) ('i' + 1)));
 
 #### Release
 ``` sh
-mvn release:clean release:prepare -B && mvn release:perform && git push
+mvn release:clean release:prepare -B && mvn release:perform
 ```
 
 #### 0.1.5 Todo

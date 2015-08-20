@@ -8,10 +8,11 @@ import static org.junit.Assert.assertNull;
 
 public abstract class BindShortTest implements DBSupplier{
 
+    protected final Short expected = 12;
+
     @Test
     public void value() throws Exception {
-        final Short expected = 12;
-        final Short selected = new SimpleBuilder()
+        final Short selected = builder()
                 .bindShort(":binding", expected)
                 .execute(db(), rs -> rs.getShort(1));
         assertEquals(expected, selected);
@@ -19,7 +20,7 @@ public abstract class BindShortTest implements DBSupplier{
 
     @Test
     public void Null() throws Exception {
-        final Short selected = new SimpleBuilder()
+        final Short selected = builder()
                 .bindShort(":binding", null)
                 .execute(db(), rs -> rs.getShort(1));
         assertNull(selected);
@@ -27,11 +28,14 @@ public abstract class BindShortTest implements DBSupplier{
 
     @Test
     public void primitive() throws Exception {
-        final short expected = 12;
-        final short selected = new SimpleBuilder()
+        final short selected = builder()
                 .bindShortPrimitive(":binding", expected)
                 .execute(db(), rs -> rs.getShortPrimitive(1));
-        assertEquals(expected, selected);
+        assertEquals(expected.shortValue(), selected);
+    }
+
+    public SimpleBuilder builder() {
+        return new SimpleBuilder();
     }
 
 }

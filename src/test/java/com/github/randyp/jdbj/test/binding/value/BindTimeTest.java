@@ -14,8 +14,8 @@ public abstract class BindTimeTest extends HasExpectedTimeOfDay implements DBSup
 
     @Test
     public void value() throws Exception {
-        final Time expected = new Time(expectedTime);
-        final Time selected = new SimpleBuilder()
+        final Time expected = new Time(expectedMillis);
+        final Time selected = builder()
                 .bindTime(":binding", expected)
                 .execute(db(), rs -> rs.getTime(1));
         assertEquals(expected, selected);
@@ -23,7 +23,7 @@ public abstract class BindTimeTest extends HasExpectedTimeOfDay implements DBSup
 
     @Test
     public void valueNull() throws Exception {
-        final Time selected = new SimpleBuilder()
+        final Time selected = builder()
                 .bindDate(":binding", null)
                 .execute(db(), rs -> rs.getTime(1));
         assertNull(selected);
@@ -31,8 +31,8 @@ public abstract class BindTimeTest extends HasExpectedTimeOfDay implements DBSup
 
     @Test
     public void valueCalendar() throws Exception {
-        final Time expected = new Time(expectedTime);
-        final Time selected = new SimpleBuilder()
+        final Time expected = new Time(expectedMillis);
+        final Time selected = builder()
                 .bindTime(":binding", expected, GregorianCalendar.getInstance())
                 .execute(db(), rs -> rs.getTime(1, GregorianCalendar.getInstance()));
         assertEquals(expected, selected);
@@ -40,9 +40,13 @@ public abstract class BindTimeTest extends HasExpectedTimeOfDay implements DBSup
 
     @Test
     public void valueCalendarNull() throws Exception {
-        final Time selected = new SimpleBuilder()
+        final Time selected = builder()
                 .bindDate(":binding", null, GregorianCalendar.getInstance())
                 .execute(db(), rs -> rs.getTime(1, GregorianCalendar.getInstance()));
         assertNull(selected);
+    }
+
+    public SimpleBuilder builder() {
+        return new SimpleBuilder();
     }
 }

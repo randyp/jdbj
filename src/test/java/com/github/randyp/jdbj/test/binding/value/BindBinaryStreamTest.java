@@ -10,68 +10,61 @@ import static org.junit.Assert.assertNull;
 
 public abstract class BindBinaryStreamTest implements DBSupplier {
 
+    protected final byte[] expected = "abcde".getBytes();
+
     @Test
     public void inputStream() throws Exception {
-        final byte[] expected = "abcde".getBytes();
-        final byte[] selected = new SimpleBuilder(getCastType())
-                .bindBinaryStream(":binding", new ByteArrayInputStream(expected))
+        final byte[] selected = builder()
+                .bindBinaryStream(":binding", expectedStream())
                 .execute(db(), rs -> rs.getBytes(1));
         assertArrayEquals(expected, selected);
     }
 
     @Test
     public void inputStreamNull() throws Exception {
-        final String selected = new SimpleBuilder(getCastType())
+        final byte[] selected = builder()
                 .bindBinaryStream(":binding", null)
-                .execute(db(), rs -> {
-                    final byte[] bytes = rs.getBytes(1);
-                    return bytes == null ? null : new String(bytes);
-                });
+                .execute(db(), rs -> rs.getBytes(1));
         assertNull(selected);
     }
 
     @Test
     public void inputLengthStream() throws Exception {
-        final byte[] expected = "abcde".getBytes();
-        final byte[] selected = new SimpleBuilder(getCastType())
-                .bindBinaryStream(":binding", new ByteArrayInputStream(expected), 5)
+        final byte[] selected = builder()
+                .bindBinaryStream(":binding", expectedStream(), 5)
                 .execute(db(), rs -> rs.getBytes(1));
         assertArrayEquals(expected, selected);
     }
 
     @Test
     public void inputLengthStreamNull() throws Exception {
-        final String selected = new SimpleBuilder(getCastType())
+        final byte[] selected = builder()
                 .bindBinaryStream(":binding", null, 5)
-                .execute(db(), rs -> {
-                    final byte[] bytes = rs.getBytes(1);
-                    return bytes == null ? null : new String(bytes);
-                });
+                .execute(db(), rs -> rs.getBytes(1));
         assertNull(selected);
     }
 
     @Test
     public void inputLengthLongStream() throws Exception {
-        final byte[] expected = "abcde".getBytes();
-        final byte[] selected = new SimpleBuilder(getCastType())
-                .bindBinaryStream(":binding", new ByteArrayInputStream(expected), (long) expected.length)
+        final byte[] selected = builder()
+                .bindBinaryStream(":binding", expectedStream(), (long) expected.length)
                 .execute(db(), rs -> rs.getBytes(1));
         assertArrayEquals(expected, selected);
     }
 
     @Test
     public void inputLengthLongStreamNull() throws Exception {
-        final String selected = new SimpleBuilder(getCastType())
+        final byte[] selected = builder()
                 .bindBinaryStream(":binding", null, 5L)
-                .execute(db(), rs -> {
-                    final byte[] bytes = rs.getBytes(1);
-                    return bytes == null ? null : new String(bytes);
-                });
+                .execute(db(), rs -> rs.getBytes(1));
         assertNull(selected);
     }
 
-    public String getCastType() {
-        return "varchar";
+    public SimpleBuilder builder() {
+        return new SimpleBuilder();
     }
 
+    public ByteArrayInputStream expectedStream() {
+        return new ByteArrayInputStream(expected);
+    }
 }

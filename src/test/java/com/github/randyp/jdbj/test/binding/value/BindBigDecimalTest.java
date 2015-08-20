@@ -10,10 +10,11 @@ import static org.junit.Assert.assertNull;
 
 public abstract class BindBigDecimalTest implements DBSupplier {
 
+    protected final BigDecimal expected = new BigDecimal("1.234");
+
     @Test
     public void value() throws Exception {
-        final BigDecimal expected = new BigDecimal("1.234");
-        final BigDecimal selected = new SimpleBuilder()
+        final BigDecimal selected = builder()
                 .bindBigDecimal(":binding", expected)
                 .execute(db(), rs -> rs.getBigDecimal(1));
         assertEquals(expected, selected);
@@ -21,10 +22,14 @@ public abstract class BindBigDecimalTest implements DBSupplier {
 
     @Test
     public void Null() throws Exception {
-        final BigDecimal selected = new SimpleBuilder()
+        final BigDecimal selected = builder()
                 .bindBigDecimal(":binding", null)
                 .execute(db(), rs -> rs.getBigDecimal(1));
         assertNull(selected);
+    }
+
+    public SimpleBuilder builder() {
+        return new SimpleBuilder();
     }
 
 }

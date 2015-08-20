@@ -92,13 +92,13 @@ public abstract class ExecuteQueryTest implements DBSupplier {
 
     @Test
      public void defaultValues() throws Exception {
-        final ExecuteQuery<List<String>> query = JDBJ.query("SELECT * FROM information_schema.tables LIMIT :limit")
-                .bindDefault(":limit", pc -> pc.setInt(5))
-                .map(rs -> rs.getString("table_name"))
-                .toList();
+        final ExecuteQuery<Optional<String>> query = JDBJ.query("SELECT table_name FROM information_schema.tables WHERE LOWER(table_name) = :name")
+                .bindDefaultString(":name", "tables")
+                .map(rs -> rs.getString("table_name").toLowerCase())
+                .first();
 
-        assertEquals(5, query.execute(db()).size());
-        assertEquals(10, query.bindInt(":limit", 10).execute(db()).size());
+        assertEquals(Optional.of("tables"), query.execute(db()));
+        assertEquals(Optional.of("schemata"), query.bindString(":name", "schemata").execute(db()));
     }
 
     @Ignore

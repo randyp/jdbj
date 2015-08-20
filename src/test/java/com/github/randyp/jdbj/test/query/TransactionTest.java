@@ -1,6 +1,7 @@
 package com.github.randyp.jdbj.test.query;
 
 import com.github.randyp.jdbj.*;
+import com.github.randyp.jdbj.student.NewStudent;
 import com.github.randyp.jdbj.student.Student;
 import com.github.randyp.jdbj.student.StudentTest;
 import org.junit.Test;
@@ -16,10 +17,9 @@ import static org.junit.Assert.*;
 
 public abstract class TransactionTest extends StudentTest {
 
-    final Student student = new Student(10L, "Ada", "Dada", new BigDecimal("3.1"));
+    final NewStudent student = new NewStudent("Ada", "Dada", new BigDecimal("3.1"));
 
-    final ExecuteUpdate executeUpdate = JDBJ.resource(Student.insert_id).update()
-            .bindLong(":id", student.getId())
+    final ExecuteUpdate executeUpdate = JDBJ.resource(Student.insert).update()
             .bindString(":first_name", student.getFirstName())
             .bindString(":last_name", student.getLastName())
             .bindBigDecimal(":gpa", student.getGpa());
@@ -28,12 +28,9 @@ public abstract class TransactionTest extends StudentTest {
     public void committed() throws Exception {
         JDBJ.transaction(db(), connection -> assertEquals(1, executeUpdate.execute(connection)));
 
-        final List<Student> actual;
-        try (Connection connection = db().getConnection()) {
-            actual = Student.selectAll.execute(connection);
-        }
-
-        assertEquals(Collections.singletonList(student), actual);
+        final List<Student> actual = Student.selectAll.execute(db());
+        assertEquals(1, actual.size());
+        assertEquals(student.getFirstName(), actual.get(0).getFirstName());
     }
 
     @Test
@@ -43,7 +40,8 @@ public abstract class TransactionTest extends StudentTest {
             return Student.selectAll.execute(connection);
         });
 
-        assertEquals(Collections.singletonList(student), actual);
+        assertEquals(1, actual.size());
+        assertEquals(student.getFirstName(), actual.get(0).getFirstName());
     }
 
     @Test
@@ -53,7 +51,8 @@ public abstract class TransactionTest extends StudentTest {
             return Student.selectAll.execute(connection);
         });
 
-        assertEquals(Collections.singletonList(student), actual);
+        assertEquals(1, actual.size());
+        assertEquals(student.getFirstName(), actual.get(0).getFirstName());
     }
 
     @Test
@@ -68,10 +67,7 @@ public abstract class TransactionTest extends StudentTest {
             assertEquals("did I do that?", e.getMessage());
         }
 
-        final List<Student> actual;
-        try (Connection connection = db().getConnection()) {
-            actual = Student.selectAll.execute(connection);
-        }
+        final List<Student> actual = Student.selectAll.execute(db());
         assertTrue(actual.isEmpty());
     }
 

@@ -1220,7 +1220,7 @@ public class SmartResultSetTest {
 
         @Test
         public void index() throws Exception {
-            final Time expected = new Time(expectedTime);
+            final Time expected = new Time(expectedMillis);
             final Binding binding = pc -> pc.setTime(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getTime(1));
             assertResults(binding, assertions, db);
@@ -1228,7 +1228,7 @@ public class SmartResultSetTest {
 
         @Test
         public void indexCalendar() throws Exception {
-            final Time expected = new Time(expectedTime);
+            final Time expected = new Time(expectedMillis);
             final Binding binding = pc -> pc.setTime(expected, GregorianCalendar.getInstance());
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getTime(1, GregorianCalendar.getInstance()));
             assertResults(binding, assertions, db);
@@ -1236,7 +1236,7 @@ public class SmartResultSetTest {
 
         @Test
         public void label() throws Exception {
-            final Time expected = new Time(expectedTime);
+            final Time expected = new Time(expectedMillis);
             final Binding binding = pc -> pc.setTime(expected);
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getTime("bound"));
             assertResults(binding, assertions, db);
@@ -1244,7 +1244,7 @@ public class SmartResultSetTest {
 
         @Test
         public void labelCalendar() throws Exception {
-            final Time expected = new Time(expectedTime);
+            final Time expected = new Time(expectedMillis);
             final Binding binding = pc -> pc.setTime(expected, GregorianCalendar.getInstance());
             final ResultSetAssertions assertions = rs -> assertEquals(expected, rs.getTime("bound", GregorianCalendar.getInstance()));
             assertResults(binding, assertions, db);

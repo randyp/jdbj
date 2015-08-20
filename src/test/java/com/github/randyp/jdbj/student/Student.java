@@ -6,11 +6,10 @@ import com.github.randyp.jdbj.SmartResultSet;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.util.Comparator;
 import java.util.List;
 
 public class Student extends NewStudent {
-
-    public static final String insert_id = "student_insert_id.sql";
 
     public static final ExecuteQuery<List<Student>> selectAll = JDBJ.string("SELECT * FROM student ORDER BY id ASC").query()
             .map(Student::from)
@@ -55,5 +54,13 @@ public class Student extends NewStudent {
         result = 31 * result + lastName.hashCode();
         result = 31 * result + gpa.hashCode();
         return result;
+    }
+
+    public static class Compare {
+
+        public static Comparator<Student> FIRST_NAME = (o1, o2) -> o1.firstName.compareTo(o2.firstName);
+
+        private Compare() {
+        }
     }
 }

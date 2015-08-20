@@ -10,13 +10,12 @@ import static org.junit.Assert.assertNull;
 
 public abstract class BindArrayTest implements DBSupplier {
 
-    public abstract String castType();
+    protected final String[] expected = new String[]{"a", "b", "c"};
 
     @Test
     public void value() throws Exception {
-        final String[] expected = {"a", "b", "c"};
         try (Connection connection = db().getConnection()) {
-            final String[] selected = new SimpleBuilder(castType())
+            final String[] selected = builder()
                     .bindArray(":binding", connection.createArrayOf("varchar", expected))
                     .execute(db(), rs -> (String[]) rs.getSQLArray(1).getArray());
             assertArrayEquals(expected, selected);
@@ -25,10 +24,14 @@ public abstract class BindArrayTest implements DBSupplier {
 
     @Test
     public void Null() throws Exception {
-        final Object selected = new SimpleBuilder(castType())
+        final Object selected = builder()
                 .bindArray(":binding", null)
                 .execute(db(), rs -> rs.getObject(1));
         assertNull(selected);
+    }
+
+    public SimpleBuilder builder() {
+        return new SimpleBuilder("varchar");
     }
 
 }

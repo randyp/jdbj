@@ -1126,7 +1126,7 @@ public class OptionalValueBindingsBuilderTest {
 
         @Test
         public void value() throws Exception {
-            final Time expected = new Time(expectedTime);
+            final Time expected = new Time(expectedMillis);
             final Time selected = new SimpleBuilder()
                     .bindDefaultTime(":binding", null)
                     .bindOptionalTime(":binding", Optional.of(expected))
@@ -1136,7 +1136,7 @@ public class OptionalValueBindingsBuilderTest {
 
         @Test
         public void valueEmpty() throws Exception {
-            final Time expected = new Time(expectedTime);
+            final Time expected = new Time(expectedMillis);
             final Time selected = new SimpleBuilder()
                     .bindDefaultTime(":binding", expected)
                     .bindOptionalDate(":binding", Optional.empty())
@@ -1146,7 +1146,7 @@ public class OptionalValueBindingsBuilderTest {
 
         @Test
         public void valueCalendar() throws Exception {
-            final Time expected = new Time(expectedTime);
+            final Time expected = new Time(expectedMillis);
             final Time selected = new SimpleBuilder()
                     .bindDefaultTime(":binding", null, GregorianCalendar.getInstance())
                     .bindOptionalTime(":binding", Optional.of(expected), GregorianCalendar.getInstance())
@@ -1156,7 +1156,7 @@ public class OptionalValueBindingsBuilderTest {
 
         @Test
         public void valueCalendarEmpty() throws Exception {
-            final Time expected = new Time(expectedTime);
+            final Time expected = new Time(expectedMillis);
             final Time selected = new SimpleBuilder()
                     .bindDefaultTime(":binding", expected, GregorianCalendar.getInstance())
                     .bindOptionalDate(":binding", Optional.empty(), GregorianCalendar.getInstance())

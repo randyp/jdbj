@@ -23,7 +23,6 @@ public class PGRule extends ExternalResource implements DataSource {
 
     @Override
     public Connection getConnection() throws SQLException {
-
         return DriverManager.getConnection(url, defaultProperties);
     }
 

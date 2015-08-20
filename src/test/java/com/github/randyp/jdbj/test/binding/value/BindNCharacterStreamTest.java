@@ -10,18 +10,19 @@ import static org.junit.Assert.assertNull;
 
 public abstract class BindNCharacterStreamTest implements DBSupplier {
 
+    protected final String expected = "abcde";
+
     @Test
     public void reader() throws Exception {
-        final String expected = "abcde";
-        final String selected = new SimpleBuilder()
-                .bindNCharacterStream(":binding", new StringReader(expected))
+        final String selected = builder()
+                .bindNCharacterStream(":binding", expectedReader())
                 .execute(db(), rs -> rs.getString(1));
         assertEquals(expected, selected);
     }
 
     @Test
     public void readerNull() throws Exception {
-        final String selected = new SimpleBuilder()
+        final String selected = builder()
                 .bindNCharacterStream(":binding", null)
                 .execute(db(), rs -> rs.getString(1));
         assertNull(selected);
@@ -29,18 +30,25 @@ public abstract class BindNCharacterStreamTest implements DBSupplier {
 
     @Test
     public void readerLength() throws Exception {
-        final String expected = "abcde";
-        final String selected = new SimpleBuilder()
-                .bindNCharacterStream(":binding", new StringReader(expected), 5L)
+        final String selected = builder()
+                .bindNCharacterStream(":binding", expectedReader(), 5L)
                 .execute(db(), rs -> rs.getString(1));
         assertEquals(expected, selected);
     }
 
     @Test
     public void readerNullLength() throws Exception {
-        final String selected = new SimpleBuilder()
+        final String selected = builder()
                 .bindNCharacterStream(":binding", null, 5L)
                 .execute(db(), rs -> rs.getString(1));
         assertNull(selected);
+    }
+
+    public SimpleBuilder builder() {
+        return new SimpleBuilder();
+    }
+
+    public StringReader expectedReader() {
+        return new StringReader(expected);
     }
 }

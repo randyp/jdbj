@@ -29,11 +29,6 @@ public class ValueBindingBuilderTest {
         }
 
         @Override
-        public String castType() {
-            return "varchar";
-        }
-
-        @Override
         public void value() throws Exception {
             thrown.expect(JdbcSQLException.class);
             thrown.expectMessage("Feature not supported: \"createArray\" [50100-187]");
@@ -239,20 +234,25 @@ public class ValueBindingBuilderTest {
 
     public static class BindSQLXML extends BindSQLXMLTest {
 
+        @Rule
+        public ExpectedException thrown = ExpectedException.none();
+
         @Override
         public DataSource db() {
             return db;
         }
 
         @Override
-        @Test(expected = JdbcSQLException.class)
         public void value() throws Exception {
+            thrown.expect(JdbcSQLException.class);
+            thrown.expectMessage("Feature not supported");
             super.value();
         }
 
         @Override
-        @Test(expected = JdbcSQLException.class)
         public void Null() throws Exception {
+            thrown.expect(JdbcSQLException.class);
+            thrown.expectMessage("Feature not supported");
             super.Null();
         }
     }

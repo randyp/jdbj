@@ -14,16 +14,15 @@ public abstract class BindDateTest extends HasExpectedTimeSinceEpoch implements 
 
     @Test
     public void value() throws Exception {
-        final Date expected = new Date(expectedTime);
-        final Date selected = new SimpleBuilder()
-                .bindDate(":binding", expected)
+        final Date selected = builder()
+                .bindDate(":binding", expectedDate)
                 .execute(db(), rs -> rs.getDate(1));
-        assertEquals(expected, selected);
+        assertEquals(expectedDate, selected);
     }
 
     @Test
     public void valueNull() throws Exception {
-        final Date selected = new SimpleBuilder()
+        final Date selected = builder()
                 .bindDate(":binding", null)
                 .execute(db(), rs -> rs.getDate(1));
         assertNull(selected);
@@ -31,19 +30,22 @@ public abstract class BindDateTest extends HasExpectedTimeSinceEpoch implements 
 
     @Test
     public void valueCalendar() throws Exception {
-        final Date expected = new Date(expectedTime);
-        final Date selected = new SimpleBuilder()
-                .bindDate(":binding", expected, GregorianCalendar.getInstance())
+        final Date selected = builder()
+                .bindDate(":binding", expectedDate, GregorianCalendar.getInstance())
                 .execute(db(), rs -> rs.getDate(1, GregorianCalendar.getInstance()));
-        assertEquals(expected, selected);
+        assertEquals(expectedDate, selected);
     }
 
     @Test
     public void valueCalendarNull() throws Exception {
-        final Date selected = new SimpleBuilder()
+        final Date selected = builder()
                 .bindDate(":binding", null, GregorianCalendar.getInstance())
                 .execute(db(), rs -> rs.getDate(1, GregorianCalendar.getInstance()));
         assertNull(selected);
+    }
+
+    public SimpleBuilder builder() {
+        return new SimpleBuilder();
     }
 
 }

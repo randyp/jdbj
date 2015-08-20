@@ -1239,7 +1239,7 @@ public class DefaultValueBindingsBuilderTest {
 
         @Test
         public void value() throws Exception {
-            final Time expected = new Time(expectedTime);
+            final Time expected = new Time(expectedMillis);
             try (Connection connection = db.getConnection()) {
                 final Time selected = new SimpleBuilder()
                         .bindDefaultTime(":binding", expected)
@@ -1260,7 +1260,7 @@ public class DefaultValueBindingsBuilderTest {
 
         @Test
         public void valueCalendar() throws Exception {
-            final Time expected = new Time(expectedTime);
+            final Time expected = new Time(expectedMillis);
             try (Connection connection = db.getConnection()) {
                 final Time selected = new SimpleBuilder()
                         .bindDefaultTime(":binding", expected, GregorianCalendar.getInstance())

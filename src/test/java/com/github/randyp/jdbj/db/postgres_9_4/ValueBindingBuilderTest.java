@@ -1,5 +1,6 @@
 package com.github.randyp.jdbj.db.postgres_9_4;
 
+import com.github.randyp.jdbj.test.SimpleBuilder;
 import com.github.randyp.jdbj.test.binding.value.*;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -24,8 +25,8 @@ public class ValueBindingBuilderTest {
         }
 
         @Override
-        public String castType() {
-            return "varchar[]";
+        public SimpleBuilder builder() {
+            return new SimpleBuilder("varchar[]");
         }
     }
 
@@ -74,14 +75,14 @@ public class ValueBindingBuilderTest {
         }
 
         @Override
-        public String getCastType() {
-            return "bytea";
-        }
-
-        @Override
         @Test(expected = NullPointerException.class) //appears to be bug in driver "array.length" when array is null
         public void inputStreamNull() throws Exception {
             super.inputStreamNull();
+        }
+
+        @Override
+        public SimpleBuilder builder() {
+            return new SimpleBuilder("bytea");
         }
     }
 
