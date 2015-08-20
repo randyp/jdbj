@@ -1,4 +1,4 @@
-package com.github.randyp.jdbj.db.derby_10_11;
+package com.github.randyp.jdbj.db.sqllite_3_8;
 
 import com.github.randyp.jdbj.test.query.*;
 import org.junit.ClassRule;
@@ -14,12 +14,11 @@ import java.sql.SQLException;
 public class QueriesTest {
 
     @ClassRule
-    public static final DerbyRule db = new DerbyRule(){
+    public static final SqlLiteRule db = new SqlLiteRule(){
         @Override
         protected void before() throws Throwable {
             super.before();
-            cleanup();
-            final String createStudents = "CREATE TABLE student(id BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), first_name varchar(500), last_name varchar(500), gpa varchar(10))";
+            final String createStudents = "CREATE TABLE student(id INTEGER PRIMARY KEY AUTOINCREMENT, first_name varchar(500), last_name varchar(500), gpa varchar(10))";
             try (Connection connection = db.getConnection();
                  PreparedStatement preparedStatement = connection.prepareStatement(createStudents)) {
                 preparedStatement.execute();
@@ -28,11 +27,6 @@ public class QueriesTest {
 
         @Override
         protected void after() {
-            cleanup();
-            super.after();
-        }
-
-        private void cleanup() {
             try {
                 final String dropStudents = "DROP TABLE student";
                 try (Connection connection = db.getConnection();
@@ -42,6 +36,7 @@ public class QueriesTest {
             } catch (SQLException e) {
                 //ignore
             }
+            super.after();
         }
     };
 

@@ -23,6 +23,7 @@ public abstract class StudentTest implements DBSupplier {
             @Override
             protected void before() throws Throwable {
                 super.before();
+                cleanup();
                 final String createStudents = "CREATE TABLE student(id BIGINT PRIMARY KEY auto_increment, first_name varchar, last_name varchar, gpa varchar)";
                 try (Connection connection = db.getConnection();
                      PreparedStatement preparedStatement = connection.prepareStatement(createStudents)) {
@@ -32,6 +33,11 @@ public abstract class StudentTest implements DBSupplier {
 
             @Override
             protected void after() {
+                cleanup();
+                super.after();
+            }
+
+            private void cleanup() {
                 try {
                     final String dropStudents = "DROP TABLE student";
                     try (Connection connection = db.getConnection();
@@ -41,7 +47,6 @@ public abstract class StudentTest implements DBSupplier {
                 } catch (SQLException e) {
                     //ignore
                 }
-                super.after();
             }
         };
     }

@@ -3,10 +3,18 @@ package com.github.randyp.jdbj.test.query;
 import com.github.randyp.jdbj.ExecuteQuery;
 import com.github.randyp.jdbj.JDBJ;
 import com.github.randyp.jdbj.StreamQuery;
+import com.github.randyp.jdbj.student.NewStudent;
+import com.github.randyp.jdbj.student.Student;
+import com.github.randyp.jdbj.student.StudentTest;
 import com.github.randyp.jdbj.test.binding.value.DBSupplier;
 import jdk.nashorn.internal.ir.annotations.Ignore;
+import org.junit.Before;
 import org.junit.Test;
 
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -14,102 +22,141 @@ import java.util.stream.Stream;
 
 import static org.junit.Assert.*;
 
-public abstract class ExecuteQueryTest implements DBSupplier {
+public abstract class ExecuteQueryTest extends StudentTest {
+
+    private final List<NewStudent> newStudents = Arrays.asList(
+            new NewStudent("Ada10", "Dada10", new BigDecimal("3.9")),
+            new NewStudent("Ada11", "Dada11", new BigDecimal("4.9"))
+    );
+
+    @Before
+    public void setUp() throws Exception {
+
+        try(Connection connection = db().getConnection();
+            PreparedStatement ps =connection.prepareStatement("INSERT INTO student(first_name, last_name, gpa) VALUES (?, ?, ?)")){
+            for (NewStudent newStudent : newStudents) {
+                ps.setString(1, newStudent.getFirstName());
+                ps.setString(2, newStudent.getLastName());
+                ps.setBigDecimal(3, newStudent.getGpa());
+                ps.addBatch();
+            }
+            ps.executeBatch();
+        }
+    }
 
     @Test
     public void selectMapToListExecute() throws Exception {
-        final ExecuteQuery<List<String>> query = JDBJ.query("SELECT table_name FROM information_schema.tables WHERE LOWER(table_name) = 'tables'")
-                .map(rs -> rs.getString("table_name").toLowerCase())
+        final ExecuteQuery<List<Student>> query = JDBJ.query("SELECT * FROM student ORDER BY id")
+                .map(Student::from)
                 .toList();
-        final List<String> results = query.execute(db());
-        assertEquals(Collections.singletonList("tables"), results);
+        final List<Student> results = query.execute(db());
+        assertEquals(2, results.size());
+        for (int i = 0; i < results.size(); i++) {
+            assertEquals(newStudents.get(i).getFirstName(), results.get(i).getFirstName());
+        }
     }
 
     @Test
-    public void selectMapToListBindLongsExecute() throws Exception {
-        final ExecuteQuery<List<String>> query = JDBJ.query("SELECT table_name FROM information_schema.tables WHERE LOWER(table_name) in :names")
-                .map(rs -> rs.getString("table_name").toLowerCase())
+    public void selectMapToListBindListExecute() throws Exception {
+        final ExecuteQuery<List<Student>> query = JDBJ.query("SELECT * FROM student WHERE last_name in :last_names")
+                .map(Student::from)
                 .toList()
-                .bindStrings(":names", "tables");
+                .bindStrings(":last_names", "Dada11");
 
-        final List<String> results = query.execute(db());
-        assertEquals(Collections.singletonList("tables"), results);
+        final List<Student> results = query.execute(db());
+        assertEquals(1, results.size());
+        assertEquals("Ada11", results.get(0).getFirstName());
     }
 
     @Test
-    public void selectMapFirstBindLongsExecute() throws Exception {
-        final ExecuteQuery<Optional<String>> query = JDBJ.query("SELECT table_name FROM information_schema.tables WHERE LOWER(table_name) in :names")
-                .map(rs -> rs.getString("table_name").toLowerCase())
+    public void selectMapFirstBindListExecute() throws Exception {
+        final ExecuteQuery<Optional<Student>> query = JDBJ.query("SELECT * FROM student WHERE last_name in :last_names")
+                .map(Student::from)
                 .first()
-                .bindStrings(":names", "tables");
+                .bindStrings(":last_names", "Dada11");
 
-        final Optional<String> result = query.execute(db());
+        final Optional<Student> result = query.execute(db());
         assertTrue(result.isPresent());
-        assertEquals("tables", result.get());
+        assertEquals("Ada11", result.get().getFirstName());
     }
 
     @Test
     public void selectMapRemapFirstBindLongsExecute() throws Exception {
         //noinspection RedundantArrayCreation
-        final ExecuteQuery<Optional<Integer>> query = JDBJ.query("SELECT table_name FROM information_schema.tables WHERE LOWER(table_name) in :names")
-                .map(rs -> rs.getString("table_name").toLowerCase())
-                .remap(String::length)
+        final ExecuteQuery<Optional<String>> query = JDBJ.query("SELECT * FROM student WHERE last_name in :last_names")
+                .map(Student::from)
+                .remap(NewStudent::getFirstName)
                 .first()
-                .bindStrings(":names", "tables");
+                .bindStrings(":last_names", "Dada11");
 
-        final Optional<Integer> result = query.execute(db());
+        final Optional<String> result = query.execute(db());
         assertTrue(result.isPresent());
-        assertEquals("tables".length(), result.get().intValue());
+        assertEquals("Ada11", result.get());
     }
 
     @Test
     public void selectMapBindLongsStreamExecute() throws Exception {
         //noinspection RedundantArrayCreation
-        final StreamQuery<String> query = JDBJ.query("SELECT table_name FROM information_schema.tables WHERE LOWER(table_name) in :names")
-                .map(rs -> rs.getString("table_name").toLowerCase())
-                .bindStrings(":names", "tables")
+        final StreamQuery<Student> query = JDBJ.query("SELECT * FROM student WHERE last_name in :last_names")
+                .map(Student::from)
+                .bindStrings(":last_names", "Dada11")
                 .toStream();
 
-        final Optional<String> result;
-        try (Stream<String> stream = query.execute(db())) {
+        final Optional<Student> result;
+        try (Stream<Student> stream = query.execute(db())) {
             result = stream.findFirst();
         }
 
         assertTrue(result.isPresent());
-        assertEquals("tables", result.get());
+        assertEquals("Ada11", result.get().getFirstName());
     }
 
     @Test
     public void query() throws Exception {
-        final ExecuteQuery<Optional<String>> query = JDBJ.resource("tables_by_schema.sql")
+        final ExecuteQuery<Optional<Student>> query = JDBJ.resource("student_all_ordered_by_id.sql")
                 .query()
-                .map(rs -> rs.getString("table_name").toLowerCase())
-                .bindString(":table_schema", "information_schema")
+                .map(Student::from)
                 .first();
-        final Optional<String> result = query.execute(db());
-        assertNotNull(result);
+        final Optional<Student> result = query.execute(db());
+        assertTrue(result.isPresent());
     }
 
     @Test
      public void defaultValues() throws Exception {
-        final ExecuteQuery<Optional<String>> query = JDBJ.query("SELECT table_name FROM information_schema.tables WHERE LOWER(table_name) = :name")
-                .bindDefaultString(":name", "tables")
-                .map(rs -> rs.getString("table_name").toLowerCase())
+        final ExecuteQuery<Optional<Student>> query = JDBJ.query("SELECT * FROM student WHERE last_name = :last_name")
+                .map(Student::from)
+                .bindDefaultString(":last_name", "Dada11")
                 .first();
 
-        assertEquals(Optional.of("tables"), query.execute(db()));
-        assertEquals(Optional.of("schemata"), query.bindString(":name", "schemata").execute(db()));
+        {
+            final Optional<Student> student = query.execute(db());
+            assertTrue(student.isPresent());
+            assertEquals("Ada11", student.get().getFirstName());
+        }
+        {
+            final Optional<Student> student = query.bindString(":last_name", "Dada10").execute(db());
+            assertTrue(student.isPresent());
+            assertEquals("Ada10", student.get().getFirstName());
+        }
     }
 
     @Ignore
     @Test
     public void defaultValuesLists() throws Exception {
-        final ExecuteQuery<List<String>> query = JDBJ.query("SELECT * FROM information_schema.tables WHERE LOWER(table_name) in :names")
-                .map(rs -> rs.getString("table_name"))
-                .toList()
-                .bindDefaultStrings(":names", "tables");
+        final ExecuteQuery<Optional<Student>> query = JDBJ.query("SELECT * FROM student WHERE last_name in :last_names")
+                .map(Student::from)
+                .first()
+                .bindDefaultStrings(":last_names", "Dada11");
 
-        assertEquals(1, query.execute(db()).size());
-        assertEquals(2, query.bindStrings(":names", "tables", "schemata").execute(db()).size());
+        {
+            final Optional<Student> student = query.execute(db());
+            assertTrue(student.isPresent());
+            assertEquals("Ada11", student.get().getFirstName());
+        }
+        {
+            final Optional<Student> student = query.bindStrings(":last_names", "Dada10").execute(db());
+            assertTrue(student.isPresent());
+            assertEquals("Ada10", student.get().getFirstName());
+        }
     }
 }

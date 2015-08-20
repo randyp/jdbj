@@ -19,7 +19,7 @@ public class StudentDAO {
         this.connection = connection;
     }
 
-    private static final ExecuteQuery<List<Student>> all = JDBJ.resource("student_all_ordered_by_id.sql")
+    private static final ExecuteQuery<List<Student>> all = JDBJ.resource("student_all_ordered_by_id_limit.sql")
             .query()
             .map(Student::from)
             .toList()

@@ -1,1 +1,0 @@
-SELECT table_schema, table_name from information_schema.tables WHERE LOWER(table_schema) = :table_schema

@@ -1,4 +1,4 @@
-package com.github.randyp.jdbj.db.derby_10_11;
+package com.github.randyp.jdbj.db.sqllite_3_8;
 
 import org.junit.rules.ExternalResource;
 
@@ -8,18 +8,17 @@ import java.sql.*;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-public class DerbyRule extends ExternalResource implements DataSource {
+public class SqlLiteRule extends ExternalResource implements DataSource {
 
-    private final String url = "jdbc:derby:jdbj;create=true";
+    private final String url = "jdbc:sqlite:jdbj.db";
     private final Properties defaultProperties = new Properties();
 
-    public DerbyRule() {
+    public SqlLiteRule() {
         defaultProperties.setProperty("user", "jdbj");
         defaultProperties.setProperty("password", "jdbj");
 
         try {
-            String driver = "org.apache.derby.jdbc.EmbeddedDriver";
-            Class.forName(driver).newInstance();
+            Class.forName("org.sqlite.JDBC").newInstance();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

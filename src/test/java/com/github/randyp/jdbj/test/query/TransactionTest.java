@@ -46,7 +46,7 @@ public abstract class TransactionTest extends StudentTest {
 
     @Test
     public void returningWithIsolation() throws Exception {
-        final List<Student> actual = JDBJ.returningTransaction(db(), Connection.TRANSACTION_READ_COMMITTED, connection -> {
+        final List<Student> actual = JDBJ.returningTransaction(db(), Connection.TRANSACTION_SERIALIZABLE, connection -> {
             assertEquals(1, executeUpdate.execute(connection));
             return Student.selectAll.execute(connection);
         });
@@ -93,8 +93,8 @@ public abstract class TransactionTest extends StudentTest {
             connection.setTransactionIsolation(originalIsolation);
             DataSource fakeDataSource = new FakeDataSource<>(() -> new FakeConnection(connection));
 
-            JDBJ.transaction(fakeDataSource, Connection.TRANSACTION_READ_COMMITTED, c -> {
-                assertEquals(Connection.TRANSACTION_READ_COMMITTED, c.getTransactionIsolation());
+            JDBJ.transaction(fakeDataSource, Connection.TRANSACTION_SERIALIZABLE, c -> {
+                assertEquals(Connection.TRANSACTION_SERIALIZABLE, c.getTransactionIsolation());
                 assertEquals(1, executeUpdate.execute(c));
             });
             assertEquals(originalIsolation, connection.getTransactionIsolation());
@@ -168,7 +168,7 @@ public abstract class TransactionTest extends StudentTest {
                     connection.close();
                 }
             });
-            JDBJ.transaction(fakeDataSource, Connection.TRANSACTION_READ_COMMITTED, c -> assertEquals(1, executeUpdate.execute(c)));
+            JDBJ.transaction(fakeDataSource, Connection.TRANSACTION_SERIALIZABLE, c -> assertEquals(1, executeUpdate.execute(c)));
             assertTrue(connection.isClosed());
         }
     }
