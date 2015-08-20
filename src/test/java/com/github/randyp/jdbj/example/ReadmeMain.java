@@ -11,9 +11,9 @@ public class ReadmeMain {
 
     public static void main(String[] args) throws Exception {
         try (H2DB db = new H2DB("PrototypeMain")) {
-            final MapQuery<Student> studentsByIds = JDBJ.resource("student_by_ids.sql")
+            final MapQuery<Student> studentsByIds = JDBJ.resource("student_by_ids_limit.sql")
                     .query()
-                    .bindDefaultLong(":limit", 10L)
+                    .bindLong(":limit", 10L)
                     .map(Student::from);
 
             //do something else for a while

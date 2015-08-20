@@ -13,6 +13,8 @@ import java.util.stream.Stream;
 @SuppressWarnings("unused")
 public class StudentDAO {
 
+    private static final long DEFAULT_LIMIT = 10L;
+
     private final Connection connection;
 
     public StudentDAO(Connection connection) {
@@ -22,19 +24,18 @@ public class StudentDAO {
     private static final ExecuteQuery<List<Student>> all = JDBJ.resource("student_all_ordered_by_id_limit.sql")
             .query()
             .map(Student::from)
-            .toList()
-            .bindDefaultLong(":limit", 10L);
+            .toList();
 
     public List<Student> all(Optional<Long> limit) throws SQLException {
         ExecuteQuery<List<Student>> all = StudentDAO.all;
         if(limit.isPresent()){
-            all = all.bindLong(":limit", limit.get());
+            all = all.bindLong(":limit", limit.orElse(DEFAULT_LIMIT));
         }
         return all.execute(connection);
     }
 
     public List<Student> all() throws SQLException {
-        return all.execute(connection);
+        return all.bindLong(":limit", DEFAULT_LIMIT).execute(connection);
     }
 
     private static final MapQuery<Student> by_ids = JDBJ.resource("student_by_ids.sql")

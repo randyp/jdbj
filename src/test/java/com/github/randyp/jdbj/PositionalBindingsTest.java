@@ -24,33 +24,12 @@ public class PositionalBindingsTest {
         }
     }
 
-    public static class ContainsBinding {
-
-        @Test(expected = IllegalArgumentException.class)
-        public void nullNameDefault() throws Exception {
-            PositionalBindings.empty().containsDefaultedBinding(null);
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void nullNameHard() throws Exception {
-            PositionalBindings.empty().containsDefaultedBinding(null);
-        }
-    }
-
-    public static class Value {
+    public static class BindValue {
 
         @Test
-        public void defaultOnlyUseDefault() throws Exception {
-            final Binding expected = pc -> pc.setInt(1);
-            final PositionalBindings positionalBindings = PositionalBindings.empty()
-                    .defaultValueBinding(":id", expected);
-            assertTrue(positionalBindings.containsBinding(":id"));
-            assertTrue(positionalBindings.containsDefaultedBinding(":id"));
-            assertFalse(positionalBindings.containsHardBinding(":id"));
-
-            final PositionalBinding positionalBinding = positionalBindings.get(":id");
-            assertTrue(positionalBinding instanceof ValueBinding);
-            assertSame(expected, ((ValueBinding) positionalBinding).getBinding());
+        public void notBound() throws Exception {
+            final PositionalBindings positionalBindings = PositionalBindings.empty();
+            assertFalse(positionalBindings.containsBinding(":id"));
         }
 
         @Test
@@ -59,34 +38,10 @@ public class PositionalBindingsTest {
             final PositionalBindings positionalBindings = PositionalBindings.empty()
                     .valueBinding(":id", expected);
             assertTrue(positionalBindings.containsBinding(":id"));
-            assertFalse(positionalBindings.containsDefaultedBinding(":id"));
-            assertTrue(positionalBindings.containsHardBinding(":id"));
 
             final PositionalBinding positionalBinding = positionalBindings.get(":id");
             assertTrue(positionalBinding instanceof ValueBinding);
             assertSame(expected, ((ValueBinding) positionalBinding).getBinding());
-        }
-
-        @Test
-        public void defaultAndBindingUseBinding() throws Exception {
-            final Binding expected = pc -> pc.setInt(1);
-            final PositionalBindings positionalBindings = PositionalBindings.empty()
-                    .defaultValueBinding(":id", pc -> pc.setInt(2))
-                    .valueBinding(":id", expected);
-            assertTrue(positionalBindings.containsBinding(":id"));
-            assertTrue(positionalBindings.containsDefaultedBinding(":id"));
-            assertTrue(positionalBindings.containsHardBinding(":id"));
-
-            final PositionalBinding positionalBinding = positionalBindings.get(":id");
-            assertTrue(positionalBinding instanceof ValueBinding);
-            assertSame(expected, ((ValueBinding) positionalBinding).getBinding());
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void alreadyDefaulted() throws Exception {
-            PositionalBindings.empty()
-                    .defaultValueBinding(":id", pc -> pc.setInt(1))
-                    .defaultValueBinding(":id", pc -> pc.setInt(1));
         }
 
         @Test(expected = IllegalArgumentException.class)
@@ -95,32 +50,14 @@ public class PositionalBindingsTest {
                     .valueBinding(":id", pc -> pc.setInt(1))
                     .valueBinding(":id", pc -> pc.setInt(1));
         }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void alreadyBoundWhyAreYouDefaulting() throws Exception {
-            PositionalBindings.empty()
-                    .valueBinding(":id", pc -> pc.setInt(1))
-                    .defaultValueBinding(":id", pc -> pc.setInt(1));
-        }
     }
 
-    public static class list {
+    public static class Bindlist {
 
         @Test
-        public void defaultOnlyUseDefault() throws Exception {
-            final List<Binding> expected = Collections.singletonList(pc -> pc.setInt(1));
-            final PositionalBindings positionalBindings = PositionalBindings.empty()
-                    .defaultCollectionBinding(":id", expected);
-            assertTrue(positionalBindings.containsBinding(":id"));
-            assertTrue(positionalBindings.containsDefaultedBinding(":id"));
-            assertFalse(positionalBindings.containsHardBinding(":id"));
-
-            final PositionalBinding positionalBinding = positionalBindings.get(":id");
-            assertTrue(positionalBinding instanceof ListBinding);
-
-            final List<Binding> bindings = ((ListBinding) positionalBinding).getBindings();
-            assertEquals(expected.size(), bindings.size());
-            assertSame(expected.get(0), bindings.get(0));
+        public void notBound() throws Exception {
+            final PositionalBindings positionalBindings = PositionalBindings.empty();
+            assertFalse(positionalBindings.containsBinding(":id"));
         }
 
         @Test
@@ -129,8 +66,6 @@ public class PositionalBindingsTest {
             final PositionalBindings positionalBindings = PositionalBindings.empty()
                     .collectionBinding(":id", expected);
             assertTrue(positionalBindings.containsBinding(":id"));
-            assertFalse(positionalBindings.containsDefaultedBinding(":id"));
-            assertTrue(positionalBindings.containsHardBinding(":id"));
 
             final PositionalBinding positionalBinding = positionalBindings.get(":id");
             assertTrue(positionalBinding instanceof ListBinding);
@@ -140,102 +75,12 @@ public class PositionalBindingsTest {
             assertSame(expected.get(0), bindings.get(0));
         }
 
-        @Test
-        public void defaultAndBindingUseBinding() throws Exception {
-            final List<Binding> expected = Collections.singletonList(pc -> pc.setInt(1));
-            final PositionalBindings positionalBindings = PositionalBindings.empty()
-                    .defaultCollectionBinding(":id", new ArrayList<>())
-                    .collectionBinding(":id", expected);
-            assertTrue(positionalBindings.containsBinding(":id"));
-            assertTrue(positionalBindings.containsDefaultedBinding(":id"));
-            assertTrue(positionalBindings.containsHardBinding(":id"));
-
-            final PositionalBinding positionalBinding = positionalBindings.get(":id");
-            assertTrue(positionalBinding instanceof ListBinding);
-
-            final List<Binding> bindings = ((ListBinding) positionalBinding).getBindings();
-            assertEquals(expected.size(), bindings.size());
-            assertSame(expected.get(0), bindings.get(0));
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void alreadyDefaulted() throws Exception {
-            PositionalBindings.empty()
-                    .defaultCollectionBinding(":id", new ArrayList<>())
-                    .defaultCollectionBinding(":id", new ArrayList<>());
-        }
 
         @Test(expected = IllegalArgumentException.class)
         public void alreadyBound() throws Exception {
             PositionalBindings.empty()
                     .collectionBinding(":id", new ArrayList<>())
                     .collectionBinding(":id", new ArrayList<>());
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void alreadyBoundWhyAreYouDefaulting() throws Exception {
-            PositionalBindings.empty()
-                    .collectionBinding(":id", new ArrayList<>())
-                    .defaultCollectionBinding(":id", new ArrayList<>());
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void defaultListNullName() throws Exception {
-            PositionalBindings.empty()
-                    .defaultCollectionBinding(null, new ArrayList<>());
-        }
-    }
-
-    public static class DefaultValuesHardLists {
-
-        @Test
-        public void defaultAndBindingUseBinding() throws Exception {
-            final List<Binding> expected = Collections.singletonList(pc -> pc.setInt(1));
-            final PositionalBindings positionalBindings = PositionalBindings.empty()
-                    .defaultValueBinding(":id", pc -> pc.setInt(1))
-                    .collectionBinding(":id", expected);
-            assertTrue(positionalBindings.containsBinding(":id"));
-            assertTrue(positionalBindings.containsDefaultedBinding(":id"));
-            assertTrue(positionalBindings.containsHardBinding(":id"));
-
-            final PositionalBinding positionalBinding = positionalBindings.get(":id");
-            assertTrue(positionalBinding instanceof ListBinding);
-
-            final List<Binding> bindings = ((ListBinding) positionalBinding).getBindings();
-            assertEquals(expected.size(), bindings.size());
-            assertSame(expected.get(0), bindings.get(0));
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void alreadyBoundWhyAreYouDefaulting() throws Exception {
-            PositionalBindings.empty()
-                    .collectionBinding(":id", new ArrayList<>())
-                    .defaultValueBinding(":id", pc -> pc.setInt(1));
-        }
-    }
-
-    public static class DefaultListsHardValues {
-
-        @Test
-        public void defaultAndBindingUseBinding() throws Exception {
-            final Binding expected = pc -> pc.setInt(1);
-            final PositionalBindings positionalBindings = PositionalBindings.empty()
-                    .defaultCollectionBinding(":id", new ArrayList<>())
-                    .valueBinding(":id", expected);
-            assertTrue(positionalBindings.containsBinding(":id"));
-            assertTrue(positionalBindings.containsDefaultedBinding(":id"));
-            assertTrue(positionalBindings.containsHardBinding(":id"));
-
-            final PositionalBinding positionalBinding = positionalBindings.get(":id");
-            assertTrue(positionalBinding instanceof ValueBinding);
-            assertSame(expected, ((ValueBinding) positionalBinding).getBinding());
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void alreadyBoundWhyAreYouDefaulting() throws Exception {
-            PositionalBindings.empty()
-                    .valueBinding(":id", pc -> pc.setInt(1))
-                    .defaultCollectionBinding(":id", new ArrayList<>());
         }
     }
 }

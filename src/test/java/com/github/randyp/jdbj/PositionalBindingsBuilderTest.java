@@ -90,35 +90,6 @@ public class PositionalBindingsBuilderTest {
         }
     }
 
-    public static class BindDefault {
-
-        @Test(expected = IllegalArgumentException.class)
-        public void nullName() throws Exception {
-            new TestBuilder().bindDefault(null, pc->pc.setLong(1L));
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void nullBinding() throws Exception {
-            new TestBuilder().bindDefault(":binding", null);
-        }
-    }
-
-    public static class RequireDefaulted {
-
-        @Test(expected = IllegalArgumentException.class)
-        public void notPresent() throws Exception {
-            new TestBuilder().requireDefaultedBindingForOptional(":binding");
-        }
-
-        @Test
-        public void present() throws Exception {
-            new TestBuilder()
-                    .bindDefaultLong(":binding", 1L)
-                    .requireDefaultedBindingForOptional(":binding");
-        }
-
-    }
-
     private static class TestBuilder extends PositionalBindingsBuilder<TestBuilder> {
 
         TestBuilder() {

@@ -12,52 +12,32 @@ import java.util.*;
 public class PositionalBindings implements ValueBindings {
 
     public static PositionalBindings empty() {
-        return new PositionalBindings(new HashMap<>(), new HashMap<>(), new HashMap<>(), new HashMap<>());
+        return new PositionalBindings(new HashMap<>(), new HashMap<>());
     }
-
-    private final Map<String, Binding> defaultValueBindings;
-    private final Map<String, List<Binding>> defaultListBindings;
 
     private final Map<String, Binding> valueBindings;
     private final Map<String, List<Binding>> listBindings;
 
     private final Set<String> keys;
 
-    private PositionalBindings(Map<String, Binding> defaultValueBindings,
-                               Map<String, List<Binding>> defaultListBindings,
-                               Map<String, Binding> valueBindings, Map<String,
-            List<Binding>> listBindings) {
-        this.defaultValueBindings = defaultValueBindings;
-        this.defaultListBindings = defaultListBindings;
+    private PositionalBindings(Map<String, Binding> valueBindings,
+                               Map<String, List<Binding>> listBindings) {
         this.valueBindings = valueBindings;
         this.listBindings = listBindings;
 
         {
             final Set<String> keys = new HashSet<>(valueBindings.keySet());
             keys.addAll(listBindings.keySet());
-            keys.addAll(defaultValueBindings.keySet());
-            keys.addAll(defaultListBindings.keySet());
             this.keys = Collections.unmodifiableSet(keys);
         }
     }
 
     @Override
     public boolean containsBinding(String name) {
-        return containsHardBinding(name) || containsDefaultedBinding(name);
-    }
-
-    public boolean containsHardBinding(String name) {
         if (name == null) {
             throw new IllegalArgumentException("name cannot be null");
         }
         return valueBindings.containsKey(name) || listBindings.containsKey(name);
-    }
-
-    public boolean containsDefaultedBinding(String name) {
-        if (name == null) {
-            throw new IllegalArgumentException("name cannot be null");
-        }
-        return defaultValueBindings.containsKey(name) || defaultListBindings.containsKey(name);
     }
 
     @Override
@@ -66,7 +46,7 @@ public class PositionalBindings implements ValueBindings {
             throw new IllegalArgumentException("binding cannot be null");
         }
 
-        if (containsHardBinding(name)) {
+        if (containsBinding(name)) {
             throw new IllegalArgumentException("named parameter \"" + name + "\" already has a binding");
         }
 
@@ -74,24 +54,9 @@ public class PositionalBindings implements ValueBindings {
         newValueBindings.put(name, binding);
 
         return new PositionalBindings(
-                defaultValueBindings,
-                defaultListBindings,
                 newValueBindings,
                 listBindings
         );
-    }
-
-    @Override
-    public PositionalBindings defaultValueBinding(String name, Binding binding) {
-        if (binding == null) {
-            throw new IllegalArgumentException("binding cannot be null");
-        }
-        if(containsBinding(name)){
-            throw new IllegalArgumentException("named parameter \"" + name + "\" already has a default binding");
-        }
-        final Map<String, Binding> newDefaultValueBindings = new HashMap<>(defaultValueBindings);
-        newDefaultValueBindings.put(name, binding);
-        return new PositionalBindings(newDefaultValueBindings, defaultListBindings, valueBindings, listBindings);
     }
 
     public PositionalBindings collectionBinding(String name, List<Binding> bindings) {
@@ -100,7 +65,7 @@ public class PositionalBindings implements ValueBindings {
         }
         checkBindings(bindings);
 
-        if (containsHardBinding(name)) {
+        if (containsBinding(name)) {
             throw new IllegalArgumentException("named parameter \"" + name + "\" already has a binding");
         }
 
@@ -108,30 +73,8 @@ public class PositionalBindings implements ValueBindings {
         newListBindings.put(name, bindings);
 
         return new PositionalBindings(
-                defaultValueBindings,
-                defaultListBindings,
                 valueBindings,
                 newListBindings
-        );
-    }
-
-    public PositionalBindings defaultCollectionBinding(String name, List<Binding> bindings) {
-        if (name == null) {
-            throw new IllegalArgumentException("name cannot be null");
-        }
-        checkBindings(bindings);
-        if (containsBinding(name)) {
-            throw new IllegalArgumentException("named parameter \"" + name + "\" already has a binding");
-        }
-
-        final Map<String, List<Binding>> newDefaultListBindings = new HashMap<>(defaultListBindings);
-        newDefaultListBindings.put(name, bindings);
-
-        return new PositionalBindings(
-                defaultValueBindings,
-                newDefaultListBindings,
-                valueBindings,
-                listBindings
         );
     }
 
@@ -142,11 +85,7 @@ public class PositionalBindings implements ValueBindings {
             toReturn = new ValueBinding(valueBindings.get(namedParameter));
         } else if (listBindings.containsKey(namedParameter)) {
             toReturn = new ListBinding(listBindings.get(namedParameter));
-        } else if(defaultValueBindings.containsKey(namedParameter)){
-            toReturn = new ValueBinding(defaultValueBindings.get(namedParameter));
-        }else if(defaultListBindings.containsKey(namedParameter)){
-            toReturn = new ListBinding(defaultListBindings.get(namedParameter));
-        }else {
+        } else {
             throw new IllegalArgumentException("no such binding: \"" + namedParameter + "\"");
         }
         return toReturn;

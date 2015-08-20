@@ -6,8 +6,6 @@ import com.github.randyp.jdbj.StreamQuery;
 import com.github.randyp.jdbj.student.NewStudent;
 import com.github.randyp.jdbj.student.Student;
 import com.github.randyp.jdbj.student.StudentTest;
-import com.github.randyp.jdbj.test.binding.value.DBSupplier;
-import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,12 +13,12 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public abstract class ExecuteQueryTest extends StudentTest {
 
@@ -119,44 +117,5 @@ public abstract class ExecuteQueryTest extends StudentTest {
                 .first();
         final Optional<Student> result = query.execute(db());
         assertTrue(result.isPresent());
-    }
-
-    @Test
-     public void defaultValues() throws Exception {
-        final ExecuteQuery<Optional<Student>> query = JDBJ.query("SELECT * FROM student WHERE last_name = :last_name")
-                .map(Student::from)
-                .bindDefaultString(":last_name", "Dada11")
-                .first();
-
-        {
-            final Optional<Student> student = query.execute(db());
-            assertTrue(student.isPresent());
-            assertEquals("Ada11", student.get().getFirstName());
-        }
-        {
-            final Optional<Student> student = query.bindString(":last_name", "Dada10").execute(db());
-            assertTrue(student.isPresent());
-            assertEquals("Ada10", student.get().getFirstName());
-        }
-    }
-
-    @Ignore
-    @Test
-    public void defaultValuesLists() throws Exception {
-        final ExecuteQuery<Optional<Student>> query = JDBJ.query("SELECT * FROM student WHERE last_name in :last_names")
-                .map(Student::from)
-                .first()
-                .bindDefaultStrings(":last_names", "Dada11");
-
-        {
-            final Optional<Student> student = query.execute(db());
-            assertTrue(student.isPresent());
-            assertEquals("Ada11", student.get().getFirstName());
-        }
-        {
-            final Optional<Student> student = query.bindStrings(":last_names", "Dada10").execute(db());
-            assertTrue(student.isPresent());
-            assertEquals("Ada10", student.get().getFirstName());
-        }
     }
 }

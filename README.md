@@ -5,9 +5,9 @@
 jdbj is a small jdbc fluent interface for capturing query intent before query execution. Sample code:
 ``` java
 //db is a javax.sql.DataSource
-final MapQuery<Student> studentsByIds = JDBJ.resource("student_by_ids.sql")
+final MapQuery<Student> studentsByIds = JDBJ.resource("student_by_ids_limit.sql")
         .query()
-        .bindDefaultLong(":limit", 10L)
+        .bindLong(":limit", 10L)
         .map(Student::from);
 
 //do something else for a while
@@ -32,7 +32,7 @@ try (Stream<Student> stream = streamQuery.execute(db)) {
 * Java8 lambda interface for bindings, transactions
 * Fetch-forward read-only cursors, always
 * Script Execution, with parameters
-* Comprehensive test suites for lastest postgres,h2,derby,sqllite,mysql
+* Comprehensive test suites for latest postgres,h2,derby,SQLite,MySql
 
 #### Examples
 A full set of examples is being developed in [jdbj-examples](https://github.com/randyp/jdbj-examples), but here are some quick examples.

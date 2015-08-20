@@ -11,8 +11,6 @@ public interface ValueBindings {
 
     PositionalBindings valueBinding(String name, Binding binding);
 
-    PositionalBindings defaultValueBinding(String name, Binding binding);
-
     PositionalBinding get(String namedParameter);
 
     Set<String> keys();
