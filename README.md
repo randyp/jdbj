@@ -80,12 +80,6 @@ Thank you to:
 mvn release:clean release:prepare -B && mvn release:perform
 ```
 
-#### 0.1.5 Todo
-* [x] Derby Integration Tests
-* [x] SQLLite Integration Tests
-* [x] Mysql Integration Tests
-* [x] HSQLDB Integration Tests
-
 #### 0.1.6
 * [ ] Hacky-yet-compatible batch insert & update queries
 * [ ] Wrap Batch sql exceptions
