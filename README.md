@@ -85,10 +85,12 @@ mvn release:clean release:prepare -B && mvn release:perform
 * [x] SQLLite Integration Tests
 * [x] Mysql Integration Tests
 * [ ] HSQLDB Integration Tests
-* [ ] Hacky-yet-compatible batch insert & update queries
 
 #### 0.1.6
-* [ ] Somehow remove most antlr classes we don't need from shading process...
+* [ ] Hacky-yet-compatible batch insert & update queries
 * [ ] Wrap Batch sql exceptions
-* [ ] Java Doc
 * [ ] Examples
+
+#### 0.1.7
+* [ ] Somehow remove most antlr classes we don't need from shading process...
+* [ ] Java Doc
