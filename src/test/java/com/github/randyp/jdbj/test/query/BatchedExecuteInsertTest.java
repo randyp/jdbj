@@ -31,12 +31,8 @@ public abstract class BatchedExecuteInsertTest extends StudentTest {
                 .bindBigDecimal(":gpa", newStudent.getGpa())
                 .endBatch();
 
-        final List<Long> keys;
-        final List<Student> actual;
-        try (Connection connection = db().getConnection()) {
-            keys = insertQuery.execute(connection);
-            actual = Student.selectAll.execute(connection);
-        }
+        final List<Long> keys = insertQuery.execute(db());
+        final List<Student> actual = Student.selectAll.execute(db());
         assertEquals(1, keys.size());
         assertEquals(Collections.singletonList(newStudent.withId(keys.get(0))), actual);
     }
@@ -49,9 +45,7 @@ public abstract class BatchedExecuteInsertTest extends StudentTest {
                 .insert(keyMapper)
                 .asBatch();
 
-        try (Connection connection = db().getConnection()) {
-            insertQuery.execute(connection);
-        }
+        insertQuery.execute(db());
     }
 
     @Test(expected = IllegalStateException.class)

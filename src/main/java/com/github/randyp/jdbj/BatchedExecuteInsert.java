@@ -1,8 +1,10 @@
 package com.github.randyp.jdbj;
 
 import com.github.randyp.jdbj.lambda.Binding;
+import com.github.randyp.jdbj.lambda.ConnectionSupplier;
 import com.github.randyp.jdbj.lambda.ResultSetMapper;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,10 +32,19 @@ public class BatchedExecuteInsert<R> {
         return new Batch();
     }
 
-    public List<R> execute(Connection connection) throws SQLException {
-        if(batches.isEmpty()){
-            throw new IllegalStateException("no batches to insert");
+    public List<R> execute(DataSource db) throws SQLException {
+        return execute(db::getConnection);
+    }
+
+    public List<R> execute(ConnectionSupplier db) throws SQLException {
+        checkNotEmpty();
+        try(Connection connection = db.getConnection()){
+            return execute(connection);
         }
+    }
+
+    public List<R> execute(Connection connection) throws SQLException {
+        checkNotEmpty();
 
         final String sql = statement.jdbcSql(batches.get(0));
 
@@ -51,6 +62,12 @@ public class BatchedExecuteInsert<R> {
             }
         }
         return keys;
+    }
+
+    private void checkNotEmpty() {
+        if(batches.isEmpty()){
+            throw new IllegalStateException("no batches to insert");
+        }
     }
 
     public class Batch implements ValueBindingsBuilder<Batch> {

@@ -84,7 +84,7 @@ mvn release:clean release:prepare -B && mvn release:perform
 * [x] Derby Integration Tests
 * [x] SQLLite Integration Tests
 * [x] Mysql Integration Tests
-* [ ] HSQLDB Integration Tests
+* [x] HSQLDB Integration Tests
 
 #### 0.1.6
 * [ ] Hacky-yet-compatible batch insert & update queries

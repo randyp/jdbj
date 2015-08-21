@@ -1,7 +1,9 @@
 package com.github.randyp.jdbj;
 
 import com.github.randyp.jdbj.lambda.Binding;
+import com.github.randyp.jdbj.lambda.ConnectionSupplier;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -24,6 +26,16 @@ public class BatchedExecuteUpdate {
 
     public Batch startBatch() {
         return new Batch();
+    }
+
+    public int[] execute(DataSource db) throws SQLException {
+        return execute(db::getConnection);
+    }
+
+    public int[] execute(ConnectionSupplier db) throws SQLException {
+        try(Connection connection = db.getConnection()){
+            return execute(connection);
+        }
     }
 
     public int[] execute(Connection connection) throws SQLException {

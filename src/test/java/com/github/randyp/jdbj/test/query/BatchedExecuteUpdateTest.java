@@ -33,11 +33,8 @@ public abstract class BatchedExecuteUpdateTest extends StudentTest {
                     .endBatch();
         }
 
-        final List<Student> actual;
-        try (Connection connection = db().getConnection()) {
-            assertArrayEquals(new int[]{1, 1}, insertQuery.execute(connection));
-            actual = Student.selectAll.execute(connection);
-        }
+        assertArrayEquals(new int[]{1, 1}, insertQuery.execute(db()));
+        final List<Student> actual = Student.selectAll.execute(db());
         assertEquals(expected.size(), actual.size());
         for (int i = 0; i < actual.size(); i++) {
             final NewStudent expectedStudent = expected.get(i);
