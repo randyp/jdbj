@@ -1,5 +1,6 @@
 package com.github.randyp.jdbj;
 
+import com.github.randyp.jdbj.lambda.ConnectionSupplier;
 import com.github.randyp.jdbj.lexer.StatementsLexer;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.Token;
@@ -61,6 +62,10 @@ public final class ExecuteScript extends PositionalBindingsBuilder<ExecuteScript
     }
 
     public boolean[] execute(DataSource db) throws SQLException {
+        return execute(db::getConnection);
+    }
+
+    public boolean[] execute(ConnectionSupplier db) throws SQLException {
         checkAllBindingsPresent();
         try(Connection connection = db.getConnection()){
             return execute(connection);

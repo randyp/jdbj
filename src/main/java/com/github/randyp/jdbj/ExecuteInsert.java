@@ -1,5 +1,6 @@
 package com.github.randyp.jdbj;
 
+import com.github.randyp.jdbj.lambda.ConnectionSupplier;
 import com.github.randyp.jdbj.lambda.ResultSetMapper;
 
 import javax.annotation.concurrent.Immutable;
@@ -32,6 +33,10 @@ public final class ExecuteInsert<R> extends PositionalBindingsBuilder<ExecuteIns
     }
 
     public List<R> execute(DataSource db) throws SQLException {
+        return execute(db::getConnection);
+    }
+
+    public List<R> execute(ConnectionSupplier db) throws SQLException {
         checkAllBindingsPresent();
         try(Connection connection = db.getConnection()){
             return execute(connection);

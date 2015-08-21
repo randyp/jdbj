@@ -1,5 +1,6 @@
 package com.github.randyp.jdbj;
 
+import com.github.randyp.jdbj.lambda.ConnectionSupplier;
 import com.github.randyp.jdbj.lambda.ResultSetMapper;
 
 import javax.annotation.concurrent.Immutable;
@@ -23,6 +24,10 @@ public final class StreamQuery<R> extends PositionalBindingsBuilder<StreamQuery<
     }
 
     public Stream<R> execute(DataSource db) throws SQLException {
+        return execute(db::getConnection);
+    }
+
+    public Stream<R> execute(ConnectionSupplier db) throws SQLException {
         checkAllBindingsPresent();
         final Connection connection = db.getConnection();
         return execute(connection).onClose( ()->{

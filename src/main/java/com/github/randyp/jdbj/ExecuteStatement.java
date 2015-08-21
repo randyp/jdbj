@@ -1,5 +1,7 @@
 package com.github.randyp.jdbj;
 
+import com.github.randyp.jdbj.lambda.ConnectionSupplier;
+
 import javax.annotation.concurrent.Immutable;
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -21,6 +23,10 @@ public final class ExecuteStatement extends PositionalBindingsBuilder<ExecuteSta
     }
 
     public boolean execute(DataSource db) throws SQLException {
+        return execute(db::getConnection);
+    }
+
+    public boolean execute(ConnectionSupplier db) throws SQLException {
         checkAllBindingsPresent();
         try(Connection connection = db.getConnection()){
             return execute(connection);
