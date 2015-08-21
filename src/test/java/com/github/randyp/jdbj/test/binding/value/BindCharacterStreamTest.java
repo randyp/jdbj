@@ -15,7 +15,7 @@ public abstract class BindCharacterStreamTest implements DBSupplier {
     @Test
     public void reader() throws Exception {
         final String selected = builder()
-                .bindCharacterStream(":binding", new StringReader(expected))
+                .bindCharacterStream(":binding", expectedReader())
                 .execute(db(), rs -> rs.getString(1));
         assertEquals(expected, selected);
     }
@@ -31,7 +31,7 @@ public abstract class BindCharacterStreamTest implements DBSupplier {
     @Test
     public void readerLength() throws Exception {
         final String selected = builder()
-                .bindCharacterStream(":binding", new StringReader(expected), 5)
+                .bindCharacterStream(":binding", expectedReader(), 5)
                 .execute(db(), rs -> rs.getString(1));
         assertEquals(expected, selected);
     }
@@ -47,7 +47,7 @@ public abstract class BindCharacterStreamTest implements DBSupplier {
     @Test
     public void readerLengthLong() throws Exception {
         final String selected = builder()
-                .bindCharacterStream(":binding", new StringReader(expected), 5L)
+                .bindCharacterStream(":binding", expectedReader(), 5L)
                 .execute(db(), rs -> rs.getString(1));
         assertEquals(expected, selected);
     }
@@ -58,6 +58,10 @@ public abstract class BindCharacterStreamTest implements DBSupplier {
                 .bindCharacterStream(":binding", null, 5L)
                 .execute(db(), rs -> rs.getString(1));
         assertNull(selected);
+    }
+
+    public StringReader expectedReader() {
+        return new StringReader(expected);
     }
 
     public SimpleBuilder builder() {

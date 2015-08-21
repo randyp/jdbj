@@ -14,9 +14,11 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
 import javax.sql.DataSource;
+import java.io.InputStream;
 import java.io.Reader;
 import java.net.URL;
 import java.sql.*;
+import java.util.GregorianCalendar;
 
 @RunWith(Enclosed.class)
 public class ValueBindingBuilderTest {
@@ -83,8 +85,10 @@ public class ValueBindingBuilderTest {
         }
     }
 
-    /*
     public static class BindArray extends BindArrayTest {
+
+        @Rule
+        public ExpectedException thrown = ExpectedException.none();
 
         @After
         public void tearDown() throws Exception {
@@ -96,9 +100,11 @@ public class ValueBindingBuilderTest {
             return db;
         }
 
-        @Test(expected = SQLFeatureNotSupportedException.class)
+        @Test
         @Override
         public void value() throws Exception {
+            thrown.expect(SQLSyntaxErrorException.class);
+            thrown.expectMessage("incompatible data type in conversion");
             try (Connection connection = db.getConnection()) {
                 final Array array = connection.createArrayOf("varchar", expected);
                 update.bindArray(":binding", array).execute(connection);
@@ -106,9 +112,11 @@ public class ValueBindingBuilderTest {
             super.value();
         }
 
-        @Test(expected = SQLFeatureNotSupportedException.class)
+        @Test
         @Override
         public void Null() throws Exception {
+            thrown.expect(SQLSyntaxErrorException.class);
+            thrown.expectMessage("incompatible data type in conversion");
             update.bindArray(":binding", null).execute(db);
             super.Null();
         }
@@ -118,7 +126,6 @@ public class ValueBindingBuilderTest {
             return new SimpleBuilder(statement);
         }
     }
-    */
 
     public static class BindAsciiStream extends BindAsciiStreamTest {
 
@@ -222,8 +229,10 @@ public class ValueBindingBuilderTest {
         }
     }
 
-    /*
     public static class BindBinaryStream extends BindBinaryStreamTest {
+
+        @Rule
+        public ExpectedException thrown = ExpectedException.none();
 
         @After
         public void tearDown() throws Exception {
@@ -238,62 +247,70 @@ public class ValueBindingBuilderTest {
         @Test
         @Override
         public void inputStream() throws Exception {
-            updateBinary.bindBinaryStream(":binding", expectedStream()).execute(db);
+            thrown.expect(SQLException.class);
+            thrown.expectMessage("InputStream error: java.sql.SQLSyntaxErrorException: incompatible data type in conversion");
+            update.bindBinaryStream(":binding", expectedStream()).execute(db);
             super.inputStream();
         }
 
         @Test
         @Override
         public void inputStreamNull() throws Exception {
-            updateBinary.bindBinaryStream(":binding", null).execute(db);
+            thrown.expect(SQLException.class);
+            thrown.expectMessage("InputStream error: java.lang.NullPointerException");
+            update.bindBinaryStream(":binding", null).execute(db);
             super.inputStreamNull();
         }
 
         @Test
         @Override
         public void inputLengthStream() throws Exception {
-            updateBinary.bindBinaryStream(":binding", expectedStream(), expected.length).execute(db);
+            thrown.expect(SQLException.class);
+            thrown.expectMessage("InputStream error: java.sql.SQLSyntaxErrorException: incompatible data type in conversion");
+            update.bindBinaryStream(":binding", expectedStream(), expected.length).execute(db);
             super.inputLengthStream();
         }
 
         @Test
         @Override
         public void inputLengthStreamNull() throws Exception {
-            updateBinary.bindBinaryStream(":binding", null, expected.length).execute(db);
+            thrown.expect(SQLException.class);
+            thrown.expectMessage("InputStream error: java.lang.NullPointerException");
+            update.bindBinaryStream(":binding", null, expected.length).execute(db);
             super.inputLengthStreamNull();
         }
 
         @Test
         @Override
         public void inputLengthLongStream() throws Exception {
-            updateBinary.bindBinaryStream(":binding", expectedStream(), (long) expected.length).execute(db);
+            thrown.expect(SQLException.class);
+            thrown.expectMessage("InputStream error: java.sql.SQLSyntaxErrorException: incompatible data type in conversion");
+            update.bindBinaryStream(":binding", expectedStream(), (long) expected.length).execute(db);
             super.inputLengthLongStream();
         }
 
         @Test
         @Override
         public void inputLengthLongStreamNull() throws Exception {
-            updateBinary.bindBinaryStream(":binding", null, (long) expected.length).execute(db);
+            update.bindBinaryStream(":binding", null, (long) expected.length).execute(db);
             super.inputLengthLongStreamNull();
         }
 
         @Override
         public SimpleBuilder builder() {
-            return new SimpleBuilder(statement_binary);
+            return new SimpleBuilder(statement);
         }
     }
-    */
 
-    /*
     public static class BindBlob extends BindBlobTest {
+
+        @Rule
+        public ExpectedException thrown = ExpectedException.none();
 
         @After
         public void tearDown() throws Exception {
             clearBindings();
         }
-
-        @Rule
-        public ExpectedException thrown = ExpectedException.none();
 
         @Override
         public DataSource db() {
@@ -303,10 +320,12 @@ public class ValueBindingBuilderTest {
         @Test
         @Override
         public void value() throws Exception {
+            thrown.expect(SQLException.class);
+            thrown.expectMessage("Invalid argument in JDBC call");
             try(Connection connection = db.getConnection()){
                 final Blob blob = connection.createBlob();
                 blob.setBytes(1, expected);
-                update_blob.bindBlob(":binding", blob).execute(connection);
+                update.bindBlob(":binding", blob).execute(connection);
             }
             super.value();
         }
@@ -314,44 +333,53 @@ public class ValueBindingBuilderTest {
         @Test
         @Override
         public void valueNull() throws Exception {
-            update_blob.bindBlob(":binding", (Blob) null).execute(db);
+            thrown.expect(SQLException.class);
+            thrown.expectMessage("Invalid argument in JDBC call");
+            update.bindBlob(":binding", (Blob) null).execute(db);
             super.valueNull();
         }
 
         @Test
         @Override
         public void inputStream() throws Exception {
-            update_blob.bindBlob(":binding", expectedStream()).execute(db);
+            thrown.expect(SQLException.class);
+            thrown.expectMessage("InputStream error: java.sql.SQLSyntaxErrorException: incompatible data type in conversion");
+            update.bindBlob(":binding", expectedStream()).execute(db);
             super.inputStream();
         }
 
         @Test
         @Override
         public void inputStreamNull() throws Exception {
-            update_blob.bindBlob(":binding", (InputStream) null).execute(db);
+            thrown.expect(SQLException.class);
+            thrown.expectMessage("InputStream error: java.lang.NullPointerException");
+            update.bindBlob(":binding", (InputStream) null).execute(db);
             super.inputStreamNull();
         }
 
         @Test
         @Override
         public void inputStreamLength() throws Exception {
-            update_blob.bindBlob(":binding", expectedStream(), expected.length).execute(db);
+            thrown.expect(SQLException.class);
+            thrown.expectMessage("InputStream error: java.sql.SQLSyntaxErrorException: incompatible data type in conversion");
+            update.bindBlob(":binding", expectedStream(), expected.length).execute(db);
             super.inputStreamLength();
         }
 
         @Test
         @Override
         public void inputStreamNullLength() throws Exception {
-            update_blob.bindBlob(":binding", null, expected.length).execute(db);
+            thrown.expect(SQLException.class);
+            thrown.expectMessage("InputStream error: java.lang.NullPointerException");
+            update.bindBlob(":binding", null, expected.length).execute(db);
             super.inputStreamNullLength();
         }
 
         @Override
         public SimpleBuilder builder() {
-            return new SimpleBuilder(statement_blob);
+            return new SimpleBuilder(statement);
         }
     }
-    */
 
     public static class BindBoolean extends BindBooleanTest {
 
@@ -445,29 +473,179 @@ public class ValueBindingBuilderTest {
         }
     }
 
-//    public static class BindByteArray extends BindByteArrayTest {
-//        @Override
-//        public DataSource db() {
-//            return db;
-//        }
-//    }
-//
-//    public static class BindCharacterStream extends BindCharacterStreamTest {
-//        @Override
-//        public DataSource db() {
-//            return db;
-//        }
-//    }
-//
-//    public static class BindClob extends BindClobTest {
-//        @Override
-//        public DataSource db() {
-//            return db;
-//        }
-//    }
+    public static class BindByteArray extends BindByteArrayTest {
 
-    /*
+        @Rule
+        public ExpectedException thrown = ExpectedException.none();
+
+        @After
+        public void tearDown() throws Exception {
+            clearBindings();
+        }
+
+        @Override
+        public DataSource db() {
+            return db;
+        }
+
+        @Override
+        public void value() throws Exception {
+            thrown.expect(SQLSyntaxErrorException.class);
+            thrown.expectMessage("incompatible data type in conversion");
+            update.bindByteArray(":binding", expected).execute(db);
+            super.value();
+        }
+
+        @Override
+        public void valueNull() throws Exception {
+            update.bindByteArray(":binding", null).execute(db);
+            super.valueNull();
+        }
+
+        @Override
+        public SimpleBuilder builder() {
+            return new SimpleBuilder(statement);
+        }
+    }
+
+    public static class BindCharacterStream extends BindCharacterStreamTest {
+
+        @Rule
+        public ExpectedException thrown = ExpectedException.none();
+
+        @After
+        public void tearDown() throws Exception {
+            clearBindings();
+        }
+
+        @Override
+        public DataSource db() {
+            return db;
+        }
+
+        @Override
+        public void reader() throws Exception {
+            update.bindCharacterStream(":binding", expectedReader()).execute(db);
+            super.reader();
+        }
+
+        @Override
+        public void readerNull() throws Exception {
+            thrown.expect(SQLException.class);
+            thrown.expectMessage("InputStream error: java.lang.NullPointerException");
+            update.bindCharacterStream(":binding", null).execute(db);
+            super.readerNull();
+        }
+
+        @Override
+        public void readerLength() throws Exception {
+            thrown.expect(SQLException.class);
+            thrown.expectMessage("InputStream error: java.io.EOFException");
+            update.bindCharacterStream(":binding", expectedReader(), expected.length()).execute(db);
+            super.readerLength();
+        }
+
+        @Override
+        public void readerLengthNull() throws Exception {
+            thrown.expect(SQLException.class);
+            thrown.expectMessage("InputStream error: java.lang.NullPointerException");
+            update.bindCharacterStream(":binding", null, expected.length()).execute(db);
+            super.readerLengthNull();
+        }
+
+        @Override
+        public void readerLengthLong() throws Exception {
+            thrown.expect(SQLException.class);
+            thrown.expectMessage("InputStream error: java.io.EOFException");
+            update.bindCharacterStream(":binding", expectedReader(), (long) expected.length()).execute(db);
+            super.readerLengthLong();
+        }
+
+        @Override
+        public void readerLengthLongNull() throws Exception {
+            thrown.expect(SQLException.class);
+            thrown.expectMessage("InputStream error: java.lang.NullPointerException");
+            update.bindCharacterStream(":binding", null, (long) expected.length()).execute(db);
+            super.readerLengthLongNull();
+        }
+
+        @Override
+        public SimpleBuilder builder() {
+            return new SimpleBuilder(statement);
+        }
+    }
+
+    public static class BindClob extends BindClobTest {
+
+        @Rule
+        public ExpectedException thrown = ExpectedException.none();
+
+        @After
+        public void tearDown() throws Exception {
+            clearBindings();
+        }
+        
+        @Override
+        public DataSource db() {
+            return db;
+        }
+
+        @Override
+        public void value() throws Exception {
+            try(Connection connection = db.getConnection()){
+                final Clob clob = connection.createClob();
+                clob.setString(1, expected);
+                update.bindClob(":binding", clob).execute(connection);
+            }
+            super.value();
+        }
+
+        @Override
+        public void valueNull() throws Exception {
+            update.bindClob(":binding", (Clob) null).execute(db);
+            super.valueNull();
+        }
+
+        @Override
+        public void reader() throws Exception {
+            update.bindClob(":binding", expectedReader()).execute(db);
+            super.reader();
+        }
+
+        @Override
+        public void readerNull() throws Exception {
+            thrown.expect(SQLException.class);
+            thrown.expectMessage("InputStream error: java.lang.NullPointerException");
+            update.bindClob(":binding", (Reader) null).execute(db);
+            super.readerNull();
+        }
+
+        @Override
+        public void readerLength() throws Exception {
+            thrown.expect(SQLException.class);
+            thrown.expectMessage("InputStream error: java.io.EOFException");
+            update.bindClob(":binding", expectedReader(), expected.length()).execute(db);
+            super.readerLength();
+        }
+
+        @Override
+        public void readerLengthNull() throws Exception {
+            thrown.expect(SQLException.class);
+            thrown.expectMessage("InputStream error: java.lang.NullPointerException");
+            update.bindClob(":binding", null, expected.length()).execute(db);
+            super.readerLengthNull();
+        }
+
+        @Override
+        public SimpleBuilder builder() {
+            return new SimpleBuilder(statement);
+        }
+    }
+    
     public static class BindDate extends BindDateTest {
+
+        @Rule
+        public ExpectedException thrown = ExpectedException.none();
 
         @After
         public void tearDown() throws Exception {
@@ -496,6 +674,8 @@ public class ValueBindingBuilderTest {
         @Test
         @Override
         public void valueCalendar() throws Exception {
+            thrown.expect(java.sql.SQLSyntaxErrorException.class);
+            thrown.expectMessage("incompatible data type in conversion");
             update.bindDate(":binding", expectedDate, GregorianCalendar.getInstance()).execute(db);
             super.valueCalendar();
         }
@@ -512,7 +692,6 @@ public class ValueBindingBuilderTest {
             return new SimpleBuilder(statement);
         }
     }
-    */
 
     public static class BindDouble extends BindDoubleTest {
 
@@ -1060,8 +1239,10 @@ public class ValueBindingBuilderTest {
         }
     }
 
-    /*
     public static class BindTime extends BindTimeTest {
+
+        @Rule
+        public ExpectedException thrown = ExpectedException.none();
 
         @After
         public void tearDown() throws Exception {
@@ -1090,6 +1271,8 @@ public class ValueBindingBuilderTest {
         @Test
         @Override
         public void valueCalendar() throws Exception {
+            thrown.expect(java.sql.SQLSyntaxErrorException.class);
+            thrown.expectMessage("incompatible data type in conversion");
             update.bindTime(":binding", expectedTime, GregorianCalendar.getInstance()).execute(db);
             super.valueCalendar();
         }
@@ -1107,8 +1290,10 @@ public class ValueBindingBuilderTest {
         }
     }
 
-
     public static class BindTimestamp extends BindTimestampTest {
+
+        @Rule
+        public ExpectedException thrown = ExpectedException.none();
 
         @Override
         public DataSource db() {
@@ -1137,6 +1322,8 @@ public class ValueBindingBuilderTest {
         @Test
         @Override
         public void valueCalendar() throws Exception {
+            thrown.expect(java.sql.SQLSyntaxErrorException.class);
+            thrown.expectMessage("incompatible data type in conversion");
             update_timestamp.bindTimestamp(":binding", new Timestamp(expectedTime), GregorianCalendar.getInstance()).execute(db);
             super.valueCalendar();
         }
@@ -1153,7 +1340,6 @@ public class ValueBindingBuilderTest {
             return new SimpleBuilder(statement_timestamp);
         }
     }
-    */
 
     public static class BindURL extends BindURLTest {
 

@@ -46,7 +46,7 @@ public abstract class BindClobTest implements DBSupplier {
     public void reader() throws Exception {
         try (Connection connection = db().getConnection()) {
             final String selected = builder()
-                    .bindClob(":binding", new StringReader(expected))
+                    .bindClob(":binding", expectedReader())
                     .execute(connection, rs -> rs.getClob(1).getSubString(1L, expected.length()));
             assertEquals(expected, selected);
         }
@@ -69,7 +69,7 @@ public abstract class BindClobTest implements DBSupplier {
     public void readerLength() throws Exception {
         try (Connection connection = db().getConnection()) {
             final String selected = builder()
-                    .bindClob(":binding", new StringReader(expected), (long) expected.length())
+                    .bindClob(":binding", expectedReader(), (long) expected.length())
                     .execute(connection, rs -> rs.getClob(1).getSubString(1L, expected.length()));
             assertEquals(expected, selected);
         }
@@ -86,6 +86,10 @@ public abstract class BindClobTest implements DBSupplier {
                     });
             assertNull(selected);
         }
+    }
+
+    public StringReader expectedReader() {
+        return new StringReader(expected);
     }
 
     public SimpleBuilder builder() {
