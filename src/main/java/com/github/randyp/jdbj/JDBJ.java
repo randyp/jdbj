@@ -7,11 +7,10 @@ import com.github.randyp.jdbj.lambda.ResultSetMapper;
 
 import javax.annotation.Nullable;
 import javax.sql.DataSource;
-import java.io.*;
+import java.io.InputStream;
+import java.io.Reader;
 import java.net.URL;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -92,36 +91,23 @@ public final class JDBJ {
     }
 
     public static JDBJBuilder string(String string) {
-        return new JDBJBuilder(string);
+        return JDBJBuilder.fromString(string);
     }
 
     public static JDBJBuilder reader(IOSupplier<Reader> supplier) {
-        final StringBuilder queryString = new StringBuilder();
-        try (BufferedReader br = new BufferedReader(supplier.get())) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                queryString.append(line).append('\n');
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return new JDBJBuilder(queryString.toString());
+        return JDBJBuilder.fromReader(supplier);
     }
 
     public static JDBJBuilder stream(IOSupplier<InputStream> supplier) {
-        return reader(()->new InputStreamReader(supplier.get()));
+        return JDBJBuilder.fromStream(supplier);
     }
 
     public static JDBJBuilder path(Path path) {
-        return stream(()-> Files.newInputStream(path, StandardOpenOption.READ));
+        return JDBJBuilder.fromPath(path);
     }
 
     public static JDBJBuilder resource(String resourceName) {
-        final URL url = JDBJ.class.getClassLoader().getResource(resourceName);
-        if (url == null) {
-            throw new IllegalArgumentException("resource not found: " + resourceName);
-        }
-        return stream(url::openStream);
+        return JDBJBuilder.fromResource(resourceName);
     }
 
     public static ReturnsQuery query(String query) {

@@ -81,6 +81,7 @@ mvn release:clean release:prepare -B && mvn release:perform
 ```
 
 #### 0.1.6
+* [x] can append multiple string sources together to build a query
 * [ ] Hacky-yet-compatible batch insert & update queries
 * [ ] Wrap Batch sql exceptions
 * [ ] Examples
