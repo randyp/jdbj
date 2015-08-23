@@ -4,6 +4,8 @@ import com.github.randyp.jdbj.ExecuteUpdate;
 import com.github.randyp.jdbj.FakeConnection;
 import com.github.randyp.jdbj.FakeDataSource;
 import com.github.randyp.jdbj.JDBJ;
+import com.github.randyp.jdbj.lambda.ConnectionRunnable;
+import com.github.randyp.jdbj.lambda.ConnectionSupplier;
 import com.github.randyp.jdbj.student.NewStudent;
 import com.github.randyp.jdbj.student.Student;
 import com.github.randyp.jdbj.student.StudentTest;
@@ -13,6 +15,7 @@ import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -40,7 +43,8 @@ public abstract class TransactionTest extends StudentTest {
 
     @Test
     public void committed() throws Exception {
-        JDBJ.transaction(db(), connection -> assertEquals(1, executeUpdate.execute(connection)));
+        ConnectionRunnable runnable = connection -> assertEquals(1, executeUpdate.execute(connection));
+        JDBJ.transaction(runnable).execute(db());
 
         final List<Student> actual = Student.selectAll.execute(db());
         assertEquals(1, actual.size());
@@ -48,23 +52,18 @@ public abstract class TransactionTest extends StudentTest {
     }
 
     @Test
-    public void returning() throws Exception {
-        final List<Student> actual = JDBJ.returningTransaction(db(), connection -> {
-            assertEquals(1, executeUpdate.execute(connection));
-            return Student.selectAll.execute(connection);
-        });
+    public void committedUsingConnection() throws Exception {
+        ConnectionRunnable runnable = connection -> assertEquals(1, executeUpdate.execute(connection));
+        try(Connection connection = db().getConnection()){
+            connection.setTransactionIsolation(lowIsolation);
+            JDBJ.transaction(runnable).isolation(highIsolation).execute(connection);
+            
+            assertFalse(connection.isClosed());
+            assertTrue(connection.getAutoCommit());
+            assertEquals(lowIsolation, connection.getTransactionIsolation());
+        }
 
-        assertEquals(1, actual.size());
-        assertEquals(student.getFirstName(), actual.get(0).getFirstName());
-    }
-
-    @Test
-    public void returningWithIsolation() throws Exception {
-        final List<Student> actual = JDBJ.returningTransaction(db(), highIsolation, connection -> {
-            assertEquals(1, executeUpdate.execute(connection));
-            return Student.selectAll.execute(connection);
-        });
-
+        final List<Student> actual = Student.selectAll.execute(db());
         assertEquals(1, actual.size());
         assertEquals(student.getFirstName(), actual.get(0).getFirstName());
     }
@@ -72,10 +71,11 @@ public abstract class TransactionTest extends StudentTest {
     @Test
     public void rollback() throws Exception {
         try {
-            JDBJ.transaction(db(), connection -> {
+            ConnectionRunnable runnable = connection -> {
                 assertEquals(1, executeUpdate.execute(connection));
                 throw new SQLException("did I do that?");
-            });
+            };
+            JDBJ.transaction(runnable).execute(db());
             fail("should have throw steve urkel exception");
         } catch (SQLException e) {
             assertEquals("did I do that?", e.getMessage());
@@ -91,10 +91,11 @@ public abstract class TransactionTest extends StudentTest {
             DataSource fakeDataSource = new FakeDataSource<>(() -> new FakeConnection(connection));
 
             assertTrue(connection.getAutoCommit());
-            JDBJ.transaction(fakeDataSource, c -> {
+            ConnectionRunnable runnable = c -> {
                 assertFalse(c.getAutoCommit());
                 assertEquals(1, executeUpdate.execute(c));
-            });
+            };
+            JDBJ.transaction(runnable).execute(fakeDataSource);
             assertTrue(connection.getAutoCommit());
         }
     }
@@ -109,10 +110,11 @@ public abstract class TransactionTest extends StudentTest {
             assertEquals(originalIsolation, connection.getTransactionIsolation());
             DataSource fakeDataSource = new FakeDataSource<>(() -> new FakeConnection(connection));
 
-            JDBJ.transaction(fakeDataSource, highIsolation, c -> {
+            ConnectionRunnable runnable = c -> {
                 assertEquals(highIsolation, c.getTransactionIsolation());
                 assertEquals(1, executeUpdate.execute(c));
-            });
+            };
+            JDBJ.transaction(runnable).isolation(highIsolation).execute(fakeDataSource);
             assertEquals(originalIsolation, connection.getTransactionIsolation());
         }
     }
@@ -126,32 +128,34 @@ public abstract class TransactionTest extends StudentTest {
             connection.setTransactionIsolation(originalIsolation);
             DataSource fakeDataSource = new FakeDataSource<>(() -> new FakeConnection(connection));
 
-            JDBJ.transaction(fakeDataSource, c -> {
+            ConnectionRunnable runnable = c -> {
                 assertEquals(originalIsolation, c.getTransactionIsolation());
                 assertEquals(1, executeUpdate.execute(c));
-            });
+            };
+            JDBJ.transaction(runnable).execute(fakeDataSource);
             assertEquals(originalIsolation, connection.getTransactionIsolation());
         }
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test(expected = SQLException.class)
     public void exceptIfAutocommitAlreadyOff() throws Exception {
         try (Connection connection = db().getConnection()) {
             DataSource fakeDataSource = new FakeDataSource<>(() -> connection);
             connection.setAutoCommit(false);
-            JDBJ.transaction(fakeDataSource, c -> assertEquals(1, executeUpdate.execute(c)));
+            ConnectionRunnable runnable = c -> assertEquals(1, executeUpdate.execute(c));
+            JDBJ.transaction(runnable).execute(fakeDataSource);
         }
     }
 
-    @Test
-    public void exceptDuringAutocommitResetIgnored() throws Exception {
+    @Test(expected = SQLException.class)
+    public void exceptDuringAutocommitResetNotIgnored() throws Exception {
         try (Connection connection = db().getConnection()) {
             DataSource fakeDataSource = new FakeDataSource<>(() -> new FakeConnection(connection) {
                 @Override
                 public void setAutoCommit(boolean autoCommit) throws SQLException {
                     super.setAutoCommit(autoCommit);
                     if (autoCommit) {
-                        throw new SQLException();
+                        throw new SQLException("do not ignore me");
                     }
                 }
 
@@ -160,13 +164,18 @@ public abstract class TransactionTest extends StudentTest {
                     connection.close();
                 }
             });
-            JDBJ.transaction(fakeDataSource, c -> assertEquals(1, executeUpdate.execute(c)));
-            assertTrue(connection.isClosed());
+            ConnectionRunnable runnable = c -> assertEquals(1, executeUpdate.execute(c));
+            try{
+                JDBJ.transaction(runnable).execute(fakeDataSource);
+            }catch (Exception e){
+                assertTrue(connection.isClosed());
+                throw e;
+            }
         }
     }
 
-    @Test
-    public void exceptDuringIsolationResetIgnored() throws Exception {
+    @Test(expected = SQLException.class)
+    public void exceptDuringIsolationResetNotIgnored() throws Exception {
         try (Connection connection = db().getConnection()) {
             connection.setTransactionIsolation(lowIsolation);
             DataSource fakeDataSource = new FakeDataSource<>(() -> new FakeConnection(connection) {
@@ -175,7 +184,7 @@ public abstract class TransactionTest extends StudentTest {
                     final int beforeSet = connection.getTransactionIsolation();
                     super.setTransactionIsolation(level);
                     if (beforeSet == highIsolation) {
-                        throw new SQLException("should be ignored");
+                        throw new SQLException("do not ignore me");
                     }
                 }
 
@@ -184,23 +193,34 @@ public abstract class TransactionTest extends StudentTest {
                     connection.close();
                 }
             });
-            JDBJ.transaction(fakeDataSource, highIsolation, c -> assertEquals(1, executeUpdate.execute(c)));
-            assertTrue(connection.isClosed());
+            ConnectionRunnable runnable = c -> assertEquals(1, executeUpdate.execute(c));
+            try{
+                JDBJ.transaction(runnable).isolation(highIsolation).execute(fakeDataSource);
+            }catch (Exception e){
+                assertTrue(connection.isClosed());
+                throw e;
+            }
         }
     }
 
-    @Test
+    @Test(expected = SQLException.class)
     public void exceptDuringCloseIgnored() throws Exception {
+        ConnectionRunnable runnable = c -> assertEquals(1, executeUpdate.execute(c));
         try (Connection connection = db().getConnection()) {
             DataSource fakeDataSource = new FakeDataSource<>(() -> new FakeConnection(connection) {
                 @Override
                 public void close() throws SQLException {
                     connection.close();
-                    throw new SQLException("should be ignored");
+                    throw new SQLException("do not ignore me");
                 }
             });
-            JDBJ.transaction(fakeDataSource, c -> assertEquals(1, executeUpdate.execute(c)));
-            assertTrue(connection.isClosed());
+            
+            try{
+                JDBJ.transaction(runnable).execute(fakeDataSource);
+            }catch (Exception e){
+                assertTrue(connection.isClosed());
+                throw e;
+            }
         }
     }
 
@@ -212,7 +232,7 @@ public abstract class TransactionTest extends StudentTest {
                 @Override
                 public void rollback() throws SQLException {
                     super.rollback();
-                    throw new SQLException("should be ignored");
+                    throw new SQLException("should not be ignored");
                 }
 
                 @Override
@@ -221,15 +241,101 @@ public abstract class TransactionTest extends StudentTest {
                 }
             });
             try {
-                JDBJ.transaction(fakeDataSource, c -> {
+                ConnectionRunnable runnable = c -> {
                     assertEquals(1, executeUpdate.execute(c));
                     throw new SQLException("did I do that?");
-                });
+                };
+                JDBJ.transaction(runnable).execute(fakeDataSource);
                 fail("should have throw steve urkel exception");
             } catch (SQLException e) {
                 assertEquals("did I do that?", e.getMessage());
+                assertNotNull(e.getNextException());
+                e = e.getNextException();
+                assertEquals("should not be ignored", e.getMessage());
             }
             assertTrue(connection.isClosed());
         }
+    }
+
+    @Test
+    public void exceptionsChainedProperlyDuringRollback() throws Exception {
+        final int originalIsolation = this.lowIsolation;
+        try (Connection connection = db().getConnection()) {
+            connection.setTransactionIsolation(originalIsolation);
+            DataSource fakeDataSource = new FakeDataSource<>(() -> new FakeConnection(connection) {
+
+                @Override
+                public void rollback() throws SQLException {
+                    super.rollback();
+                    throw new SQLException("should not be ignored - rollback");
+                }
+
+                @Override
+                public void setAutoCommit(boolean autoCommit) throws SQLException {
+                    super.setAutoCommit(autoCommit);
+                    if(autoCommit){
+                        throw new SQLException("should not be ignored - autocommit");
+                    }
+                }
+
+                @Override
+                public void setTransactionIsolation(int level) throws SQLException {
+                    super.setTransactionIsolation(level);
+                    if(level == originalIsolation){
+                        throw new SQLException("should not be ignored - isolation");
+                    }
+                }
+
+                @Override
+                public void close() throws SQLException {
+                    connection.close();
+                    throw new SQLException("should not be ignored - close");
+                }
+            });
+            try {
+                ConnectionRunnable runnable = c -> {
+                    assertEquals(1, executeUpdate.execute(c));
+                    throw new SQLException("should not be ignored - runnable");
+                };
+                JDBJ.transaction(runnable).isolation(highIsolation).execute(fakeDataSource);
+                fail("was supposed to except");
+            } catch (SQLException e) {
+                assertTrue(connection.isClosed());
+                assertEquals("should not be ignored - runnable", e.getMessage());
+                
+                e = e.getNextException();
+                assertNotNull(e);
+                assertEquals("should not be ignored - rollback", e.getMessage());
+
+                e = e.getNextException();
+                assertNotNull(e);
+                assertEquals("should not be ignored - autocommit", e.getMessage());
+
+                e = e.getNextException();
+                assertNotNull(e);
+                assertEquals("should not be ignored - isolation", e.getMessage());
+
+                e = e.getNextException();
+                assertNotNull(e);
+                assertEquals("should not be ignored - close", e.getMessage());
+                
+                assertNull(e.getNextException());
+            }
+        }
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void executeNullDataSource() throws Exception {
+        JDBJ.transaction(connection->{}).execute((DataSource) null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void executeNullConnectionSupplier() throws Exception {
+        JDBJ.transaction(connection->{}).execute((ConnectionSupplier) null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void executeNullConnection() throws Exception {
+        JDBJ.transaction(connection->{}).execute((Connection) null);
     }
 }

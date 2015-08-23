@@ -1,6 +1,5 @@
 package com.github.randyp.jdbj.lambda;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -9,7 +8,7 @@ import java.sql.SQLException;
  * <p>
  * It is expected that the instance of {@link ConnectionRunnable} will not call {@link Connection#close()}.
  * <p>
- * When being used as part of a {@link com.github.randyp.jdbj.JDBJ#transaction(DataSource, ConnectionRunnable)} it is additionally expected not to tamper with {@link Connection#setAutoCommit(boolean)}, {@link Connection#commit()}, {@link Connection#rollback()}, and sometimes {@link Connection#setTransactionIsolation(int)}.
+ * When being used as part of a {@link com.github.randyp.jdbj.JDBJ#transaction(ConnectionRunnable)} it is additionally expected not to tamper with {@link Connection#setAutoCommit(boolean)}, {@link Connection#commit()}, {@link Connection#rollback()}, and sometimes {@link Connection#setTransactionIsolation(int)}.
  * <p>
  * Example:
  * <pre>
@@ -21,7 +20,7 @@ import java.sql.SQLException;
  * }
  * </pre>
  * @see ConnectionCallable
- * @see com.github.randyp.jdbj.JDBJ#transaction(DataSource, ConnectionRunnable)
+ * @see com.github.randyp.jdbj.JDBJ#transaction(ConnectionRunnable)
  */
 public interface ConnectionRunnable {
 

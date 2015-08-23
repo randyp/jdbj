@@ -120,4 +120,12 @@ public class QueriesTest {
             super(Connection.TRANSACTION_SERIALIZABLE, Connection.TRANSACTION_READ_COMMITTED);
         }
     }
+
+    public static class ReturningTransaction extends ReturningTransactionTest {
+
+        @Override
+        public DataSource db() {
+            return db;
+        }
+    }
 }

@@ -8,7 +8,12 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
 import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 @RunWith(Enclosed.class)
 public class ValueBindingBuilderTest {
@@ -82,10 +87,15 @@ public class ValueBindingBuilderTest {
             return db;
         }
 
-        @Test(expected = NullPointerException.class) //appears to be bug in driver, can't call with null bytes
+        @Test
         @Override
         public void valueNull() throws Exception {
-            super.valueNull();
+            try {
+                super.valueNull();
+                fail("Supposed to except because of driver bug");
+            } catch (SQLException e) {
+                assertTrue(e.getCause() instanceof NullPointerException);
+            }
         }
 
         @Override

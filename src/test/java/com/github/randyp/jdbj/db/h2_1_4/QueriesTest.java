@@ -92,4 +92,12 @@ public class QueriesTest {
             return db;
         }
     }
+
+    public static class ReturningTransaction extends ReturningTransactionTest {
+
+        @Override
+        public DataSource db() {
+            return db;
+        }
+    }
 }

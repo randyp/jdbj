@@ -13,13 +13,13 @@ final ExecuteInsert<Long> insert = JDBJ.resource(NewStudent.insert)
         .insert(rs->rs.getLong(1));
 
 //db is a javax.sql.DataSource or com.github.randyp.jdbj.lambda.ConnectionSupplier
-List<Long> generatedKeys = JDBJ.returningTransaction(db, connection -> {
+List<Long> generatedKeys = JDBJ.transaction(connection -> {
     final List<Long> keys = new ArrayList<>();
     for (NewStudent newStudent : newStudents) {
         keys.addAll(insert.bindValues(newStudent::bindings).execute(connection));
     }
     return keys;
-});
+}).execute(db);
 
 //setup query object
 final MapQuery<Student> studentsByIds = JDBJ.resource("student_by_ids_limit.sql")
