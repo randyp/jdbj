@@ -5,6 +5,9 @@ import com.github.randyp.jdbj.lambda.Binding;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+/**
+ * Not intended for external use.
+ */
 final class ValueBinding implements PositionalBinding {
 
     private final Binding binding;

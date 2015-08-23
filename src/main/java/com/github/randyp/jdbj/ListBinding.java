@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Not intended for external use.
+ */
 final class ListBinding implements PositionalBinding {
 
     private final List<Binding> bindings;

@@ -13,8 +13,15 @@ import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * Entry point for building and executing queries, transactions with JDBJ features.
+ * <p>
+ * If you can, prefer {@link JDBJ#resource(String)} over {@link JDBJ#string(String)}.
+ * <p>
+ * However, since {@link JDBJ#string(String)} is commonly used in tests, convenience methods are provided to build queries with a single string: {@link JDBJ#query(String)}, {@link JDBJ#update(String)}, {@link JDBJ#insert(String, ResultMapper)}, {@link JDBJ#statement(String)}, {@link JDBJ#script(String)}.
+ */
 public final class JDBJ {
-
+    
     public static void transaction(DataSource dataSource, ConnectionRunnable runnable) throws SQLException {
         returningTransactionOptionalIsolation(dataSource, null, c -> {
             runnable.run(c);
@@ -89,24 +96,24 @@ public final class JDBJ {
         }
     }
 
-    public static JDBJBuilder string(String string) {
-        return JDBJBuilder.fromString(string);
+    public static QueryStringBuilder string(String string) {
+        return QueryStringBuilder.fromString(string);
     }
 
-    public static JDBJBuilder reader(IOSupplier<Reader> supplier) {
-        return JDBJBuilder.fromReader(supplier);
+    public static QueryStringBuilder reader(IOSupplier<Reader> supplier) {
+        return QueryStringBuilder.fromReader(supplier);
     }
 
-    public static JDBJBuilder stream(IOSupplier<InputStream> supplier) {
-        return JDBJBuilder.fromStream(supplier);
+    public static QueryStringBuilder stream(IOSupplier<InputStream> supplier) {
+        return QueryStringBuilder.fromStream(supplier);
     }
 
-    public static JDBJBuilder path(Path path) {
-        return JDBJBuilder.fromPath(path);
+    public static QueryStringBuilder path(Path path) {
+        return QueryStringBuilder.fromPath(path);
     }
 
-    public static JDBJBuilder resource(String resourceName) {
-        return JDBJBuilder.fromResource(resourceName);
+    public static QueryStringBuilder resource(String resourceName) {
+        return QueryStringBuilder.fromResource(resourceName);
     }
 
     public static ReturnsQuery query(String query) {

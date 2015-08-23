@@ -19,68 +19,68 @@ import java.nio.file.StandardOpenOption;
  */
 @Immutable
 @ThreadSafe
-public class JDBJBuilder {
+public class QueryStringBuilder {
     
-    static JDBJBuilder fromReader(IOSupplier<Reader> supplier) {
+    static QueryStringBuilder fromReader(IOSupplier<Reader> supplier) {
         final StringBuilder builder = new StringBuilder();
         appendReaderToBuilder(supplier, builder);
-        return new JDBJBuilder(builder);
+        return new QueryStringBuilder(builder);
     }
 
-    static JDBJBuilder fromStream(IOSupplier<InputStream> supplier) {
+    static QueryStringBuilder fromStream(IOSupplier<InputStream> supplier) {
         final StringBuilder builder = new StringBuilder();
         appendStreamToBuilder(supplier, builder);
-        return new JDBJBuilder(builder);
+        return new QueryStringBuilder(builder);
     }
 
-    static JDBJBuilder fromPath(Path path) {
+    static QueryStringBuilder fromPath(Path path) {
         final StringBuilder builder = new StringBuilder();
         appendPathToBuilder(path, builder);
-        return new JDBJBuilder(builder);
+        return new QueryStringBuilder(builder);
     }
 
-    static JDBJBuilder fromResource(String resourceName){
+    static QueryStringBuilder fromResource(String resourceName){
         final StringBuilder builder = new StringBuilder();
         appendResourceToBuilder(resourceName, builder);
-        return new JDBJBuilder(builder);
+        return new QueryStringBuilder(builder);
     }
 
-    static JDBJBuilder fromString(String queryString){
-        return new JDBJBuilder(new StringBuilder(queryString));
+    static QueryStringBuilder fromString(String queryString){
+        return new QueryStringBuilder(new StringBuilder(queryString));
     }
 
     private final StringBuilder stringBuilder;
 
-    private JDBJBuilder(StringBuilder stringBuilder) {
+    private QueryStringBuilder(StringBuilder stringBuilder) {
         this.stringBuilder = stringBuilder;
     }
 
-    public JDBJBuilder string(String string){
-        return new JDBJBuilder(clone(stringBuilder).append(string));
+    public QueryStringBuilder string(String string){
+        return new QueryStringBuilder(clone(stringBuilder).append(string));
     }
 
-    public JDBJBuilder reader(IOSupplier<Reader> supplier){
+    public QueryStringBuilder reader(IOSupplier<Reader> supplier){
         final StringBuilder newBuilder = clone(stringBuilder);
         appendReaderToBuilder(supplier, newBuilder);
-        return new JDBJBuilder(newBuilder);
+        return new QueryStringBuilder(newBuilder);
     }
 
-    public JDBJBuilder stream(IOSupplier<InputStream> supplier){
+    public QueryStringBuilder stream(IOSupplier<InputStream> supplier){
         final StringBuilder newBuilder = clone(stringBuilder);
         appendStreamToBuilder(supplier, newBuilder);
-        return new JDBJBuilder(newBuilder);
+        return new QueryStringBuilder(newBuilder);
     }
 
-    public JDBJBuilder path(Path path){
+    public QueryStringBuilder path(Path path){
         final StringBuilder newBuilder = clone(stringBuilder);
         appendPathToBuilder(path, newBuilder);
-        return new JDBJBuilder(newBuilder);
+        return new QueryStringBuilder(newBuilder);
     }
 
-    public JDBJBuilder resource(String resourceName){
+    public QueryStringBuilder resource(String resourceName){
         final StringBuilder newBuilder = clone(stringBuilder);
         appendResourceToBuilder(resourceName, newBuilder);
-        return new JDBJBuilder(newBuilder);
+        return new QueryStringBuilder(newBuilder);
     }
 
     public ReturnsQuery query() {
