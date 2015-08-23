@@ -1,9 +1,9 @@
-package com.github.randyp.jdbj.binding;
+package com.github.randyp.jdbj;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public interface PositionalBinding  {
+interface PositionalBinding  {
 
     int bind(PreparedStatement ps, int parameterIndex) throws SQLException;
 

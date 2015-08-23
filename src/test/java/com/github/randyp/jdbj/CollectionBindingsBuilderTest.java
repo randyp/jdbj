@@ -397,7 +397,7 @@ public class CollectionBindingsBuilderTest {
         }
     }
 
-    static class SimpleBuilder extends com.github.randyp.jdbj.test.SimpleBuilder {
+    static class SimpleBuilder extends com.github.randyp.jdbj.SimpleBuilder {
         public SimpleBuilder() {
             super(NamedParameterStatement.make("SELECT :binding as bound"));
         }

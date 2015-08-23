@@ -1,6 +1,5 @@
-package com.github.randyp.jdbj.binding;
+package com.github.randyp.jdbj;
 
-import com.github.randyp.jdbj.PreparedColumn;
 import com.github.randyp.jdbj.lambda.Binding;
 
 import java.sql.PreparedStatement;
@@ -9,15 +8,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public final class ListBinding implements PositionalBinding {
+final class ListBinding implements PositionalBinding {
 
     private final List<Binding> bindings;
 
-    public ListBinding(List<Binding> bindings) {
+    ListBinding(List<Binding> bindings) {
         this.bindings = Collections.unmodifiableList(new ArrayList<>(bindings));
     }
 
-    public List<Binding> getBindings() {
+    List<Binding> getBindings() {
         return bindings;
     }
 

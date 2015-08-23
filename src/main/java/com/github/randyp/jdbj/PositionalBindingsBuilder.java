@@ -2,7 +2,6 @@ package com.github.randyp.jdbj;
 
 
 import com.github.randyp.jdbj.lambda.Binding;
-import com.github.randyp.jdbj.lambda.PositionalBindingsBuilderFactory;
 
 import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;

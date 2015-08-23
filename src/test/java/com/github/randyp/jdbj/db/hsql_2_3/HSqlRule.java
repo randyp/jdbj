@@ -1,7 +1,6 @@
 package com.github.randyp.jdbj.db.hsql_2_3;
 
 import org.hsqldb.Server;
-import org.hsqldb.persist.HsqlProperties;
 import org.junit.rules.ExternalResource;
 
 import javax.sql.DataSource;

@@ -1,6 +1,6 @@
 package com.github.randyp.jdbj.db.sqllite_3_8;
 
-import com.github.randyp.jdbj.test.SimpleBuilder;
+import com.github.randyp.jdbj.SimpleBuilder;
 import com.github.randyp.jdbj.test.binding.value.*;
 import org.junit.ClassRule;
 import org.junit.Rule;

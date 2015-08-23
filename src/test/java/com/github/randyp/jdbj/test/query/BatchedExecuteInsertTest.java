@@ -1,14 +1,13 @@
 package com.github.randyp.jdbj.test.query;
 
 import com.github.randyp.jdbj.*;
-import com.github.randyp.jdbj.lambda.ResultSetMapper;
+import com.github.randyp.jdbj.lambda.ResultMapper;
 import com.github.randyp.jdbj.student.NewStudent;
 import com.github.randyp.jdbj.student.Student;
 import com.github.randyp.jdbj.student.StudentTest;
 import org.junit.Test;
 
 import java.math.BigDecimal;
-import java.sql.Connection;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -21,7 +20,7 @@ public abstract class BatchedExecuteInsertTest extends StudentTest {
     public void insertBatch() throws Exception {
         final NewStudent newStudent = new NewStudent("Ada10", "Dada10", new BigDecimal("3.1"));
 
-        ResultSetMapper<Long> keyMapper = rs -> rs.getLong(1);
+        ResultMapper<Long> keyMapper = rs -> rs.getLong(1);
         //noinspection deprecation
         BatchedExecuteInsert<Long> insertQuery = JDBJ.resource(Student.insert).insert(keyMapper)
                 .asBatch()
@@ -44,7 +43,7 @@ public abstract class BatchedExecuteInsertTest extends StudentTest {
                 new NewStudent("Ada11", "Dada11", new BigDecimal("3.1"))
         );
 
-        ResultSetMapper<Long> keyMapper = rs -> rs.getLong(1);
+        ResultMapper<Long> keyMapper = rs -> rs.getLong(1);
         //noinspection deprecation
         BatchedExecuteInsert<Long> insertQuery = JDBJ.resource(Student.insert).insert(keyMapper)
                 .asBatch();
@@ -69,7 +68,7 @@ public abstract class BatchedExecuteInsertTest extends StudentTest {
 
     @Test(expected = IllegalStateException.class)
     public void noBatchesAdded() throws Exception {
-        ResultSetMapper<Long> keyMapper = rs -> rs.getLong(1);
+        ResultMapper<Long> keyMapper = rs -> rs.getLong(1);
         //noinspection deprecation
         BatchedExecuteInsert<Long> insertQuery = JDBJ.resource(Student.insert)
                 .insert(keyMapper)
@@ -82,7 +81,7 @@ public abstract class BatchedExecuteInsertTest extends StudentTest {
     public void missingBindings() throws Exception {
         final NewStudent student = new NewStudent("Ada10", "Dada10", new BigDecimal("3.1"));
 
-        ResultSetMapper<Long> keyMapper = rs -> rs.getLong(1);
+        ResultMapper<Long> keyMapper = rs -> rs.getLong(1);
         JDBJ.resource(Student.insert)
                 .insert(keyMapper)
                 .asBatch()

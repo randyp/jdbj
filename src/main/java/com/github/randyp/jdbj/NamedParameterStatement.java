@@ -1,6 +1,5 @@
 package com.github.randyp.jdbj;
 
-import com.github.randyp.jdbj.binding.PositionalBinding;
 import com.github.randyp.jdbj.lexer.NamedParameterStatementLexer;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.Token;

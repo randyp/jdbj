@@ -2,10 +2,9 @@ package com.github.randyp.jdbj;
 
 import com.github.randyp.jdbj.lambda.Binding;
 import com.github.randyp.jdbj.lambda.ConnectionSupplier;
-import com.github.randyp.jdbj.lambda.ResultSetMapper;
+import com.github.randyp.jdbj.lambda.ResultMapper;
 
 import javax.annotation.concurrent.NotThreadSafe;
-import javax.annotation.concurrent.ThreadSafe;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
@@ -24,10 +23,9 @@ public class BatchedExecuteInsert<R> {
 
     private final List<ValueBindings> batches = new ArrayList<>();
     private final NamedParameterStatement statement;
-    private final ResultSetMapper<R> keysMapper;
+    private final ResultMapper<R> keysMapper;
 
-
-    BatchedExecuteInsert(NamedParameterStatement statement, ResultSetMapper<R> keysMapper) {
+    BatchedExecuteInsert(NamedParameterStatement statement, ResultMapper<R> keysMapper) {
         this.statement = statement;
         this.keysMapper = keysMapper;
     }

@@ -1,11 +1,7 @@
 package com.github.randyp.jdbj.db.hsql_2_3;
 
-import com.github.randyp.jdbj.FakeConnection;
-import com.github.randyp.jdbj.FakeDataSource;
-import com.github.randyp.jdbj.JDBJ;
 import com.github.randyp.jdbj.test.query.*;
 import org.junit.ClassRule;
-import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
@@ -13,8 +9,6 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-
-import static org.junit.Assert.assertEquals;
 
 @RunWith(Enclosed.class)
 public class QueriesTest {

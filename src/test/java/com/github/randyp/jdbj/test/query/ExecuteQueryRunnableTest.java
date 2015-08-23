@@ -3,7 +3,6 @@ package com.github.randyp.jdbj.test.query;
 import com.github.randyp.jdbj.JDBJ;
 import com.github.randyp.jdbj.student.NewStudent;
 import com.github.randyp.jdbj.student.StudentTest;
-import com.github.randyp.jdbj.test.binding.value.DBSupplier;
 import org.junit.Before;
 import org.junit.Test;
 

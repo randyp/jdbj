@@ -2,7 +2,7 @@ package com.github.randyp.jdbj.student;
 
 import com.github.randyp.jdbj.ExecuteQuery;
 import com.github.randyp.jdbj.JDBJ;
-import com.github.randyp.jdbj.SmartResultSet;
+import com.github.randyp.jdbj.SmartResult;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -11,15 +11,15 @@ import java.util.List;
 
 public class Student extends NewStudent {
 
-    public static final ExecuteQuery<List<Student>> selectAll = JDBJ.string("SELECT * FROM student ORDER BY id ASC").query()
+    public static final ExecuteQuery<List<Student>> selectAll = JDBJ.query("SELECT * FROM student ORDER BY id ASC")
             .map(Student::from)
             .toList();
 
-    public static Student from(SmartResultSet rs) throws SQLException {
-        return new Student(rs.getLongPrimitive("id"),
-                rs.getString("first_name"),
-                rs.getString("last_name"),
-                rs.getBigDecimal("gpa"));
+    public static Student from(SmartResult result) throws SQLException {
+        return new Student(result.getLongPrimitive("id"),
+                result.getString("first_name"),
+                result.getString("last_name"),
+                result.getBigDecimal("gpa"));
     }
 
     final long id;

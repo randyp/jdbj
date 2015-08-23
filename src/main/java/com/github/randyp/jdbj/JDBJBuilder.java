@@ -1,7 +1,7 @@
 package com.github.randyp.jdbj;
 
 import com.github.randyp.jdbj.lambda.IOSupplier;
-import com.github.randyp.jdbj.lambda.ResultSetMapper;
+import com.github.randyp.jdbj.lambda.ResultMapper;
 
 import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;
@@ -85,7 +85,7 @@ public class JDBJBuilder {
         return new ExecuteUpdate(NamedParameterStatement.make(stringBuilder.toString()));
     }
 
-    public <R> ExecuteInsert<R> insert(ResultSetMapper<R> keyMapper) {
+    public <R> ExecuteInsert<R> insert(ResultMapper<R> keyMapper) {
         return new ExecuteInsert<>(NamedParameterStatement.make(stringBuilder.toString()), keyMapper);
     }
 

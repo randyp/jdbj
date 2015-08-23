@@ -1,6 +1,6 @@
 package com.github.randyp.jdbj.test.binding.value;
 
-import com.github.randyp.jdbj.test.SimpleBuilder;
+import com.github.randyp.jdbj.SimpleBuilder;
 import org.junit.Test;
 
 import java.io.StringReader;

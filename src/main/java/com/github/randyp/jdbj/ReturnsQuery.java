@@ -1,6 +1,6 @@
 package com.github.randyp.jdbj;
 
-import com.github.randyp.jdbj.lambda.ResultSetMapper;
+import com.github.randyp.jdbj.lambda.ResultMapper;
 import com.github.randyp.jdbj.lambda.ResultSetRunnable;
 
 import javax.annotation.concurrent.Immutable;
@@ -18,7 +18,7 @@ public final class ReturnsQuery extends PositionalBindingsBuilder<ReturnsQuery> 
         super(statement, bindings, ReturnsQuery::new);
     }
 
-    public <R> MapQuery<R> map(ResultSetMapper<R> mapper){
+    public <R> MapQuery<R> map(ResultMapper<R> mapper){
         return new MapQuery<>(statement, bindings, mapper);
     }
 

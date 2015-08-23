@@ -1,7 +1,7 @@
 package com.github.randyp.jdbj.test.query;
 
 import com.github.randyp.jdbj.*;
-import com.github.randyp.jdbj.lambda.ResultSetMapper;
+import com.github.randyp.jdbj.lambda.ResultMapper;
 import com.github.randyp.jdbj.student.NewStudent;
 import com.github.randyp.jdbj.student.Student;
 import com.github.randyp.jdbj.student.StudentTest;
@@ -18,7 +18,7 @@ public abstract class ExecuteInsertTest extends StudentTest {
     @Test
     public void insertOne() throws Exception {
         final NewStudent newStudent = new NewStudent("Ada", "Dada", new BigDecimal("3.1"));
-        ResultSetMapper<Long> keyMapper = rs -> rs.getLong(1);
+        ResultMapper<Long> keyMapper = rs -> rs.getLong(1);
         final ExecuteInsert<Long> insertQuery = JDBJ.resource(Student.insert).insert(keyMapper)
                 .bindString(":first_name", newStudent.getFirstName())
                 .bindString(":last_name", newStudent.getLastName())

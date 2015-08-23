@@ -1,7 +1,7 @@
 package com.github.randyp.jdbj;
 
 import com.github.randyp.jdbj.lambda.ConnectionSupplier;
-import com.github.randyp.jdbj.lambda.ResultSetMapper;
+import com.github.randyp.jdbj.lambda.ResultMapper;
 
 import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;
@@ -14,14 +14,14 @@ import java.util.List;
 @ThreadSafe
 public final class ExecuteInsert<R> extends PositionalBindingsBuilder<ExecuteInsert<R>> {
 
-    private final ResultSetMapper<R> keysMapper;
+    private final ResultMapper<R> keysMapper;
 
-    ExecuteInsert(NamedParameterStatement statement, ResultSetMapper<R> keysMapper) {
+    ExecuteInsert(NamedParameterStatement statement, ResultMapper<R> keysMapper) {
         this(statement, PositionalBindings.empty(), keysMapper);
 
     }
 
-    ExecuteInsert(NamedParameterStatement statement, PositionalBindings bindings, ResultSetMapper<R> keysMapper) {
+    ExecuteInsert(NamedParameterStatement statement, PositionalBindings bindings, ResultMapper<R> keysMapper) {
         super(statement, bindings, (s, b)-> new ExecuteInsert<>(s, b, keysMapper));
         this.keysMapper = keysMapper;
     }

@@ -3,7 +3,7 @@ package com.github.randyp.jdbj.db.derby_10_11;
 import com.github.randyp.jdbj.ExecuteUpdate;
 import com.github.randyp.jdbj.JDBJ;
 import com.github.randyp.jdbj.NamedParameterStatement;
-import com.github.randyp.jdbj.test.SimpleBuilder;
+import com.github.randyp.jdbj.SimpleBuilder;
 import com.github.randyp.jdbj.test.binding.value.*;
 import org.junit.After;
 import org.junit.ClassRule;

@@ -3,13 +3,12 @@ package com.github.randyp.jdbj;
 import com.github.randyp.jdbj.lambda.ConnectionCallable;
 import com.github.randyp.jdbj.lambda.ConnectionRunnable;
 import com.github.randyp.jdbj.lambda.IOSupplier;
-import com.github.randyp.jdbj.lambda.ResultSetMapper;
+import com.github.randyp.jdbj.lambda.ResultMapper;
 
 import javax.annotation.Nullable;
 import javax.sql.DataSource;
 import java.io.InputStream;
 import java.io.Reader;
-import java.net.URL;
 import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -118,7 +117,7 @@ public final class JDBJ {
         return string(query).update();
     }
 
-    public static <R> ExecuteInsert<R> insert(String query, ResultSetMapper<R> keyMapper) {
+    public static <R> ExecuteInsert<R> insert(String query, ResultMapper<R> keyMapper) {
         return string(query).insert(keyMapper);
     }
 

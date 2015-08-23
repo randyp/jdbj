@@ -1,20 +1,19 @@
-package com.github.randyp.jdbj.binding;
+package com.github.randyp.jdbj;
 
-import com.github.randyp.jdbj.PreparedColumn;
 import com.github.randyp.jdbj.lambda.Binding;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public final class ValueBinding implements PositionalBinding {
+final class ValueBinding implements PositionalBinding {
 
     private final Binding binding;
 
-    public ValueBinding(Binding binding) {
+    ValueBinding(Binding binding) {
         this.binding = binding;
     }
 
-    public Binding getBinding() {
+    Binding getBinding() {
         return binding;
     }
 

@@ -1,6 +1,6 @@
 package com.github.randyp.jdbj.db.mysql_5_1;
 
-import com.github.randyp.jdbj.test.SimpleBuilder;
+import com.github.randyp.jdbj.SimpleBuilder;
 import com.github.randyp.jdbj.test.binding.value.*;
 import org.junit.ClassRule;
 import org.junit.Test;

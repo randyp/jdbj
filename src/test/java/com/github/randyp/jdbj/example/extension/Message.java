@@ -1,6 +1,6 @@
 package com.github.randyp.jdbj.example.extension;
 
-import com.github.randyp.jdbj.SmartResultSet;
+import com.github.randyp.jdbj.SmartResult;
 import org.joda.time.DateTime;
 
 import java.sql.SQLException;
@@ -9,7 +9,7 @@ import static com.github.randyp.jdbj.example.extension.ResultSetGetters.getDateT
 
 public class Message extends NewMessage {
 
-    public static Message from(SmartResultSet rs) throws SQLException {
+    public static Message from(SmartResult rs) throws SQLException {
         return new Message(
                 rs.getLongPrimitive("id"),
                 rs.getString("content"),

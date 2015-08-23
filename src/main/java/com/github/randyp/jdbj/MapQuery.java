@@ -1,7 +1,7 @@
 package com.github.randyp.jdbj;
 
 
-import com.github.randyp.jdbj.lambda.ResultSetMapper;
+import com.github.randyp.jdbj.lambda.ResultMapper;
 
 import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;
@@ -14,9 +14,9 @@ import java.util.function.Function;
 @ThreadSafe
 public final class MapQuery<R> extends PositionalBindingsBuilder<MapQuery<R>> {
 
-    private final ResultSetMapper<R> mapper;
+    private final ResultMapper<R> mapper;
 
-    MapQuery(NamedParameterStatement statement, PositionalBindings bindings, ResultSetMapper<R> mapper) {
+    MapQuery(NamedParameterStatement statement, PositionalBindings bindings, ResultMapper<R> mapper) {
         super(statement, bindings, (s,b)->new MapQuery<>(s,b,mapper));
         this.mapper = mapper;
     }

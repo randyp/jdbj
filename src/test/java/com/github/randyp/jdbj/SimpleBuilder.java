@@ -1,10 +1,6 @@
-package com.github.randyp.jdbj.test;
+package com.github.randyp.jdbj;
 
-import com.github.randyp.jdbj.NamedParameterStatement;
-import com.github.randyp.jdbj.PositionalBindings;
-import com.github.randyp.jdbj.PositionalBindingsBuilder;
-import com.github.randyp.jdbj.SmartResultSet;
-import com.github.randyp.jdbj.lambda.ResultSetMapper;
+import com.github.randyp.jdbj.lambda.ResultMapper;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -36,7 +32,7 @@ public class SimpleBuilder extends PositionalBindingsBuilder<SimpleBuilder> {
         super(statement, bindings, SimpleBuilder::new);
     }
 
-    public <R> R execute(DataSource db, ResultSetMapper<R> mapper) throws SQLException {
+    public <R> R execute(DataSource db, ResultMapper<R> mapper) throws SQLException {
         checkAllBindingsPresent();
 
         try(Connection connection = db.getConnection()){
@@ -44,7 +40,7 @@ public class SimpleBuilder extends PositionalBindingsBuilder<SimpleBuilder> {
         }
     }
 
-    public <R> R execute(Connection connection, ResultSetMapper<R> mapper) throws SQLException {
+    public <R> R execute(Connection connection, ResultMapper<R> mapper) throws SQLException {
         checkAllBindingsPresent();
 
         final R value;

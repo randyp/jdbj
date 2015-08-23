@@ -1,7 +1,7 @@
 package com.github.randyp.jdbj;
 
 import com.github.randyp.jdbj.lambda.ConnectionSupplier;
-import com.github.randyp.jdbj.lambda.ResultSetMapper;
+import com.github.randyp.jdbj.lambda.ResultMapper;
 
 import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;
@@ -18,9 +18,9 @@ import java.util.stream.StreamSupport;
 @ThreadSafe
 public final class StreamQuery<R> extends PositionalBindingsBuilder<StreamQuery<R>> {
 
-    private final ResultSetMapper<R> mapper;
+    private final ResultMapper<R> mapper;
 
-    StreamQuery(NamedParameterStatement statement, PositionalBindings bindings, ResultSetMapper<R> mapper) {
+    StreamQuery(NamedParameterStatement statement, PositionalBindings bindings, ResultMapper<R> mapper) {
         super(statement, bindings, ((s, b) -> new StreamQuery<>(s, b, mapper)));
         this.mapper = mapper;
     }

@@ -2,12 +2,14 @@ package com.github.randyp.jdbj;
 
 
 import com.github.randyp.jdbj.lambda.ConnectionSupplier;
-import com.github.randyp.jdbj.lambda.ResultSetToResult;
 
 import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.sql.DataSource;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 @Immutable
 @ThreadSafe

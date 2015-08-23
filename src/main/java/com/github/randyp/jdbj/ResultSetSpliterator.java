@@ -1,6 +1,6 @@
 package com.github.randyp.jdbj;
 
-import com.github.randyp.jdbj.lambda.ResultSetMapper;
+import com.github.randyp.jdbj.lambda.ResultMapper;
 
 import javax.annotation.Nullable;
 import java.sql.ResultSet;
@@ -10,9 +10,9 @@ import java.util.function.Consumer;
 public class ResultSetSpliterator<R> implements Spliterator<R> {
 
     private final SmartResultSet rs;
-    private final ResultSetMapper<R> mapper;
+    private final ResultMapper<R> mapper;
 
-    public ResultSetSpliterator(ResultSet rs, ResultSetMapper<R> mapper) {
+    public ResultSetSpliterator(ResultSet rs, ResultMapper<R> mapper) {
         this.rs = new SmartResultSet(rs);
         this.mapper = mapper;
     }

@@ -1,5 +1,6 @@
-package com.github.randyp.jdbj.binding;
+package com.github.randyp.jdbj;
 
+import com.github.randyp.jdbj.ListBinding;
 import org.junit.Test;
 
 import java.util.ArrayList;

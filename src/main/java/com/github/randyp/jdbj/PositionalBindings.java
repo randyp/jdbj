@@ -1,8 +1,5 @@
 package com.github.randyp.jdbj;
 
-import com.github.randyp.jdbj.binding.ListBinding;
-import com.github.randyp.jdbj.binding.PositionalBinding;
-import com.github.randyp.jdbj.binding.ValueBinding;
 import jdk.nashorn.internal.ir.annotations.Immutable;
 import com.github.randyp.jdbj.lambda.Binding;
 

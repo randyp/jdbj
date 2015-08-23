@@ -1,7 +1,7 @@
 package com.github.randyp.jdbj;
 
 import com.github.randyp.jdbj.db.h2_1_4.H2Rule;
-import com.github.randyp.jdbj.lambda.ResultSetMapper;
+import com.github.randyp.jdbj.lambda.ResultMapper;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
@@ -100,7 +100,7 @@ public class PositionalBindingsBuilderTest {
             super(statement, bindings, TestBuilder::new);
         }
 
-        <R> R execute(Connection connection, ResultSetMapper<R> mapper) throws SQLException {
+        <R> R execute(Connection connection, ResultMapper<R> mapper) throws SQLException {
             checkAllBindingsPresent();
 
             final R value;
