@@ -2,18 +2,25 @@ package com.github.randyp.jdbj;
 
 import com.github.randyp.jdbj.lambda.Binding;
 import com.github.randyp.jdbj.lambda.ConnectionSupplier;
+import com.github.randyp.jdbj.lambda.ResultMapper;
 
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Worth noting: BatchedUpdateQuery is Mutable
+ * Encapsulates {@link PreparedStatement#executeBatch()} while adding most of the JDBJ features.
+ * <p>
+ * Worth noting: {@link BatchedExecuteUpdate} is Mutable, unlike most other query builders. 
+ * <p>
+ * @see BatchedExecuteInsert if you do need generated keys
  */
+@SuppressWarnings("deprecation")
 @NotThreadSafe
 public class BatchedExecuteUpdate {
 

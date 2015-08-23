@@ -11,6 +11,10 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * Knows how to bind {@link Collection} to a {@link PreparedColumn} 
+ * @param <E>
+ */
 @Immutable
 @ThreadSafe
 public abstract class CollectionBindingsBuilder<E> {

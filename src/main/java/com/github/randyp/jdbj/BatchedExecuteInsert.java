@@ -11,21 +11,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Worth noting: BatchedInsertReturnKeysQuery is Mutable
- *
+ * Encapsulates {@link PreparedStatement#executeBatch()} with {@link Statement#RETURN_GENERATED_KEYS} while adding most of the JDBJ features.
+ * <p>
+ * Worth noting: {@link BatchedExecuteInsert} is Mutable, unlike most other query builders. 
+ * <p>
  * Also worth noting: returning keys during batch execution is generally not supported.
- * Usually (Oracle, H2) only the keys from the last batch will be returned.
- * However, it is supported by postgres, mysql, hsql
+ * Often times only the keys from the last batch will be returned (Oracle, H2).
+ * However, this class is safe to use with current versions of postgres, mysql, and hsql.
+ * @param <K> type of the returned keys
+ * @see BatchedExecuteUpdate if you do not need generated keys
+ * @see ResultMapper
  */
+@SuppressWarnings("deprecation")
 @NotThreadSafe
 @Deprecated //no plans to remove class, just wanted you to read the above documentation about lack of support
-public class BatchedExecuteInsert<R> {
+public class BatchedExecuteInsert<K> {
 
     private final List<ValueBindings> batches = new ArrayList<>();
     private final NamedParameterStatement statement;
-    private final ResultMapper<R> keysMapper;
+    private final ResultMapper<K> keysMapper;
 
-    BatchedExecuteInsert(NamedParameterStatement statement, ResultMapper<R> keysMapper) {
+    BatchedExecuteInsert(NamedParameterStatement statement, ResultMapper<K> keysMapper) {
         this.statement = statement;
         this.keysMapper = keysMapper;
     }
@@ -34,23 +40,23 @@ public class BatchedExecuteInsert<R> {
         return new Batch();
     }
 
-    public List<R> execute(DataSource db) throws SQLException {
+    public List<K> execute(DataSource db) throws SQLException {
         return execute(db::getConnection);
     }
 
-    public List<R> execute(ConnectionSupplier db) throws SQLException {
+    public List<K> execute(ConnectionSupplier db) throws SQLException {
         checkNotEmpty();
         try(Connection connection = db.getConnection()){
             return execute(connection);
         }
     }
 
-    public List<R> execute(Connection connection) throws SQLException {
+    public List<K> execute(Connection connection) throws SQLException {
         checkNotEmpty();
 
         final String sql = statement.jdbcSql(batches.get(0));
 
-        final List<R> keys = new ArrayList<>();
+        final List<K> keys = new ArrayList<>();
         try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             for (ValueBindings batch : batches) {
                 statement.bind(ps, batch);
@@ -90,8 +96,7 @@ public class BatchedExecuteInsert<R> {
             return new Batch(batch.valueBinding(name, binding));
         }
 
-        @SuppressWarnings("deprecation")
-        public BatchedExecuteInsert<R> endBatch(){
+        public BatchedExecuteInsert<K> endBatch(){
             statement.checkAllBindingsPresent(batch);
             batches.add(batch);
             batch = null;
