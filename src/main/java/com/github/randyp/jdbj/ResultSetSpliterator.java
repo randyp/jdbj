@@ -7,6 +7,13 @@ import java.sql.ResultSet;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 
+/**
+ * Wrapper around {@link ResultSet} and {@link ResultMapper} to create a {@link Spliterator} or {@link R}.
+ * <p>
+ * Does not close the {@link ResultSet}.
+ * @param <R>
+ * @see StreamQuery
+ */
 public class ResultSetSpliterator<R> implements Spliterator<R> {
 
     private final SmartResultSet rs;
