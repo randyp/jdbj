@@ -84,7 +84,7 @@ Thank you to:
 * [x] can append multiple string sources together to build a query
 * [x] !!!!NOT IMPLEMENTED!!! Hacky-yet-compatible batch insert & update queries - not implemented because the databases which do not implement returning mulitple keys in batch also do not return multiple keys for a single insert statement with multiple rows 
 * [x] Java Doc
-* [ ] Bind Beans somehow
+* [x] Bind Beans somehow
 * [ ] save resource names at top of resource queries
 
 #### 0.1.7

@@ -89,10 +89,6 @@ public final class NamedParameterStatement {
         }
     }
 
-    /**
-     * Looks for named parameters missing from the provided {@link ValueBindings} and throws {@link IllegalArgumentException} if any are missing.
-     * @param bindings
-     */
     public void checkAllBindingsPresent(Bindings bindings) {
         if(bindings == null){
             throw new IllegalArgumentException("bindings cannot be null");
