@@ -26,13 +26,13 @@ public class HSqlRule extends ExternalResource implements DataSource {
     @Override
     public Connection getConnection() throws SQLException {
         checkDB();
-        return DriverManager.getConnection("jdbc:hsqldb:hsql://localhost/jdbj", "sa", "");
+        return DriverManager.getConnection("jdbc:hsqldb:hsql://localhost/jdbjdb", "sa", "");
     }
 
     @Override
     public Connection getConnection(String username, String password) throws SQLException {
         checkDB();
-        return DriverManager.getConnection("jdbc:hsqldb:hsql://localhost/jdbj", username, password);
+        return DriverManager.getConnection("jdbc:hsqldb:hsql://localhost/jdbjdb", username, password);
     }
 
     @Override
@@ -75,7 +75,7 @@ public class HSqlRule extends ExternalResource implements DataSource {
         this.server = new Server();
         server.setLogWriter(null);
         server.setSilent(true);
-        server.setDatabaseName(0, "jdbj");
+        server.setDatabaseName(0, "jdbjdb");
         server.setDatabasePath(0, "file:jdbjdb");
         server.start();
     }

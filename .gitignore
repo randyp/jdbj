@@ -12,3 +12,12 @@ target
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+# from tests
+derby.log
+jdbjdb
+jdbjdb.log
+jdbjdb.properties
+jdbjdb.script
+jdbjdb.db
+jdbjdb.lck

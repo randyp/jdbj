@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 
 public class DerbyRule extends ExternalResource implements DataSource {
 
-    private final String url = "jdbc:derby:jdbj;create=true";
+    private final String url = "jdbc:derby:jdbjdb;create=true";
     private final Properties defaultProperties = new Properties();
 
     private boolean open;

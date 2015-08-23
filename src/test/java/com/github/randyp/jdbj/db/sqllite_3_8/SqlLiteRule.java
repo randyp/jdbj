@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 
 public class SqlLiteRule extends ExternalResource implements DataSource {
 
-    private final String url = "jdbc:sqlite:jdbj.db";
+    private final String url = "jdbc:sqlite:jdbjdb.db";
     private final Properties defaultProperties = new Properties();
 
     public SqlLiteRule() {
