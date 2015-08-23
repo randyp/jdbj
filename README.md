@@ -77,7 +77,7 @@ Thank you to:
 
 #### Release
 ``` sh
-mvn release:clean release:prepare -B && mvn release:perform
+./release.sh
 ```
 
 #### 0.1.6
