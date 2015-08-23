@@ -4,6 +4,8 @@ import com.github.randyp.jdbj.lambda.Binding;
 import com.github.randyp.jdbj.lambda.ConnectionSupplier;
 import com.github.randyp.jdbj.lambda.ResultSetMapper;
 
+import javax.annotation.concurrent.NotThreadSafe;
+import javax.annotation.concurrent.ThreadSafe;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ import java.util.List;
  * Usually (Oracle, H2) only the keys from the last batch will be returned.
  * However, it is supported by postgres, mysql, hsql
  */
+@NotThreadSafe
 @Deprecated //no plans to remove class, just wanted you to read the above documentation about lack of support
 public class BatchedExecuteInsert<R> {
 

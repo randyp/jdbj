@@ -4,11 +4,10 @@ import com.github.randyp.jdbj.lambda.ResultSetMapper;
 import com.github.randyp.jdbj.lambda.ResultSetRunnable;
 
 import javax.annotation.concurrent.Immutable;
+import javax.annotation.concurrent.ThreadSafe;
 
-/**
- * Phase 2 Builder
- */
 @Immutable
+@ThreadSafe
 public final class ReturnsQuery extends PositionalBindingsBuilder<ReturnsQuery> {
 
     ReturnsQuery(NamedParameterStatement statement) {

@@ -5,10 +5,12 @@ import com.github.randyp.jdbj.lambda.ConnectionSupplier;
 import com.github.randyp.jdbj.lambda.ResultSetToResult;
 
 import javax.annotation.concurrent.Immutable;
+import javax.annotation.concurrent.ThreadSafe;
 import javax.sql.DataSource;
 import java.sql.*;
 
 @Immutable
+@ThreadSafe
 public final class ExecuteQuery<R> extends PositionalBindingsBuilder<ExecuteQuery<R>> {
 
     private final ResultSetToResult<R> toResult;

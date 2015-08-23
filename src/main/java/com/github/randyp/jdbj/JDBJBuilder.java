@@ -4,6 +4,7 @@ import com.github.randyp.jdbj.lambda.IOSupplier;
 import com.github.randyp.jdbj.lambda.ResultSetMapper;
 
 import javax.annotation.concurrent.Immutable;
+import javax.annotation.concurrent.ThreadSafe;
 import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
@@ -11,6 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
 @Immutable
+@ThreadSafe
 public class JDBJBuilder {
     
     static JDBJBuilder fromReader(IOSupplier<Reader> supplier) {

@@ -4,15 +4,14 @@ import com.github.randyp.jdbj.lambda.ConnectionSupplier;
 import com.github.randyp.jdbj.lambda.ResultSetMapper;
 
 import javax.annotation.concurrent.Immutable;
+import javax.annotation.concurrent.ThreadSafe;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Phase 2 Builder
- */
 @Immutable
+@ThreadSafe
 public final class ExecuteInsert<R> extends PositionalBindingsBuilder<ExecuteInsert<R>> {
 
     private final ResultSetMapper<R> keysMapper;

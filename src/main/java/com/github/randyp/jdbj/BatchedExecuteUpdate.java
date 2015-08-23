@@ -3,6 +3,7 @@ package com.github.randyp.jdbj;
 import com.github.randyp.jdbj.lambda.Binding;
 import com.github.randyp.jdbj.lambda.ConnectionSupplier;
 
+import javax.annotation.concurrent.NotThreadSafe;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,6 +14,7 @@ import java.util.List;
 /**
  * Worth noting: BatchedUpdateQuery is Mutable
  */
+@NotThreadSafe
 public class BatchedExecuteUpdate {
 
     private final List<ValueBindings> batches = new ArrayList<>();

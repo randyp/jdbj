@@ -3,15 +3,14 @@ package com.github.randyp.jdbj;
 import com.github.randyp.jdbj.lambda.ConnectionSupplier;
 
 import javax.annotation.concurrent.Immutable;
+import javax.annotation.concurrent.ThreadSafe;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-/**
- * Phase 2 Builder
- */
 @Immutable
+@ThreadSafe
 public final class ExecuteUpdate extends PositionalBindingsBuilder<ExecuteUpdate> {
 
     ExecuteUpdate(NamedParameterStatement statement) {

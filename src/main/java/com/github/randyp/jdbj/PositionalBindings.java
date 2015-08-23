@@ -6,9 +6,11 @@ import com.github.randyp.jdbj.binding.ValueBinding;
 import jdk.nashorn.internal.ir.annotations.Immutable;
 import com.github.randyp.jdbj.lambda.Binding;
 
+import javax.annotation.concurrent.ThreadSafe;
 import java.util.*;
 
 @Immutable
+@ThreadSafe
 public class PositionalBindings implements ValueBindings {
 
     public static PositionalBindings empty() {

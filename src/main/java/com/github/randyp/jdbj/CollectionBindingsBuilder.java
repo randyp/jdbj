@@ -2,6 +2,8 @@ package com.github.randyp.jdbj;
 
 import com.github.randyp.jdbj.lambda.Binding;
 
+import javax.annotation.concurrent.Immutable;
+import javax.annotation.concurrent.ThreadSafe;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -9,6 +11,8 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@Immutable
+@ThreadSafe
 public abstract class CollectionBindingsBuilder<E> {
 
     public abstract E bindList(String name, List<Binding> bindings);

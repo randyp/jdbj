@@ -5,16 +5,15 @@ import com.github.randyp.jdbj.lambda.ConnectionSupplier;
 import com.github.randyp.jdbj.lambda.ResultSetRunnable;
 
 import javax.annotation.concurrent.Immutable;
+import javax.annotation.concurrent.ThreadSafe;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- * Phase 3 Builder
- */
 @Immutable
+@ThreadSafe
 public final class ExecuteQueryRunnable extends PositionalBindingsBuilder<ExecuteQueryRunnable> {
 
     private final ResultSetRunnable runnable;

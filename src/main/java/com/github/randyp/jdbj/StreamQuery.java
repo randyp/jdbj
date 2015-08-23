@@ -4,6 +4,7 @@ import com.github.randyp.jdbj.lambda.ConnectionSupplier;
 import com.github.randyp.jdbj.lambda.ResultSetMapper;
 
 import javax.annotation.concurrent.Immutable;
+import javax.annotation.concurrent.ThreadSafe;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,6 +15,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 @Immutable
+@ThreadSafe
 public final class StreamQuery<R> extends PositionalBindingsBuilder<StreamQuery<R>> {
 
     private final ResultSetMapper<R> mapper;

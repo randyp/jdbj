@@ -5,11 +5,13 @@ import com.github.randyp.jdbj.lambda.Binding;
 import com.github.randyp.jdbj.lambda.PositionalBindingsBuilderFactory;
 
 import javax.annotation.concurrent.Immutable;
+import javax.annotation.concurrent.ThreadSafe;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
 @Immutable
+@ThreadSafe
 public class PositionalBindingsBuilder<E extends PositionalBindingsBuilder<E>> extends CollectionBindingsBuilder<E> implements ValueBindingsBuilder<E> {
 
     final NamedParameterStatement statement;

@@ -6,6 +6,7 @@ import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.Token;
 
 import javax.annotation.concurrent.Immutable;
+import javax.annotation.concurrent.ThreadSafe;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Collections;
@@ -15,6 +16,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Immutable
+@ThreadSafe
 public final class NamedParameterStatement {
 
     public static NamedParameterStatement make(String sql){

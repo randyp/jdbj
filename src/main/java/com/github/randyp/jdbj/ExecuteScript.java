@@ -6,6 +6,7 @@ import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.Token;
 
 import javax.annotation.concurrent.Immutable;
+import javax.annotation.concurrent.ThreadSafe;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Immutable
+@ThreadSafe
 public final class ExecuteScript extends PositionalBindingsBuilder<ExecuteScript> {
 
     public static ExecuteScript from(String script) {

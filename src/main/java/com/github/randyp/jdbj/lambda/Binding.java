@@ -14,7 +14,7 @@ import java.sql.SQLException;
  * Example using common bindings:
  * <pre>
  * {@code
- * List<Student> students = JDBJ.string("SELECT * FROM student LIMIT :limit").query()
+ * List<Student> students = JDBJ.query("SELECT * FROM student LIMIT :limit")
  *                             .map(Student::from).toList()
  *                             .bindInt(":limit", 10)
  *                             .execute(db);
@@ -24,7 +24,7 @@ import java.sql.SQLException;
  * Example using lambda:
  * <pre>
  * {@code
- * List<Student> students = JDBJ.string("SELECT * FROM student WHERE :lower <= id AND id < :upper").query()
+ * List<Student> students = JDBJ.query("SELECT * FROM student WHERE :lower <= id AND id < :upper")
  *                             .map(Student::from).toList()
  *                             .bindLong(":lower", range.hasLower() ? range.lower() : 0)
  *                             .bind(":upper", pc->{
@@ -41,8 +41,7 @@ import java.sql.SQLException;
  * Example using subclass:
  * <pre>
  * {@code
- * List<Message> messages = JDBJ.string("SELECT * FROM message where created_dtm <= :max_dtm ORDER BY created_dtm DESC")
- *                             .query()
+ * List<Message> messages = JDBJ.query("SELECT * FROM message where created_dtm <= :max_dtm ORDER BY created_dtm DESC")
  *                             .map(Message::from).toList()
  *                             .bind(":max_dtm", new DateTimeBinding.Now())
  *                             .execute(db);
