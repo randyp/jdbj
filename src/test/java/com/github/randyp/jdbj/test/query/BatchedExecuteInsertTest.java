@@ -88,18 +88,22 @@ public abstract class BatchedExecuteInsertTest extends StudentTest {
                 .addBatch();
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void batchAlreadyEnded() throws Exception {
+    @Test
+    public void batchAddedMultipleTimes() throws Exception {
         final NewStudent student = new NewStudent("Ada10", "Dada10", new BigDecimal("3.1"));
 
-        final BatchedExecuteInsert<Long>.Batch batch = JDBJ.resource(Student.insert)
+        final BatchedExecuteInsert<Long> batchInsert = JDBJ.resource(Student.insert)
                 .insert(rs -> rs.getLong(1))
-                .asBatch()
+                .asBatch();
+        final BatchedExecuteInsert<Long>.Batch batch = batchInsert
                 .startBatch()
                 .bindString(":first_name", student.getFirstName())
                 .bindString(":last_name", student.getLastName())
                 .bindBigDecimal(":gpa", student.getGpa());
 
         batch.addBatch();
+        batch.addBatch();
+        batchInsert.execute(db());
+        assertEquals(2, Student.selectAll.execute(db()).size());
     }
 }
