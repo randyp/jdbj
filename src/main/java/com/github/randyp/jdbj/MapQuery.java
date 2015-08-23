@@ -12,7 +12,11 @@ import java.util.function.Function;
 
 /**
  * Use to return lists or streams of objects from queries, and related behaviour.
- * <p>
+ * <pre>
+ * {@code
+ * List<Student> students = JDBJ.query("SELECT * FROM student").map(Student::from).toList().execute(db);
+ * }
+ * </pre>
  * Is {@link Immutable}, so you will need to (re)assign to a variable after every binding or call to {@link MapQuery#remap(Function)}.
  * <p>
  * Encapsulates building of {@link ExecuteQuery} or {@link StreamQuery} using a {@link ResultMapper}.

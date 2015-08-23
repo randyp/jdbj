@@ -14,8 +14,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Insert multiple rows into the database using jdbc batch functionality. Does not allow binding of collections, since generated sql must be same for all batches.
- * <p>
+ * Insert multiple rows into the database using jdbc batch functionality. Does not allow binding of collections, since generated sql must be same for all batches. Example:
+ * <pre>
+ * {@code
+ * ExecuteInsert<Long> insert = JDBJ.insert("INSERT INTO student(first_name, last_name, gpa)" +
+ * " VALUES (:first_name, :last_name, :gpa)", rs -> rs.getLong(1));
+ *
+ * List<NewStudent> newStudents = Arrays.asList(
+ * new NewStudent("Ada", "Lovelace", new BigDecimal("4.00")),
+ * new NewStudent("Haskell", "Curry", new BigDecimal("4.00"))
+ * );
+ * BatchedExecuteInsert<Long> batchInsert = insert.asBatch();
+ * for (NewStudent newStudent : newStudents) {
+ *     batchInsert.startBatch()
+ *     .bindString(":first_name", newStudent.getFirstName())
+ *     .bindString(":last_name", newStudent.getLastName())
+ *     .bindBigDecimal(":gpa", newStudent.getGpa())
+ *     .addBatch();
+ * }
+ * List<Long> generatedKeys = batchInsert.execute(db);
+ * }
+ * </pre>
  * Encapsulates the execution of {@link PreparedStatement#executeBatch()} with {@link Statement#RETURN_GENERATED_KEYS} while adding most of the JDBJ features.
  * <p>
  * Worth noting: {@link BatchedExecuteInsert} is Mutable, but individual batches {@link com.github.randyp.jdbj.BatchedExecute.Batch} are {@link Immutable}.

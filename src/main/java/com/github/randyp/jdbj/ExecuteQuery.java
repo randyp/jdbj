@@ -12,8 +12,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Runs jdbc query, returns result(s).
- * <p>
+ * Runs jdbc query, returns result(s). Example:
+ * <pre>
+ * {@code
+ * List<Student> students = JDBJ.query("SELECT * FROM student").map(Student::from).toList().execute(db);
+ * }     
+ * </pre>
  * Is {@link Immutable}, so you will need to (re)assign to a variable after every binding.
  * <p>
  * Encapsulates execution of {@link PreparedStatement#executeQuery()} for read only result sets, while adding JDBJ features.

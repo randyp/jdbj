@@ -11,7 +11,18 @@ import java.sql.SQLException;
 
 /**
  * Perform a single sql update statement. 
- * <p>
+ * <pre>
+ * {@code
+ * * <pre>
+ * {@code
+ * ExecuteUpdate updateGPA = JDBJ.update("UPDATE student set gpa = :gpa WHERE id = :id");
+ * updateGPA.bindBigDecimal(":gpa", BigDecimal.ZERO)
+ *     .bindLong(":id", 1L)
+ *     .execute(db);
+ * }     
+ * </pre>
+ * }    
+ * </pre>
  * Is {@link Immutable}, so you will need to (re)assign to a variable after every binding.
  * <p>
  * Encapsulates the execution of {@link PreparedStatement#executeUpdate()} while adding JDBJ features.

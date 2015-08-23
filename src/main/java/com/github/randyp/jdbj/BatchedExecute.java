@@ -4,7 +4,6 @@ import com.github.randyp.jdbj.lambda.Binding;
 
 import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.NotThreadSafe;
-import javax.annotation.concurrent.ThreadSafe;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +32,7 @@ abstract class BatchedExecute<P> {
     abstract P chainThis();
 
     @Immutable
-    @ThreadSafe
+    @NotThreadSafe
     public class Batch implements ValueBindingsBuilder<Batch> {
 
         private final ValueBindings batch;
@@ -50,7 +49,7 @@ abstract class BatchedExecute<P> {
         public Batch bind(String name, Binding binding) {
             return new Batch(batch.valueBinding(name, binding));
         }
-
+        
         public P addBatch(){
             statement.checkAllBindingsPresent(batch);
             batches.add(batch);

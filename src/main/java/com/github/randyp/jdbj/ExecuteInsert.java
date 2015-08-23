@@ -11,8 +11,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Perform a single sql insert statement, such as inserting a single row to the database.
- * <p>
+ * Perform a single sql insert statement, such as inserting a single row to the database. Example:
+ * <pre>
+ * {@code 
+ * ExecuteInsert<Long> insert = JDBJ.insert("INSERT INTO student(first_name, last_name, gpa)" +
+ *     " VALUES (:first_name, :last_name, :gpa)", rs -> rs.getLong(1));
+ * final Optional<Long> generatedKey = insert
+ *     .bindString(":first_name", "Ada")
+ *     .bindString(":last_name", "Lovelace")
+ *     .bindBigDecimal(":gpa", new BigDecimal("4.00"))
+ *     .execute(db).stream().findFirst();
+ * }     
+ * </pre>
  * Is {@link Immutable}, so you will need to (re)assign to a variable after every binding.
  * <p>     
  * Encapsulates the execution of {@link PreparedStatement#executeUpdate()} with {@link Statement#RETURN_GENERATED_KEYS} while adding most of the JDBJ features.

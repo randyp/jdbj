@@ -10,8 +10,13 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * Execute a single sql statement.
- * <p>
+ * Execute a single sql statement. Example:
+ * <pre>
+ * {@code
+ * JDBJ.statement("CREATE TABLE student(id SERIAL, first_name VARCHAR, last_name VARCHAR, gpa VARCHAR)")
+ *     .execute(db);
+ * }     
+ * </pre>
  * Is {@link Immutable}, so you will need to (re)assign to a variable after every binding.
  * <p>
  * Encapsulates the execution of {@link PreparedStatement#execute()} while adding JDBJ features.

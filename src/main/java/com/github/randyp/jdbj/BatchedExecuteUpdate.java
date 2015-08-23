@@ -10,8 +10,22 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * Updates multiple rows in the database using jdbc batch functionality. Does not allow binding of collections, since generated sql must be same for all batches.
- * <p>
+ * Updates multiple rows in the database using jdbc batch functionality. Does not allow binding of collections, since generated sql must be same for all batches. Example:
+ * <pre>
+ * {@code
+ * ExecuteUpdate updateGPA = JDBJ.update("UPDATE student set gpa = :gpa WHERE id = :id");
+ * updateGPA.asBatch()
+ *     .startBatch()
+ *     .bindBigDecimal(":gpa", BigDecimal.ZERO)
+ *     .bindLong(":id", 1L)
+ *     .addBatch()
+ *     .startBatch()
+ *     .bindBigDecimal(":gpa", BigDecimal.ZERO)
+ *     .bindLong(":id", 2L)
+ *     .addBatch()
+ *     .execute(db);
+ * }     
+ * </pre>
  * Encapsulates the execution of {@link PreparedStatement#executeBatch()} while adding most of the JDBJ features.
  * <p>
  * Worth noting: {@link BatchedExecuteUpdate} is Mutable, but individual batches {@link com.github.randyp.jdbj.BatchedExecute.Batch} are {@link Immutable}. 

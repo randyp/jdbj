@@ -16,8 +16,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Execute a series of sql statements separated by {@code ';'}.
- * <p>
+ * Execute a series of sql statements separated by {@code ';'}. Example:
+ * <pre>
+ * {@code
+ * String create = "CREATE TABLE student(id SERIAL, first_name VARCHAR, last_name VARCHAR, gpa VARCHAR)";
+ * String addPrimaryKey = "ALTER student add PRIMARY KEY(id)"
+ * JDBJ.script(create + ";" + addPrimaryKey)
+ *     .execute(db);
+ * }    
+ * </pre>
  * Is {@link Immutable}, so you will need to (re)assign to a variable after every binding.
  * <p>
  * Encapsulates the execution of multiple {@link PreparedStatement#execute()} by parsing the script into multiple statements and executing them, while adding JDBJ features.

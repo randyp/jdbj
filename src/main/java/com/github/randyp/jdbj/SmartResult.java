@@ -9,7 +9,7 @@ import java.util.Calendar;
 import java.util.Map;
 
 /**
- * Retrieves values from a single row in the result set.
+ * Retrieves values from a single row in the result set, restricted interface of {@link SmartResultSet}.
  */
 public abstract class SmartResult {
 

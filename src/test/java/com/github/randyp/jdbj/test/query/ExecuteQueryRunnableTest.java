@@ -40,7 +40,7 @@ public abstract class ExecuteQueryRunnableTest extends StudentTest {
         final String[] firstColumnName = {null};
         JDBJ.string("SELECT first_name FROM student")
                 .query()
-                .runnable(rs -> firstColumnName[0] = rs.getMetaData().getColumnName(1).toLowerCase())
+                .run(rs -> firstColumnName[0] = rs.getMetaData().getColumnName(1).toLowerCase())
                 .execute(db());
 
         assertEquals("first_name", firstColumnName[0]);
@@ -51,7 +51,7 @@ public abstract class ExecuteQueryRunnableTest extends StudentTest {
         final int[] count = {0};
         JDBJ.string("SELECT * FROM student where first_name = :name")
                 .query()
-                .runnable(rs -> {
+                .run(rs -> {
                     while (rs.next()) {
                         count[0]++;
                     }
@@ -68,7 +68,7 @@ public abstract class ExecuteQueryRunnableTest extends StudentTest {
         JDBJ.string("SELECT * FROM student where last_name in :last_names")
                 .query()
                 .bindStrings(":last_names", "Dada10", "Dada11")
-                .runnable(rs -> {
+                .run(rs -> {
                     while (rs.next()) {
                         count[0]++;
                     }

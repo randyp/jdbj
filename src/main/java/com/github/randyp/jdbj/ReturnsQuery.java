@@ -33,7 +33,7 @@ public final class ReturnsQuery extends PositionalBindingsBuilder<ReturnsQuery> 
         return new MapQuery<>(statement, bindings, mapper);
     }
 
-    public ExecuteQueryRunnable runnable(ResultSetRunnable runnable){
+    public ExecuteQueryRunnable run(ResultSetRunnable runnable){
         return new ExecuteQueryRunnable(statement, bindings, runnable);
     }
 }

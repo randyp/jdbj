@@ -13,8 +13,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Runs jdbc query so the caller can interact with the {@link ResultSet} using {@link ResultSetRunnable}.
- * <p>
+ * Runs jdbc query so the caller can interact with the {@link ResultSet} using {@link ResultSetRunnable}. Example:
+ * <pre>
+ * {@code
+ * JDBJ.query("SELECT * FROM student").run(rs->{
+ *     while(rs.next()){
+ *         System.out.println(rs.getLong("id"));
+ *     }
+ * }).execute(db);
+ * }    
+ * </pre>
  * Is {@link Immutable}, so you will need to (re)assign to a variable after every binding.
  * <p>
  * Encapsulates execution of {@link PreparedStatement#executeQuery()} for read only result sets, while adding JDBJ features.

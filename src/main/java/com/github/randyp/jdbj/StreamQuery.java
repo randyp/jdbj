@@ -20,13 +20,18 @@ import java.util.stream.StreamSupport;
  * <pre>
  * {@code 
  * MapQuery<String> nameQuery = JDBJ.query("SELECT first_name FROM student").map(rs->rs.getString(1));
- * try(Stream<String> names = nameQuery.toStream()){
+ * try(Stream<String> names = nameQuery.toStream().execute(db)){
  *     names.forEach(System.out.println);
+ * }catch(AdvanceFailedException e){
+ *     //possibly thrown when consuming from stream
+ *     throw e.getCause();
  * }
  * }
  * </pre>   
  * Is {@link Immutable}, so you will need to (re)assign to a variable after every binding or call to {@link MapQuery#remap(Function)}.
  * <p>
+ * Streams created with {@link StreamQuery#execute(Connection)} and similar methods will throw {@link AdvanceFailedException} if there is any unexpected exception while consuming from stream, so be sure to 
+ * <p>     
  * Encapsulates executing {@link PreparedStatement#executeQuery()}, providing a stream of the results, and calling {@link ResultSet#close()} {@link PreparedStatement#close()} when caller calls {@link Stream#close()}.
  * @param <R> return type
  * @see MapQuery

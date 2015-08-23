@@ -39,9 +39,9 @@ public class QueryStringBuilder {
         return new QueryStringBuilder(builder);
     }
 
-    static QueryStringBuilder fromResource(String resourceName){
+    static QueryStringBuilder fromResource(Class klass, String resourceName){
         final StringBuilder builder = new StringBuilder();
-        appendResourceToBuilder(resourceName, builder);
+        appendResourceToBuilder(klass, resourceName, builder);
         return new QueryStringBuilder(builder);
     }
 
@@ -78,8 +78,12 @@ public class QueryStringBuilder {
     }
 
     public QueryStringBuilder resource(String resourceName){
+        return resource(JDBJ.class, resourceName);
+    }
+    
+    public QueryStringBuilder resource(Class klass, String resourceName){
         final StringBuilder newBuilder = clone(stringBuilder);
-        appendResourceToBuilder(resourceName, newBuilder);
+        appendResourceToBuilder(klass, resourceName, newBuilder);
         return new QueryStringBuilder(newBuilder);
     }
 
@@ -143,8 +147,8 @@ public class QueryStringBuilder {
         appendStreamToBuilder(() -> Files.newInputStream(path, StandardOpenOption.READ), builder);
     }
 
-    private static void appendResourceToBuilder(String resourceName, StringBuilder builder) {
-        final URL url = JDBJ.class.getClassLoader().getResource(resourceName);
+    private static void appendResourceToBuilder(Class jdbjClass, String resourceName, StringBuilder builder) {
+        final URL url = jdbjClass.getClassLoader().getResource(resourceName);
         if (url == null) {
             throw new IllegalArgumentException("resource not found: " + resourceName);
         }
