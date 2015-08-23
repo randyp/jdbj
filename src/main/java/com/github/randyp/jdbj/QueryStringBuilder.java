@@ -144,6 +144,7 @@ public class QueryStringBuilder {
     }
 
     private static void appendPathToBuilder(Path path, StringBuilder builder) {
+        builder.append(" -- ").append(path.toString()).append('\n');
         appendStreamToBuilder(() -> Files.newInputStream(path, StandardOpenOption.READ), builder);
     }
 
@@ -152,6 +153,7 @@ public class QueryStringBuilder {
         if (url == null) {
             throw new IllegalArgumentException("resource not found: " + resourceName);
         }
+        builder.append(" -- ").append(resourceName).append('\n');
         appendStreamToBuilder(url::openStream, builder);
     }
 }
