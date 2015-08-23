@@ -1,5 +1,6 @@
 package com.github.randyp.jdbj.example.extension;
 
+import com.github.randyp.jdbj.ValueBindings;
 import org.joda.time.DateTime;
 
 public class NewMessage {
@@ -24,5 +25,11 @@ public class NewMessage {
 
     public DateTime getTime() {
         return time;
+    }
+
+    public ValueBindings bindings() {
+        return new ValueBindings()
+                .bindString(":content", content)
+                .bind(":time", new DateTimeBinding(time));
     }
 }

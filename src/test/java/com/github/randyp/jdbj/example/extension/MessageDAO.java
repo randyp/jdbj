@@ -18,8 +18,7 @@ public class MessageDAO {
     public Message insert(NewMessage newMessage) throws SQLException {
         final Long id = JDBJ.string("INSERT INTO message(content, time) VALUES (:content, :time)")
                 .insert(rs -> rs.getLong(1))
-                .bindString(":content", newMessage.getContent())
-                .bind(":time", new DateTimeBinding(newMessage.getTime()))
+                .bindValues(newMessage::bindings)
                 .execute(connection).stream().findFirst().get();
         return byId(id).get();
     }

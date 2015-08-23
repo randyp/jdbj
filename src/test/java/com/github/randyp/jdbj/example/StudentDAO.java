@@ -58,9 +58,7 @@ public class StudentDAO {
             .insert(rs->rs.getLong(1));
 
     public Student insert(NewStudent newStudent) throws SQLException{
-        final List<Long> execute = insert.bindString(":first_name", newStudent.getFirstName())
-                .bindString(":last_name", newStudent.getLastName())
-                .bindBigDecimal(":gpa", newStudent.getGpa())
+        final List<Long> execute = insert.bindValues(newStudent::bindings)
                 .execute(connection);
         final Long id = execute.stream().findFirst().get();
         return byId(id).get();
