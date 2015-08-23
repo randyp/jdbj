@@ -161,6 +161,7 @@ public final class JDBJ {
     /**
      * See {@link ExecuteInsert} for documentation.
      * @param query query
+     * @param keyMapper keyMapper              
      * @return instance of {@link ExecuteInsert}
      */
     public static <R> ExecuteInsert<R> insert(String query, ResultMapper<R> keyMapper) {
