@@ -14,6 +14,7 @@ import java.util.List;
  *
  * Also worth noting: returning keys during batch execution is generally not supported.
  * Usually (Oracle, H2) only the keys from the last batch will be returned.
+ * However, it is supported by postgres, mysql, hsql
  */
 @Deprecated //no plans to remove class, just wanted you to read the above documentation about lack of support
 public class BatchedExecuteInsert<R> {

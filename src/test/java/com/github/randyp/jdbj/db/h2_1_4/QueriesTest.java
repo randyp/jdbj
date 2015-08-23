@@ -3,6 +3,7 @@ package com.github.randyp.jdbj.db.h2_1_4;
 import com.github.randyp.jdbj.student.StudentTest;
 import com.github.randyp.jdbj.test.query.*;
 import org.junit.ClassRule;
+import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
@@ -19,6 +20,12 @@ public class QueriesTest {
         @Override
         public DataSource db() {
             return db;
+        }
+
+        @Test(expected = AssertionError.class) //because h2 doesn't return multiple keys from execute batch
+        @Override
+        public void insertBatches() throws Exception {
+            super.insertBatches();
         }
     }
 

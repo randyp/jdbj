@@ -82,7 +82,7 @@ mvn release:clean release:prepare -B && mvn release:perform
 
 #### 0.1.6
 * [x] can append multiple string sources together to build a query
-* [ ] Hacky-yet-compatible batch insert & update queries
+* [x] !!!!NOT IMPLEMENTED!!! Hacky-yet-compatible batch insert & update queries - not implemented because the databases which do not implement returning mulitple keys in batch also do not return multiple keys for a single insert statement with multiple rows 
 * [ ] Wrap Batch sql exceptions
 * [ ] Examples
 
