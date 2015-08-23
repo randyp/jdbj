@@ -16,16 +16,16 @@ public class SimpleBuilder extends PositionalBindingsBuilder<SimpleBuilder> {
             NamedParameterStatement.make("SELECT CAST(:binding as varchar) as bound");
 
     public SimpleBuilder() {
-        this(defaultStatement, PositionalBindings.empty());
+        this(defaultStatement, new PositionalBindings());
     }
 
     public SimpleBuilder(String castType) {
         this(NamedParameterStatement.make("SELECT CAST(:binding as " + castType + ") as bound"),
-                PositionalBindings.empty());
+                new PositionalBindings());
     }
 
     public SimpleBuilder(NamedParameterStatement statement) {
-        this(statement, PositionalBindings.empty());
+        this(statement, new PositionalBindings());
     }
 
     public SimpleBuilder(NamedParameterStatement statement, PositionalBindings bindings){

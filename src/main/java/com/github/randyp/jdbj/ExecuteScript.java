@@ -73,7 +73,7 @@ public final class ExecuteScript extends PositionalBindingsBuilder<ExecuteScript
 
 
     ExecuteScript(NamedParameterStatement script, List<NamedParameterStatement> statements) {
-        this(script, PositionalBindings.empty(), statements);
+        this(script, new PositionalBindings(), statements);
     }
 
     ExecuteScript(NamedParameterStatement script, PositionalBindings bindings, List<NamedParameterStatement> statements) {

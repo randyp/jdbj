@@ -28,7 +28,7 @@ import java.sql.SQLException;
 public final class ExecuteStatement extends PositionalBindingsBuilder<ExecuteStatement> {
 
     ExecuteStatement(NamedParameterStatement statement) {
-        this(statement, PositionalBindings.empty());
+        this(statement, new PositionalBindings());
     }
 
     ExecuteStatement(NamedParameterStatement statement, PositionalBindings bindings) {

@@ -18,7 +18,7 @@ import java.util.Calendar;
 interface ValueBindingsBuilder<P> {
 
     P bind(String name, Binding binding);
-
+    
     default P bindArray(String name, @Nullable Array x) {
         return bind(name, pc -> pc.setArray(x));
     }

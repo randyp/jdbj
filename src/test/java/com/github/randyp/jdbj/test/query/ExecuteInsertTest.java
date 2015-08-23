@@ -16,11 +16,11 @@ import static org.junit.Assert.assertEquals;
 public abstract class ExecuteInsertTest extends StudentTest {
 
     @Test
-    public void insertOne() throws Exception {
+     public void insertOneUsingValueBindingsSupplier() throws Exception {
         final NewStudent newStudent = new NewStudent("Ada", "Dada", new BigDecimal("3.1"));
         ResultMapper<Long> keyMapper = rs -> rs.getLong(1);
         final ExecuteInsert<Long> insertQuery = JDBJ.resource(Student.insert).insert(keyMapper)
-                .bind(newStudent);
+                .bindValues(newStudent::bindings);
 
         final List<Long> keys = insertQuery.execute(db());
         final List<Student> actual = Student.selectAll.execute(db());
@@ -30,11 +30,27 @@ public abstract class ExecuteInsertTest extends StudentTest {
     }
 
     @Test
-    public void insertOneUsingLambda() throws Exception {
+    public void insertOneUsingPositionalBindingsSupplier() throws Exception {
         final NewStudent newStudent = new NewStudent("Ada", "Dada", new BigDecimal("3.1"));
         ResultMapper<Long> keyMapper = rs -> rs.getLong(1);
         final ExecuteInsert<Long> insertQuery = JDBJ.resource(Student.insert).insert(keyMapper)
-                .bind(newStudent::bindings);
+                .bind(() -> new PositionalBindings().addAll(newStudent.bindings()));
+
+        final List<Long> keys = insertQuery.execute(db());
+        final List<Student> actual = Student.selectAll.execute(db());
+
+        assertEquals(1, keys.size());
+        assertEquals(Collections.singletonList(newStudent.withId(keys.get(0))), actual);
+    }
+
+    @Test
+    public void insertOneLonghand() throws Exception {
+        final NewStudent newStudent = new NewStudent("Ada", "Dada", new BigDecimal("3.1"));
+        ResultMapper<Long> keyMapper = rs -> rs.getLong(1);
+        final ExecuteInsert<Long> insertQuery = JDBJ.resource(Student.insert).insert(keyMapper)
+                .bindString(":first_name", newStudent.getFirstName())
+                .bindString(":last_name", newStudent.getLastName())
+                .bindBigDecimal(":gpa", newStudent.getGpa());
 
         final List<Long> keys = insertQuery.execute(db());
         final List<Student> actual = Student.selectAll.execute(db());

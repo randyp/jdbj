@@ -6,6 +6,7 @@ import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.NotThreadSafe;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Not intended for external use.
@@ -38,11 +39,15 @@ abstract class BatchedExecute<P> {
         private final ValueBindings batch;
 
         Batch(){
-            this(PositionalBindings.empty());
+            this(new ValueBindings());
         }
 
         Batch(ValueBindings batch) {
             this.batch = batch;
+        }
+
+        public Batch bindValues(Supplier<ValueBindings>supplier) {
+            return new Batch(batch.addAll(supplier.get()));
         }
 
         @Override

@@ -36,7 +36,7 @@ public final class ExecuteInsert<K> extends PositionalBindingsBuilder<ExecuteIns
     private final ResultMapper<K> keysMapper;
 
     ExecuteInsert(NamedParameterStatement statement, ResultMapper<K> keysMapper) {
-        this(statement, PositionalBindings.empty(), keysMapper);
+        this(statement, new PositionalBindings(), keysMapper);
 
     }
 

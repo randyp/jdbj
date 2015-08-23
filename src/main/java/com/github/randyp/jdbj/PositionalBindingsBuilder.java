@@ -2,13 +2,13 @@ package com.github.randyp.jdbj;
 
 
 import com.github.randyp.jdbj.lambda.Binding;
-import com.github.randyp.jdbj.lambda.HasBindings;
 
 import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Stores bindings, has convenience binding methods for common jdbj types.
@@ -44,12 +44,24 @@ public abstract class PositionalBindingsBuilder<P extends PositionalBindingsBuil
 
     /**
      * Allows you to bind objects who can create bindings for themselves, or at the very least lambdas.
-     * @param hasBindings
+     * @param supplier
      * @return self with new bindings
      * @throws SQLException
      */
-    public P bind(HasBindings hasBindings) throws SQLException {
-        final PositionalBindings bindings = hasBindings.bindings();
+    public P bind(Supplier<PositionalBindings> supplier) throws SQLException {
+        final PositionalBindings bindings = supplier.get();
+        statement.checkNoExtraBindings(bindings);
+        return factory.make(statement, this.bindings.addAll(bindings));
+    }
+
+    /**
+     * Allows you to bind objects who can create bindings for themselves, or at the very least lambdas.
+     * @param supplier
+     * @return self with new bindings
+     * @throws SQLException
+     */
+    public P bindValues(Supplier<ValueBindings> supplier) {
+        final ValueBindings bindings = supplier.get();
         statement.checkNoExtraBindings(bindings);
         return factory.make(statement, this.bindings.addAll(bindings));
     }

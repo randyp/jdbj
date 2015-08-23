@@ -13,19 +13,19 @@ public class BindingsTest {
 
     @Test
     public void empty() throws Exception {
-        final PositionalBindings bindings = PositionalBindings.empty();
+        final PositionalBindings bindings = new PositionalBindings();
         assertFalse(bindings.containsBinding(":status"));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void getNotPresent() throws Exception {
-        PositionalBindings.empty().get(":a");
+        new PositionalBindings().get(":a");
     }
 
     @Test
     public void valueBinding() throws Exception {
         final Binding binding = pc -> pc.setString("ACTIVE");
-        final PositionalBindings bindings = PositionalBindings.empty().bind(":status", binding);
+        final PositionalBindings bindings = new PositionalBindings().bind(":status", binding);
 
         assertTrue(bindings.containsBinding(":status"));
         final PositionalBinding positionalBinding = bindings.get(":status");
@@ -34,7 +34,7 @@ public class BindingsTest {
 
     @Test
     public void listBinding() throws Exception {
-        final PositionalBindings bindings = PositionalBindings.empty().bindCollection(":status", Collections.singletonList(pc -> pc.setString("ACTIVE")));
+        final PositionalBindings bindings = new PositionalBindings().bindCollection(":status", Collections.singletonList(pc -> pc.setString("ACTIVE")));
 
         assertTrue(bindings.containsBinding(":status"));
         final PositionalBinding positionalBinding = bindings.get(":status");
@@ -43,40 +43,40 @@ public class BindingsTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void rebindValue() throws Exception {
-        PositionalBindings.empty()
+        new PositionalBindings()
                 .bind(":status", pc -> pc.setString("ACTIVE"))
                 .bind(":status", pc -> pc.setString("ACTIVE"));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void rebindList() throws Exception {
-        PositionalBindings.empty()
+        new PositionalBindings()
                 .bind(":status", pc -> pc.setString("ACTIVE"))
                 .bindCollection(":status", new ArrayList<>());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void bindValueNullName() throws Exception {
-        PositionalBindings.empty().bind(null, pc -> pc.setInt(1));
+        new PositionalBindings().bind(null, pc -> pc.setInt(1));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void bindValueNullValue() throws Exception {
-        PositionalBindings.empty().bind(":a", null);
+        new PositionalBindings().bind(":a", null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void bindListNullName() throws Exception {
-        PositionalBindings.empty().bindCollection(null, new ArrayList<>());
+        new PositionalBindings().bindCollection(null, new ArrayList<>());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void bindListNullList() throws Exception {
-        PositionalBindings.empty().bindCollection(":a", null);
+        new PositionalBindings().bindCollection(":a", null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void bindListNullInList() throws Exception {
-        PositionalBindings.empty().bindCollection(":a", Arrays.asList(pc -> pc.setInt(1), null));
+        new PositionalBindings().bindCollection(":a", Arrays.asList(pc -> pc.setInt(1), null));
     }
 }

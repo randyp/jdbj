@@ -25,11 +25,9 @@ public abstract class BatchedExecuteUpdateTest extends StudentTest {
         );
 
         BatchedExecuteUpdate insertQuery = JDBJ.resource(Student.insert).update().asBatch();
-        for (NewStudent student : expected) {
+        for (NewStudent newStudent : expected) {
             insertQuery.startBatch()
-                    .bindString(":first_name", student.getFirstName())
-                    .bindString(":last_name", student.getLastName())
-                    .bindBigDecimal(":gpa", student.getGpa())
+                    .bindValues(newStudent::bindings)
                     .addBatch();
         }
 
@@ -76,9 +74,7 @@ public abstract class BatchedExecuteUpdateTest extends StudentTest {
                 .asBatch();
         final BatchedExecuteUpdate.Batch batch = batchUpdate
                 .startBatch()
-                .bindString(":first_name", newStudent.getFirstName())
-                .bindString(":last_name", newStudent.getLastName())
-                .bindBigDecimal(":gpa", newStudent.getGpa());
+                .bindValues(newStudent::bindings);
 
         batch.addBatch();
         batch.addBatch();

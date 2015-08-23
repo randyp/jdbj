@@ -27,9 +27,7 @@ import java.util.List;
  * BatchedExecuteInsert<Long> batchInsert = insert.asBatch();
  * for (NewStudent newStudent : newStudents) {
  *     batchInsert.startBatch()
- *     .bindString(":first_name", newStudent.getFirstName())
- *     .bindString(":last_name", newStudent.getLastName())
- *     .bindBigDecimal(":gpa", newStudent.getGpa())
+ *     .bindValues(newStudent::bindings())
  *     .addBatch();
  * }
  * List<Long> generatedKeys = batchInsert.execute(db);

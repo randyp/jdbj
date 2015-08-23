@@ -15,17 +15,20 @@ import java.util.*;
  */
 @Immutable
 @ThreadSafe
-public class PositionalBindings implements ValueBindings, ValueBindingsBuilder<PositionalBindings>, CollectionBindingsBuilder<PositionalBindings> {
-
-    public static PositionalBindings empty() {
-        return new PositionalBindings(new HashMap<>(), new HashMap<>());
-    }
+public class PositionalBindings implements Bindings, ValueBindingsBuilder<PositionalBindings>, CollectionBindingsBuilder<PositionalBindings> {
 
     private final Map<String, Binding> valueBindings;
     private final Map<String, List<Binding>> collectionBindings;
     private final Set<String> keys;
 
-    private PositionalBindings(Map<String, Binding> valueBindings,
+    /**
+     * New Empty PositionalBindings
+     */
+    public PositionalBindings(){
+        this(new HashMap<>(), new HashMap<>());
+    }
+
+    PositionalBindings(Map<String, Binding> valueBindings,
                                Map<String, List<Binding>> collectionBindings) {
         this.valueBindings = valueBindings;
         this.collectionBindings = collectionBindings;
@@ -52,6 +55,17 @@ public class PositionalBindings implements ValueBindings, ValueBindingsBuilder<P
         return newBindings;
     }
 
+    public PositionalBindings addAll(ValueBindings bindings) {
+        if (bindings == null) {
+            throw new IllegalArgumentException("bindings cannot be null");
+        }
+        PositionalBindings newBindings = this;
+        for (Map.Entry<String, Binding> entry : bindings.asMap().entrySet()) {
+            newBindings = newBindings.bind(entry.getKey(), entry.getValue());
+        }
+        return newBindings;
+    }
+    
     @Override
     public boolean containsBinding(String name) {
         if (name == null) {

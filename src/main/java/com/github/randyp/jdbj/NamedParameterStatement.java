@@ -57,7 +57,7 @@ public final class NamedParameterStatement {
         return namedParameters.contains(name);
     }
 
-    public String jdbcSql(ValueBindings bindings) {
+    public String jdbcSql(Bindings bindings) {
         if(bindings == null){
             throw new IllegalArgumentException("bindings cannot be null");
         }
@@ -75,7 +75,7 @@ public final class NamedParameterStatement {
         return builder.toString();
     }
 
-    public void bind(PreparedStatement ps, ValueBindings bindings) throws SQLException {
+    public void bind(PreparedStatement ps, Bindings bindings) throws SQLException {
         if (ps == null) {
             throw new IllegalArgumentException("ps cannot be null");
         }
@@ -93,7 +93,7 @@ public final class NamedParameterStatement {
      * Looks for named parameters missing from the provided {@link ValueBindings} and throws {@link IllegalArgumentException} if any are missing.
      * @param bindings
      */
-    public void checkAllBindingsPresent(ValueBindings bindings) {
+    public void checkAllBindingsPresent(Bindings bindings) {
         if(bindings == null){
             throw new IllegalArgumentException("bindings cannot be null");
         }
@@ -104,7 +104,7 @@ public final class NamedParameterStatement {
         }
     }
 
-    public void checkNoExtraBindings(ValueBindings bindings) {
+    public void checkNoExtraBindings(Bindings bindings) {
         if (bindings == null) {
             throw new IllegalArgumentException("bindings cannot be null");
         }

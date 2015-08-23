@@ -5,8 +5,6 @@ import com.github.randyp.jdbj.lambda.ResultSetRunnable;
 
 import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;
-import java.util.function.Function;
-import java.util.stream.Stream;
 
 /**
  * Return objects from queries or just execute {@link ResultSetRunnable}.
@@ -22,7 +20,7 @@ import java.util.stream.Stream;
 public final class ReturnsQuery extends PositionalBindingsBuilder<ReturnsQuery> {
 
     ReturnsQuery(NamedParameterStatement statement) {
-        this(statement, PositionalBindings.empty());
+        this(statement, new PositionalBindings());
     }
 
     ReturnsQuery(NamedParameterStatement statement, PositionalBindings bindings) {

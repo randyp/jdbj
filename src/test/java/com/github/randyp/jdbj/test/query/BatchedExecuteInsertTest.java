@@ -24,9 +24,7 @@ public abstract class BatchedExecuteInsertTest extends StudentTest {
         BatchedExecuteInsert<Long> insertQuery = JDBJ.resource(Student.insert).insert(keyMapper)
                 .asBatch()
                 .startBatch()
-                .bindString(":first_name", newStudent.getFirstName())
-                .bindString(":last_name", newStudent.getLastName())
-                .bindBigDecimal(":gpa", newStudent.getGpa())
+                .bindValues(newStudent::bindings)
                 .addBatch();
 
         final List<Long> keys = insertQuery.execute(db());
@@ -47,9 +45,7 @@ public abstract class BatchedExecuteInsertTest extends StudentTest {
                 .asBatch();
         for (NewStudent newStudent : newStudents) {
             insertQuery.startBatch()
-                    .bindString(":first_name", newStudent.getFirstName())
-                    .bindString(":last_name", newStudent.getLastName())
-                    .bindBigDecimal(":gpa", newStudent.getGpa())
+                    .bindValues(newStudent::bindings)
                     .addBatch();
         }
 
@@ -90,16 +86,14 @@ public abstract class BatchedExecuteInsertTest extends StudentTest {
 
     @Test
     public void batchAddedMultipleTimes() throws Exception {
-        final NewStudent student = new NewStudent("Ada10", "Dada10", new BigDecimal("3.1"));
+        final NewStudent newStudent = new NewStudent("Ada10", "Dada10", new BigDecimal("3.1"));
 
         final BatchedExecuteInsert<Long> batchInsert = JDBJ.resource(Student.insert)
                 .insert(rs -> rs.getLong(1))
                 .asBatch();
         final BatchedExecuteInsert<Long>.Batch batch = batchInsert
                 .startBatch()
-                .bindString(":first_name", student.getFirstName())
-                .bindString(":last_name", student.getLastName())
-                .bindBigDecimal(":gpa", student.getGpa());
+                .bindValues(newStudent::bindings);
 
         batch.addBatch();
         batch.addBatch();
