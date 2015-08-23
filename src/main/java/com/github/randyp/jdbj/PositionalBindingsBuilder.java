@@ -42,24 +42,12 @@ public abstract class PositionalBindingsBuilder<P extends PositionalBindingsBuil
         statement.bind(ps, bindings);
     }
 
-    /**
-     * Allows you to bind objects who can create bindings for themselves, or at the very least lambdas.
-     * @param supplier
-     * @return self with new bindings
-     * @throws SQLException
-     */
     public P bind(Supplier<PositionalBindings> supplier) throws SQLException {
         final PositionalBindings bindings = supplier.get();
         statement.checkNoExtraBindings(bindings);
         return factory.make(statement, this.bindings.addAll(bindings));
     }
 
-    /**
-     * Allows you to bind objects who can create bindings for themselves, or at the very least lambdas.
-     * @param supplier
-     * @return self with new bindings
-     * @throws SQLException
-     */
     public P bindValues(Supplier<ValueBindings> supplier) {
         final ValueBindings bindings = supplier.get();
         statement.checkNoExtraBindings(bindings);

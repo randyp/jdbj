@@ -1,9 +1,6 @@
 package com.github.randyp.jdbj;
 
-import com.github.randyp.jdbj.lambda.ConnectionCallable;
-import com.github.randyp.jdbj.lambda.ConnectionRunnable;
-import com.github.randyp.jdbj.lambda.IOSupplier;
-import com.github.randyp.jdbj.lambda.ResultMapper;
+import com.github.randyp.jdbj.lambda.*;
 
 import javax.annotation.Nullable;
 import javax.sql.DataSource;
@@ -28,12 +25,28 @@ public final class JDBJ {
      * The runnable should not call {@link Connection#close()}, {@link Connection#setAutoCommit(boolean)}, {@link Connection#setTransactionIsolation(int)}.
      * <p>
      * If you need a different isolation than the default you can use {@link JDBJ#transaction(DataSource, int, ConnectionRunnable)}.
-     * @param dataSource
-     * @param runnable
+     *
+     * @param db       db
+     * @param runnable runnable
      * @throws SQLException
      */
-    public static void transaction(DataSource dataSource, ConnectionRunnable runnable) throws SQLException {
-        returningTransactionOptionalIsolation(dataSource, null, c -> {
+    public static void transaction(DataSource db, ConnectionRunnable runnable) throws SQLException {
+        transaction(db::getConnection, runnable);
+    }
+
+    /**
+     * Opens a connection from dataSource, starts a transaction, and calls runnable, closes connection. If an exception is thrown in runnable and not caught the transaction will be rolled back and exception re-thrown. Otherwise the transaction will be committed.
+     * <p>
+     * The runnable should not call {@link Connection#close()}, {@link Connection#setAutoCommit(boolean)}, {@link Connection#setTransactionIsolation(int)}.
+     * <p>
+     * If you need a different isolation than the default you can use {@link JDBJ#transaction(DataSource, int, ConnectionRunnable)}.
+     *
+     * @param db       db
+     * @param runnable runnable
+     * @throws SQLException
+     */
+    public static void transaction(ConnectionSupplier db, ConnectionRunnable runnable) throws SQLException {
+        returningTransactionOptionalIsolation(db, null, c -> {
             runnable.run(c);
             return null;
         });
@@ -44,12 +57,27 @@ public final class JDBJ {
      * <p>
      * <p>
      * The runnable should not call {@link Connection#close()}, {@link Connection#setAutoCommit(boolean)}, {@link Connection#setTransactionIsolation(int)}.
-     * @param dataSource
-     * @param runnable
+     *
+     * @param db       db
+     * @param runnable runnable
      * @throws SQLException
      */
-    public static void transaction(DataSource dataSource, int transactionIsolation, ConnectionRunnable runnable) throws SQLException {
-        returningTransactionOptionalIsolation(dataSource, transactionIsolation, c -> {
+    public static void transaction(DataSource db, int transactionIsolation, ConnectionRunnable runnable) throws SQLException {
+        transaction(db::getConnection, transactionIsolation, runnable);
+    }
+
+    /**
+     * Opens a connection from dataSource, starts a transaction with the provided isolation, and calls runnable, closes connection. If an exception is thrown in runnable and not caught the transaction will be rolled back and exception re-thrown. Otherwise the transaction will be committed.
+     * <p>
+     * <p>
+     * The runnable should not call {@link Connection#close()}, {@link Connection#setAutoCommit(boolean)}, {@link Connection#setTransactionIsolation(int)}.
+     *
+     * @param db       db
+     * @param runnable runnable
+     * @throws SQLException
+     */
+    public static void transaction(ConnectionSupplier db, int transactionIsolation, ConnectionRunnable runnable) throws SQLException {
+        returningTransactionOptionalIsolation(db, transactionIsolation, c -> {
             runnable.run(c);
             return null;
         });
@@ -62,12 +90,29 @@ public final class JDBJ {
      * The callable should not call {@link Connection#close()}, {@link Connection#setAutoCommit(boolean)}, {@link Connection#setTransactionIsolation(int)}.
      * <p>
      * If you need a different isolation than the default you can use {@link JDBJ#returningTransaction(DataSource, int, ConnectionCallable)}.
-     * @param dataSource
-     * @param callable
+     *
+     * @param db       db
+     * @param callable callable
      * @throws SQLException
      */
-    public static <R> R returningTransaction(DataSource dataSource, ConnectionCallable<R> callable) throws SQLException {
-        return returningTransactionOptionalIsolation(dataSource, null, callable);
+    public static <R> R returningTransaction(DataSource db, ConnectionCallable<R> callable) throws SQLException {
+        return returningTransactionOptionalIsolation(db::getConnection, null, callable);
+    }
+
+    /**
+     * Opens a connection from dataSource, starts a transaction, and calls runnable, closes connection, returns results. If an exception is thrown in callable and not caught the transaction will be rolled back and exception re-thrown. Otherwise the transaction will be committed.
+     * <p>
+     * <p>
+     * The callable should not call {@link Connection#close()}, {@link Connection#setAutoCommit(boolean)}, {@link Connection#setTransactionIsolation(int)}.
+     * <p>
+     * If you need a different isolation than the default you can use {@link JDBJ#returningTransaction(DataSource, int, ConnectionCallable)}.
+     *
+     * @param db       db
+     * @param callable callable
+     * @throws SQLException
+     */
+    public static <R> R returningTransaction(ConnectionSupplier db, ConnectionCallable<R> callable) throws SQLException {
+        return returningTransactionOptionalIsolation(db, null, callable);
     }
 
     /**
@@ -77,16 +122,34 @@ public final class JDBJ {
      * The callable should not call {@link Connection#close()}, {@link Connection#setAutoCommit(boolean)}, {@link Connection#setTransactionIsolation(int)}.
      * <p>
      * If you need a different isolation than the default you can use {@link JDBJ#returningTransaction(DataSource, int, ConnectionCallable)}.
-     * @param dataSource
-     * @param callable
+     *
+     * @param db       db
+     * @param callable callable
      * @throws SQLException
      */
-    public static <R> R returningTransaction(DataSource dataSource, int transactionIsolation, ConnectionCallable<R> callable) throws SQLException {
-        return returningTransactionOptionalIsolation(dataSource, transactionIsolation, callable);
+    public static <R> R returningTransaction(DataSource db, int transactionIsolation, ConnectionCallable<R> callable) throws SQLException {
+        return returningTransactionOptionalIsolation(db::getConnection, transactionIsolation, callable);
+    }
+
+    /**
+     * Opens a connection from dataSource, starts a transaction with provided isolation, and calls runnable, closes connection, returns results. If an exception is thrown in callable and not caught the transaction will be rolled back and exception re-thrown. Otherwise the transaction will be committed.
+     * <p>
+     * <p>
+     * The callable should not call {@link Connection#close()}, {@link Connection#setAutoCommit(boolean)}, {@link Connection#setTransactionIsolation(int)}.
+     * <p>
+     * If you need a different isolation than the default you can use {@link JDBJ#returningTransaction(DataSource, int, ConnectionCallable)}.
+     *
+     * @param db       db
+     * @param callable callable
+     * @throws SQLException
+     */
+    public static <R> R returningTransaction(ConnectionSupplier db, int transactionIsolation, ConnectionCallable<R> callable) throws SQLException {
+        return returningTransactionOptionalIsolation(db::getConnection, transactionIsolation, callable);
     }
 
     /**
      * See {@link QueryStringBuilder} for documentation.
+     *
      * @param string string
      * @return builder
      */
@@ -96,6 +159,7 @@ public final class JDBJ {
 
     /**
      * See {@link QueryStringBuilder} for documentation.
+     *
      * @param supplier supplier
      * @return builder
      */
@@ -105,6 +169,7 @@ public final class JDBJ {
 
     /**
      * See {@link QueryStringBuilder} for documentation.
+     *
      * @param supplier supplier
      * @return builder
      */
@@ -114,6 +179,7 @@ public final class JDBJ {
 
     /**
      * See {@link QueryStringBuilder} for documentation.
+     *
      * @param path path
      * @return builder
      */
@@ -123,6 +189,7 @@ public final class JDBJ {
 
     /**
      * See {@link QueryStringBuilder} for documentation.
+     *
      * @param resourceName resourceName
      * @return builder
      */
@@ -132,7 +199,8 @@ public final class JDBJ {
 
     /**
      * See {@link QueryStringBuilder} for documentation.
-     * @param klass will use klass's classloader to load resource
+     *
+     * @param klass        will use klass's classloader to load resource
      * @param resourceName resourceName
      * @return builder
      */
@@ -142,6 +210,7 @@ public final class JDBJ {
 
     /**
      * See {@link ReturnsQuery} for documentation.
+     *
      * @param query query
      * @return instance of {@link ReturnsQuery}
      */
@@ -151,6 +220,7 @@ public final class JDBJ {
 
     /**
      * See {@link ExecuteUpdate} for documentation.
+     *
      * @param query query
      * @return instance of {@link ExecuteUpdate}
      */
@@ -160,8 +230,9 @@ public final class JDBJ {
 
     /**
      * See {@link ExecuteInsert} for documentation.
-     * @param query query
-     * @param keyMapper keyMapper              
+     *
+     * @param query     query
+     * @param keyMapper keyMapper
      * @return instance of {@link ExecuteInsert}
      */
     public static <R> ExecuteInsert<R> insert(String query, ResultMapper<R> keyMapper) {
@@ -170,6 +241,7 @@ public final class JDBJ {
 
     /**
      * See {@link ExecuteStatement} for documentation.
+     *
      * @param query query
      * @return instance of {@link ExecuteStatement}
      */
@@ -179,6 +251,7 @@ public final class JDBJ {
 
     /**
      * See {@link ExecuteScript} for documentation.
+     *
      * @param script script
      * @return instance of {@link ExecuteStatement}
      */
@@ -189,12 +262,12 @@ public final class JDBJ {
     JDBJ() {
     }
 
-    private static <R> R returningTransactionOptionalIsolation(DataSource dataSource, @Nullable Integer transactionIsolation, ConnectionCallable<R> callable) throws SQLException {
+    private static <R> R returningTransactionOptionalIsolation(ConnectionSupplier db, @Nullable Integer transactionIsolation, ConnectionCallable<R> callable) throws SQLException {
 
         Connection connection = null;
         Integer oldTransactionIsolation = null;
         try {
-            connection = dataSource.getConnection();
+            connection = db.getConnection();
 
             if (!connection.getAutoCommit()) {
                 throw new IllegalStateException("autocommit is already turned off, which means rollback point is not start of transaction");
