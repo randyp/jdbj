@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
  * <p>
  * Binds {@link Collection} to a {@link PreparedColumn}. 
  * @param <P> prototype type since {@link Immutable}
+ * @see PositionalBindingsBuilder           
  */
 @Immutable
 @ThreadSafe

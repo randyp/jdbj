@@ -16,7 +16,7 @@ import java.sql.SQLException;
  * <p>
  * Encapsulates the execution of {@link PreparedStatement#execute()} while adding JDBJ features.
  * @see JDBJ#statement(String)
- * @see ExecuteScript for executing multiple statements.
+ * @see ExecuteScript
  */
 @Immutable
 @ThreadSafe

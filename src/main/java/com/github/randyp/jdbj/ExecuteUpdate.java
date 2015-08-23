@@ -16,7 +16,7 @@ import java.sql.SQLException;
  * <p>
  * Encapsulates the execution of {@link PreparedStatement#executeUpdate()} while adding JDBJ features.
  * @see JDBJ#update(String)
- * @see ExecuteInsert if you are performing an insert and need to return generated keys.
+ * @see ExecuteInsert
  */
 @Immutable
 @ThreadSafe

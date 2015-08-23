@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  * <p>
  * This is useful because {@link PreparedStatement} cannot execute multiple statements.
  * @see JDBJ#script(String) 
- * @see ExecuteStatement for executing only one statement.
+ * @see ExecuteStatement
  */
 @Immutable
 @ThreadSafe

@@ -21,9 +21,8 @@ import java.util.List;
  * Worth noting: {@link BatchedExecuteUpdate} is Mutable, unlike most other query builders. 
  * <p>
  * @see ExecuteUpdate#asBatch() 
- * @see BatchedExecuteInsert if you do need generated keys
+ * @see BatchedExecuteInsert
  */
-@SuppressWarnings("deprecation")
 @NotThreadSafe
 public class BatchedExecuteUpdate {
 

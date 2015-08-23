@@ -21,7 +21,6 @@ public abstract class BatchedExecuteInsertTest extends StudentTest {
         final NewStudent newStudent = new NewStudent("Ada10", "Dada10", new BigDecimal("3.1"));
 
         ResultMapper<Long> keyMapper = rs -> rs.getLong(1);
-        //noinspection deprecation
         BatchedExecuteInsert<Long> insertQuery = JDBJ.resource(Student.insert).insert(keyMapper)
                 .asBatch()
                 .startBatch()
@@ -44,7 +43,6 @@ public abstract class BatchedExecuteInsertTest extends StudentTest {
         );
 
         ResultMapper<Long> keyMapper = rs -> rs.getLong(1);
-        //noinspection deprecation
         BatchedExecuteInsert<Long> insertQuery = JDBJ.resource(Student.insert).insert(keyMapper)
                 .asBatch();
         for (NewStudent newStudent : newStudents) {
@@ -69,7 +67,6 @@ public abstract class BatchedExecuteInsertTest extends StudentTest {
     @Test(expected = IllegalStateException.class)
     public void noBatchesAdded() throws Exception {
         ResultMapper<Long> keyMapper = rs -> rs.getLong(1);
-        //noinspection deprecation
         BatchedExecuteInsert<Long> insertQuery = JDBJ.resource(Student.insert)
                 .insert(keyMapper)
                 .asBatch();
@@ -95,7 +92,6 @@ public abstract class BatchedExecuteInsertTest extends StudentTest {
     public void batchAlreadyEnded() throws Exception {
         final NewStudent student = new NewStudent("Ada10", "Dada10", new BigDecimal("3.1"));
 
-        //noinspection deprecation
         final BatchedExecuteInsert<Long>.Batch batch = JDBJ.resource(Student.insert)
                 .insert(rs -> rs.getLong(1))
                 .asBatch()

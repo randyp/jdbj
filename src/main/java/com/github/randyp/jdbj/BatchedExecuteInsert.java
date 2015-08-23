@@ -22,12 +22,10 @@ import java.util.List;
  * However, this class is safe to use with current versions of postgres, mysql, and hsql.
  * @param <K> type of the returned keys
  * @see ExecuteInsert#asBatch() 
- * @see BatchedExecuteUpdate if you do not need generated keys
+ * @see BatchedExecuteUpdate
  * @see ResultMapper
  */
-@SuppressWarnings("deprecation")
 @NotThreadSafe
-@Deprecated //no plans to remove class, just wanted you to read the above documentation about lack of support
 public class BatchedExecuteInsert<K> {
 
     private final List<ValueBindings> batches = new ArrayList<>();

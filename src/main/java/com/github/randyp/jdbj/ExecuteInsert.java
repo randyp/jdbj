@@ -18,7 +18,7 @@ import java.util.List;
  * Encapsulates the execution of {@link PreparedStatement#executeUpdate()} with {@link Statement#RETURN_GENERATED_KEYS} while adding most of the JDBJ features.
  * @param <K> key type returned by keyMapper
  * @see JDBJ#insert(String, ResultMapper)
- * @see ExecuteUpdate if you are doing an update, delete, and insert without returning generated keys.
+ * @see ExecuteUpdate
  */
 @Immutable
 @ThreadSafe
@@ -36,7 +36,6 @@ public final class ExecuteInsert<K> extends PositionalBindingsBuilder<ExecuteIns
         this.keysMapper = keysMapper;
     }
 
-    @SuppressWarnings("deprecation")
     public BatchedExecuteInsert<K> asBatch(){
         return new BatchedExecuteInsert<>(statement, keysMapper);
     }

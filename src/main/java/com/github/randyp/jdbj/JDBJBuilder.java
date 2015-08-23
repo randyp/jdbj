@@ -15,7 +15,7 @@ import java.nio.file.StandardOpenOption;
  * Build a query string from various resources, turn them into query objects with JDBJ features.
  * <p>
  * Is {@link Immutable}, so you will need to (re)assign to a variable after every binding.
- * @see JDBJ for creation methods
+ * @see JDBJ
  */
 @Immutable
 @ThreadSafe
