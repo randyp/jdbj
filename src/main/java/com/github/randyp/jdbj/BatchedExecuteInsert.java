@@ -1,21 +1,24 @@
 package com.github.randyp.jdbj;
 
-import com.github.randyp.jdbj.lambda.Binding;
 import com.github.randyp.jdbj.lambda.ConnectionSupplier;
 import com.github.randyp.jdbj.lambda.ResultMapper;
 
+import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.sql.DataSource;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Insert multiple rows into the database using jdbc batch functionality.
+ * Insert multiple rows into the database using jdbc batch functionality. Does not allow binding of collections, since generated sql must be same for all batches.
  * <p>
  * Encapsulates the execution of {@link PreparedStatement#executeBatch()} with {@link Statement#RETURN_GENERATED_KEYS} while adding most of the JDBJ features.
  * <p>
- * Worth noting: {@link BatchedExecuteInsert} is Mutable, unlike most other query builders. 
+ * Worth noting: {@link BatchedExecuteInsert} is Mutable, but individual batches {@link com.github.randyp.jdbj.BatchedExecute.Batch} are {@link Immutable}.
  * <p>
  * Also worth noting: returning keys during batch execution is generally not supported.
  * Often times only the keys from the last batch will be returned (Oracle, H2).
@@ -26,19 +29,13 @@ import java.util.List;
  * @see ResultMapper
  */
 @NotThreadSafe
-public class BatchedExecuteInsert<K> {
+public class BatchedExecuteInsert<K> extends BatchedExecute<BatchedExecuteInsert<K>> {
 
-    private final List<ValueBindings> batches = new ArrayList<>();
-    private final NamedParameterStatement statement;
     private final ResultMapper<K> keysMapper;
 
     BatchedExecuteInsert(NamedParameterStatement statement, ResultMapper<K> keysMapper) {
-        this.statement = statement;
+        super(statement);
         this.keysMapper = keysMapper;
-    }
-
-    public Batch startBatch(){
-        return new Batch();
     }
 
     public List<K> execute(DataSource db) throws SQLException {
@@ -79,35 +76,8 @@ public class BatchedExecuteInsert<K> {
         }
     }
 
-    public class Batch implements ValueBindingsBuilder<Batch> {
-
-        private ValueBindings batch;
-
-        Batch(){
-            this(PositionalBindings.empty());
-        }
-
-        Batch(ValueBindings batch) {
-            this.batch = batch;
-        }
-
-        @Override
-        public Batch bind(String name, Binding binding) {
-            checkBatchNotEnded();
-            return new Batch(batch.valueBinding(name, binding));
-        }
-
-        public BatchedExecuteInsert<K> endBatch(){
-            statement.checkAllBindingsPresent(batch);
-            batches.add(batch);
-            batch = null;
-            return BatchedExecuteInsert.this;
-        }
-
-        private void checkBatchNotEnded() {
-            if(batch == null){
-                throw new IllegalStateException("batch already ended, use BatchedInsertQuery#startBatch to create a new batch");
-            }
-        }
+    @Override
+    BatchedExecuteInsert<K> chainThis() {
+        return this;
     }
 }

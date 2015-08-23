@@ -7,6 +7,13 @@ import java.net.URL;
 import java.sql.*;
 import java.util.Calendar;
 
+/**
+ * Binds to {@link PreparedStatement} at a parameterIndex, creates sql objects such as {@link java.sql.Array}.
+ * <p>
+ * Used by the {@link com.github.randyp.jdbj.lambda.Binding} class to performing binding for a named parameter, which may be in multiple spots in the prepared statement.
+ * Hence the {@link PreparedColumn} does not expose the parameter index in its interface.
+ * @see com.github.randyp.jdbj.lambda.Binding
+ */
 public class PreparedColumn {
 
     private boolean set;

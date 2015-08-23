@@ -10,12 +10,14 @@ import java.sql.SQLException;
 import java.util.List;
 
 /**
- *
- * @param <P> prototype type since {@link Immutable}
+ * Stores bindings, has convenience binding methods for common jdbj types.
+ * <p>
+ * Abstract class for most all query builder classes such as {@link ExecuteQuery} which are (almost) always {@link Immutable}. 
+ * @param <P> prototype type
  */
 @Immutable
 @ThreadSafe
-class PositionalBindingsBuilder<P extends PositionalBindingsBuilder<P>> extends CollectionBindingsBuilder<P> implements ValueBindingsBuilder<P> {
+abstract class PositionalBindingsBuilder<P extends PositionalBindingsBuilder<P>> extends CollectionBindingsBuilder<P> implements ValueBindingsBuilder<P> {
 
     final NamedParameterStatement statement;
     final PositionalBindings bindings;

@@ -4,6 +4,9 @@ import com.github.randyp.jdbj.lambda.Binding;
 
 import java.util.Set;
 
+/**
+ * Restricted interface of PositionalBindings for {@link ValueBindingsBuilder}.
+ */
 public interface ValueBindings {
 
     boolean containsBinding(String name);

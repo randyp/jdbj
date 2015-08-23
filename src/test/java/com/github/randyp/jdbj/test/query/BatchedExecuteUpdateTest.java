@@ -30,7 +30,7 @@ public abstract class BatchedExecuteUpdateTest extends StudentTest {
                     .bindString(":first_name", student.getFirstName())
                     .bindString(":last_name", student.getLastName())
                     .bindBigDecimal(":gpa", student.getGpa())
-                    .endBatch();
+                    .addBatch();
         }
 
         assertArrayEquals(new int[]{1, 1}, insertQuery.execute(db()));
@@ -64,7 +64,7 @@ public abstract class BatchedExecuteUpdateTest extends StudentTest {
                 .startBatch()
                 .bindString(":first_name", student.getFirstName())
                 .bindString(":last_name", student.getLastName())
-                .endBatch();
+                .addBatch();
     }
 
     @Test(expected = IllegalStateException.class)
@@ -79,7 +79,6 @@ public abstract class BatchedExecuteUpdateTest extends StudentTest {
                 .bindString(":last_name", newStudent.getLastName())
                 .bindBigDecimal(":gpa", newStudent.getGpa());
 
-        batch.endBatch();
-        batch.bindString(":first_name", newStudent.getFirstName());
+        batch.addBatch();
     }
 }

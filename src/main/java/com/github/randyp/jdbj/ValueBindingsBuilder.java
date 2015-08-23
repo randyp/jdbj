@@ -12,8 +12,8 @@ import java.sql.*;
 import java.util.Calendar;
 
 /**
- *
- * @param <P> prototype type since {@link Immutable}
+ * Restricted interface of {@link PositionalBindingsBuilder} for batch queries {@link BatchedExecuteInsert}, {@link BatchedExecuteUpdate}. Batch queries do not allow binding of collections, since generated sql must be same for all batches.
+ * @param <P> prototype type since {@link PositionalBindingsBuilder} is {@link Immutable}.
  */
 interface ValueBindingsBuilder<P> {
 

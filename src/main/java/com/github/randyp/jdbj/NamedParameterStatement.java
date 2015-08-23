@@ -14,6 +14,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Knows the named parameters in a jdbj sql statement, generates jdbc sql and binds to a {@link PreparedStatement} given a complete {@link PositionalBindings}.
+ * <p>
+ * Encapsulates tokenized jdbj SQL so we know the named parameters and where to bind them.
+ */
 @Immutable
 @ThreadSafe
 public final class NamedParameterStatement {
@@ -84,6 +89,10 @@ public final class NamedParameterStatement {
         }
     }
 
+    /**
+     * Looks for named parameters missing from the provided {@link ValueBindings} and throws {@link IllegalArgumentException} if any are missing.
+     * @param bindings
+     */
     public void checkAllBindingsPresent(ValueBindings bindings) {
         if(bindings == null){
             throw new IllegalArgumentException("bindings cannot be null");

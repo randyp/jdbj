@@ -6,6 +6,13 @@ import com.github.randyp.jdbj.lambda.Binding;
 import javax.annotation.concurrent.ThreadSafe;
 import java.util.*;
 
+/**
+ * Data structure to store bindings for named parameters.
+ * <p>
+ * Will except if you try to bind for the same name multiple times.
+ * <p>
+ * Is {@link Immutable}, you (re)assign to a variable after each call to {@link PositionalBindings#valueBinding(String, Binding)} and {@link PositionalBindings#collectionBinding(String, List)}.
+ */
 @Immutable
 @ThreadSafe
 public class PositionalBindings implements ValueBindings {
@@ -16,7 +23,6 @@ public class PositionalBindings implements ValueBindings {
 
     private final Map<String, Binding> valueBindings;
     private final Map<String, List<Binding>> listBindings;
-
     private final Set<String> keys;
 
     private PositionalBindings(Map<String, Binding> valueBindings,

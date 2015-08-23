@@ -1,42 +1,30 @@
 package com.github.randyp.jdbj;
 
-import com.github.randyp.jdbj.lambda.Binding;
 import com.github.randyp.jdbj.lambda.ConnectionSupplier;
-import com.github.randyp.jdbj.lambda.ResultMapper;
 
+import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
- * Updates multiple rows in the database using jdbc batch functionality.
+ * Updates multiple rows in the database using jdbc batch functionality. Does not allow binding of collections, since generated sql must be same for all batches.
  * <p>
  * Encapsulates the execution of {@link PreparedStatement#executeBatch()} while adding most of the JDBJ features.
  * <p>
- * Worth noting: {@link BatchedExecuteUpdate} is Mutable, unlike most other query builders. 
+ * Worth noting: {@link BatchedExecuteUpdate} is Mutable, but individual batches {@link com.github.randyp.jdbj.BatchedExecute.Batch} are {@link Immutable}. 
  * <p>
  * @see ExecuteUpdate#asBatch() 
  * @see BatchedExecuteInsert
  */
 @NotThreadSafe
-public class BatchedExecuteUpdate {
-
-    private final List<ValueBindings> batches = new ArrayList<>();
-    private final NamedParameterStatement statement;
-
+public class BatchedExecuteUpdate extends BatchedExecute<BatchedExecuteUpdate> {
 
     BatchedExecuteUpdate(NamedParameterStatement statement) {
-        this.statement = statement;
+        super(statement);
 
-    }
-
-    public Batch startBatch() {
-        return new Batch();
     }
 
     public int[] execute(DataSource db) throws SQLException {
@@ -64,35 +52,8 @@ public class BatchedExecuteUpdate {
         }
     }
 
-    public class Batch implements ValueBindingsBuilder<Batch> {
-
-        private ValueBindings batch;
-
-        Batch() {
-            this(PositionalBindings.empty());
-        }
-
-        Batch(ValueBindings batch) {
-            this.batch = batch;
-        }
-
-        @Override
-        public Batch bind(String name, Binding binding) {
-            checkBatchNotEnded();
-            return new Batch(batch.valueBinding(name, binding));
-        }
-
-        public BatchedExecuteUpdate endBatch() {
-            statement.checkAllBindingsPresent(batch);
-            batches.add(batch);
-            batch = null;
-            return BatchedExecuteUpdate.this;
-        }
-
-        private void checkBatchNotEnded() {
-            if (batch == null) {
-                throw new IllegalStateException("batch already ended, use BatchedInsertQuery#startBatch to create a new batch");
-            }
-        }
+    @Override
+    BatchedExecuteUpdate chainThis() {
+        return this;
     }
 }

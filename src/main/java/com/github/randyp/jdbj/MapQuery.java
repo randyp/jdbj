@@ -10,6 +10,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
+/**
+ * Use to return lists or streams of objects from queries, and related behaviour.
+ * <p>
+ * Is {@link Immutable}, so you will need to (re)assign to a variable after every binding or call to {@link MapQuery#remap(Function)}.
+ * <p>
+ * Encapsulates building of {@link ExecuteQuery} or {@link StreamQuery} using a {@link ResultMapper}.
+ * @param <R> return type
+ * @see ExecuteQuery
+ * @see StreamQuery
+ * @see ResultMapper
+ */
 @Immutable
 @ThreadSafe
 public final class MapQuery<R> extends PositionalBindingsBuilder<MapQuery<R>> {

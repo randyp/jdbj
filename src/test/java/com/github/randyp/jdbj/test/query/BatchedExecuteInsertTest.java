@@ -27,7 +27,7 @@ public abstract class BatchedExecuteInsertTest extends StudentTest {
                 .bindString(":first_name", newStudent.getFirstName())
                 .bindString(":last_name", newStudent.getLastName())
                 .bindBigDecimal(":gpa", newStudent.getGpa())
-                .endBatch();
+                .addBatch();
 
         final List<Long> keys = insertQuery.execute(db());
         final List<Student> actual = Student.selectAll.execute(db());
@@ -50,7 +50,7 @@ public abstract class BatchedExecuteInsertTest extends StudentTest {
                     .bindString(":first_name", newStudent.getFirstName())
                     .bindString(":last_name", newStudent.getLastName())
                     .bindBigDecimal(":gpa", newStudent.getGpa())
-                    .endBatch();
+                    .addBatch();
         }
 
 
@@ -85,7 +85,7 @@ public abstract class BatchedExecuteInsertTest extends StudentTest {
                 .startBatch()
                 .bindString(":first_name", student.getFirstName())
                 .bindString(":last_name", student.getLastName())
-                .endBatch();
+                .addBatch();
     }
 
     @Test(expected = IllegalStateException.class)
@@ -100,7 +100,6 @@ public abstract class BatchedExecuteInsertTest extends StudentTest {
                 .bindString(":last_name", student.getLastName())
                 .bindBigDecimal(":gpa", student.getGpa());
 
-        batch.endBatch();
-        batch.bindString(":first_name", student.getFirstName());
+        batch.addBatch();
     }
 }

@@ -11,9 +11,27 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Spliterator;
+import java.util.function.Function;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+/**
+ * Use to return {@link Stream} of objects from queries. Please close your streams, perhaps using try-with-resources:
+ * <pre>
+ * {@code 
+ * MapQuery<String> nameQuery = JDBJ.query("SELECT first_name FROM student").map(rs->rs.getString(1));
+ * try(Stream<String> names = nameQuery.toStream()){
+ *     names.forEach(System.out.println);
+ * }
+ * }
+ * </pre>   
+ * Is {@link Immutable}, so you will need to (re)assign to a variable after every binding or call to {@link MapQuery#remap(Function)}.
+ * <p>
+ * Encapsulates executing {@link PreparedStatement#executeQuery()}, providing a stream of the results, and calling {@link ResultSet#close()} {@link PreparedStatement#close()} when caller calls {@link Stream#close()}.
+ * @param <R> return type
+ * @see MapQuery
+ * @see ResultMapper
+ */
 @Immutable
 @ThreadSafe
 public final class StreamQuery<R> extends PositionalBindingsBuilder<StreamQuery<R>> {

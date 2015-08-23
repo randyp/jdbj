@@ -8,6 +8,9 @@ import java.sql.*;
 import java.util.Calendar;
 import java.util.Map;
 
+/**
+ * Retrieves values from a single row in the result set.
+ */
 public abstract class SmartResult {
 
     public <A> A[] getArray(int columnIndex) throws SQLException {
