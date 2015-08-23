@@ -2,6 +2,7 @@ package com.github.randyp.jdbj;
 
 
 import com.github.randyp.jdbj.lambda.Binding;
+import com.github.randyp.jdbj.lambda.HasBindings;
 
 import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;
@@ -17,7 +18,7 @@ import java.util.List;
  */
 @Immutable
 @ThreadSafe
-abstract class PositionalBindingsBuilder<P extends PositionalBindingsBuilder<P>> extends CollectionBindingsBuilder<P> implements ValueBindingsBuilder<P> {
+public abstract class PositionalBindingsBuilder<P extends PositionalBindingsBuilder<P>> implements CollectionBindingsBuilder<P>, ValueBindingsBuilder<P> {
 
     final NamedParameterStatement statement;
     final PositionalBindings bindings;
@@ -41,21 +42,31 @@ abstract class PositionalBindingsBuilder<P extends PositionalBindingsBuilder<P>>
         statement.bind(ps, bindings);
     }
 
+    /**
+     * Allows you to bind objects who can create bindings for themselves, or at the very least lambdas.
+     * @param hasBindings
+     * @return self with new bindings
+     * @throws SQLException
+     */
+    public P bind(HasBindings hasBindings) throws SQLException {
+        final PositionalBindings bindings = hasBindings.bindings();
+        statement.checkNoExtraBindings(bindings);
+        return factory.make(statement, this.bindings.addAll(bindings));
+    }
+    
     @Override
     public P bind(String name, Binding binding){
         if(!statement.containsParameter(name)){
             throw new IllegalArgumentException("\""+name+"\" is not a named parameter");
         }
-
-        return factory.make(statement, bindings.valueBinding(name, binding));
+        return factory.make(statement, bindings.bind(name, binding));
     }
 
     @Override
-    public P bindList(String name, List<Binding> bindings) {
+    public P bindCollection(String name, List<Binding> bindings) {
         if(!statement.containsParameter(name)){
             throw new IllegalArgumentException("\""+name+"\" is not a named parameter");
         }
-
-        return factory.make(statement, this.bindings.collectionBinding(name, bindings));
+        return factory.make(statement, this.bindings.bindCollection(name, bindings));
     }
 }

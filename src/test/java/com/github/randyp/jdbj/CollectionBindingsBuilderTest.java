@@ -25,12 +25,12 @@ public class CollectionBindingsBuilderTest {
     public static class BindList {
         @Test(expected = IllegalArgumentException.class)
         public void nullName() throws Exception {
-            new SimpleBuilder().bindList(null, Collections.singletonList(pc -> pc.setInt(1)));
+            new SimpleBuilder().bindCollection(null, Collections.singletonList(pc -> pc.setInt(1)));
         }
 
         @Test(expected = IllegalArgumentException.class)
         public void nulList() throws Exception {
-            new SimpleBuilder().bindList(":binding", null);
+            new SimpleBuilder().bindCollection(":binding", null);
         }
     }
 

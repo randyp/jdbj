@@ -47,7 +47,7 @@ abstract class BatchedExecute<P> {
 
         @Override
         public Batch bind(String name, Binding binding) {
-            return new Batch(batch.valueBinding(name, binding));
+            return new Batch(batch.bind(name, binding));
         }
         
         public P addBatch(){

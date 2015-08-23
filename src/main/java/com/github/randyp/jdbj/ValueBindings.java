@@ -11,7 +11,7 @@ public interface ValueBindings {
 
     boolean containsBinding(String name);
 
-    PositionalBindings valueBinding(String name, Binding binding);
+    PositionalBindings bind(String name, Binding binding);
 
     PositionalBinding get(String namedParameter);
 

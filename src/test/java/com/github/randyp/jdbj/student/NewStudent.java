@@ -1,8 +1,11 @@
 package com.github.randyp.jdbj.student;
 
+import com.github.randyp.jdbj.PositionalBindings;
+import com.github.randyp.jdbj.lambda.HasBindings;
+
 import java.math.BigDecimal;
 
-public class NewStudent {
+public class NewStudent implements HasBindings {
 
     public static final String insert = "student_insert.sql";
 
@@ -35,6 +38,13 @@ public class NewStudent {
 
     public BigDecimal getGpa() {
         return gpa;
+    }
+    
+    public PositionalBindings bindings(){
+        return PositionalBindings.empty()
+                .bindString(":first_name", firstName)
+                .bindString(":last_name", lastName)
+                .bindBigDecimal(":gpa", gpa);
     }
 
     public Student withId(long id) {

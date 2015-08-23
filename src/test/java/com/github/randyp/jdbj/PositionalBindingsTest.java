@@ -30,10 +30,10 @@ public class PositionalBindingsTest {
         }
 
         @Test
-        public void bindingOnlyUseBinding() throws Exception {
+        public void bind() throws Exception {
             final Binding expected = pc -> pc.setInt(1);
             final PositionalBindings positionalBindings = PositionalBindings.empty()
-                    .valueBinding(":id", expected);
+                    .bind(":id", expected);
             assertTrue(positionalBindings.containsBinding(":id"));
 
             final PositionalBinding positionalBinding = positionalBindings.get(":id");
@@ -44,12 +44,12 @@ public class PositionalBindingsTest {
         @Test(expected = IllegalArgumentException.class)
         public void alreadyBound() throws Exception {
             PositionalBindings.empty()
-                    .valueBinding(":id", pc -> pc.setInt(1))
-                    .valueBinding(":id", pc -> pc.setInt(1));
+                    .bind(":id", pc -> pc.setInt(1))
+                    .bind(":id", pc -> pc.setInt(1));
         }
     }
 
-    public static class Bindlist {
+    public static class BindCollection {
 
         @Test
         public void notBound() throws Exception {
@@ -58,10 +58,10 @@ public class PositionalBindingsTest {
         }
 
         @Test
-        public void bindingOnlyUseBinding() throws Exception {
+        public void bind() throws Exception {
             final List<Binding> expected = Collections.singletonList(pc -> pc.setInt(1));
             final PositionalBindings positionalBindings = PositionalBindings.empty()
-                    .collectionBinding(":id", expected);
+                    .bindCollection(":id", expected);
             assertTrue(positionalBindings.containsBinding(":id"));
 
             final PositionalBinding positionalBinding = positionalBindings.get(":id");
@@ -76,8 +76,92 @@ public class PositionalBindingsTest {
         @Test(expected = IllegalArgumentException.class)
         public void alreadyBound() throws Exception {
             PositionalBindings.empty()
-                    .collectionBinding(":id", new ArrayList<>())
-                    .collectionBinding(":id", new ArrayList<>());
+                    .bindCollection(":id", new ArrayList<>())
+                    .bindCollection(":id", new ArrayList<>());
+        }
+    }
+
+    public static class AddBindings {
+        
+        
+
+        @Test
+        public void notBound() throws Exception {
+            final PositionalBindings left = PositionalBindings.empty();
+            final PositionalBindings right = PositionalBindings.empty();
+            final PositionalBindings positionalBindings = left.addAll(right);
+            assertFalse(positionalBindings.containsBinding(":id"));
+        }
+
+        @Test
+        public void bindLeftValue() throws Exception {
+            final Binding expected = pc -> pc.setInt(1);
+            final PositionalBindings left = PositionalBindings.empty().bind(":id", expected);
+            final PositionalBindings right = PositionalBindings.empty();
+            final PositionalBindings positionalBindings = left.addAll(right);
+            assertTrue(positionalBindings.containsBinding(":id"));
+
+            final PositionalBinding positionalBinding = positionalBindings.get(":id");
+            assertTrue(positionalBinding instanceof ValueBinding);
+            assertSame(expected, ((ValueBinding) positionalBinding).getBinding());
+        }
+
+        @Test
+        public void bindRightValue() throws Exception {
+            final Binding expected = pc -> pc.setInt(1);
+            final PositionalBindings left = PositionalBindings.empty();
+            final PositionalBindings right = PositionalBindings.empty().bind(":id", expected);
+            final PositionalBindings positionalBindings = left.addAll(right);
+            assertTrue(positionalBindings.containsBinding(":id"));
+
+            final PositionalBinding positionalBinding = positionalBindings.get(":id");
+            assertTrue(positionalBinding instanceof ValueBinding);
+            assertSame(expected, ((ValueBinding) positionalBinding).getBinding());
+        }
+
+        @Test
+        public void bindLeftCollection() throws Exception {
+            final List<Binding> expected = Collections.singletonList(pc -> pc.setInt(1));
+            final PositionalBindings left = PositionalBindings.empty().bindCollection(":id", expected);
+            final PositionalBindings right = PositionalBindings.empty();
+            final PositionalBindings positionalBindings = left.addAll(right);
+            assertTrue(positionalBindings.containsBinding(":id"));
+
+            final PositionalBinding positionalBinding = positionalBindings.get(":id");
+            assertTrue(positionalBinding instanceof ListBinding);
+
+            final List<Binding> bindings = ((ListBinding) positionalBinding).getBindings();
+            assertEquals(expected.size(), bindings.size());
+            assertSame(expected.get(0), bindings.get(0));
+        }
+
+        @Test
+        public void bindRightCollection() throws Exception {
+            final List<Binding> expected = Collections.singletonList(pc -> pc.setInt(1));
+            final PositionalBindings left = PositionalBindings.empty();
+            final PositionalBindings right = PositionalBindings.empty().bindCollection(":id", expected);
+            final PositionalBindings positionalBindings = left.addAll(right);
+            assertTrue(positionalBindings.containsBinding(":id"));
+
+            final PositionalBinding positionalBinding = positionalBindings.get(":id");
+            assertTrue(positionalBinding instanceof ListBinding);
+
+            final List<Binding> bindings = ((ListBinding) positionalBinding).getBindings();
+            assertEquals(expected.size(), bindings.size());
+            assertSame(expected.get(0), bindings.get(0));
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void alreadyBound() throws Exception {
+            final Binding expected = pc -> pc.setInt(1);
+            final PositionalBindings left = PositionalBindings.empty().bind(":id", expected);
+            final PositionalBindings right = PositionalBindings.empty().bind(":id", expected);
+            left.addAll(right);
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void nullBindings() throws Exception {
+            PositionalBindings.empty().addAll(null);
         }
     }
 }

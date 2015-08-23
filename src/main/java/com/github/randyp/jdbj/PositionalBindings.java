@@ -11,30 +11,45 @@ import java.util.*;
  * <p>
  * Will except if you try to bind for the same name multiple times.
  * <p>
- * Is {@link Immutable}, you (re)assign to a variable after each call to {@link PositionalBindings#valueBinding(String, Binding)} and {@link PositionalBindings#collectionBinding(String, List)}.
+ * Is {@link Immutable}, you (re)assign to a variable after each call to {@link PositionalBindings#bind(String, Binding)} and {@link PositionalBindings#bindCollection(String, List)}.
  */
 @Immutable
 @ThreadSafe
-public class PositionalBindings implements ValueBindings {
+public class PositionalBindings implements ValueBindings, ValueBindingsBuilder<PositionalBindings>, CollectionBindingsBuilder<PositionalBindings> {
 
     public static PositionalBindings empty() {
         return new PositionalBindings(new HashMap<>(), new HashMap<>());
     }
 
     private final Map<String, Binding> valueBindings;
-    private final Map<String, List<Binding>> listBindings;
+    private final Map<String, List<Binding>> collectionBindings;
     private final Set<String> keys;
 
     private PositionalBindings(Map<String, Binding> valueBindings,
-                               Map<String, List<Binding>> listBindings) {
+                               Map<String, List<Binding>> collectionBindings) {
         this.valueBindings = valueBindings;
-        this.listBindings = listBindings;
+        this.collectionBindings = collectionBindings;
 
         {
             final Set<String> keys = new HashSet<>(valueBindings.keySet());
-            keys.addAll(listBindings.keySet());
+            keys.addAll(collectionBindings.keySet());
             this.keys = Collections.unmodifiableSet(keys);
         }
+    }
+
+    public PositionalBindings addAll(PositionalBindings bindings) {
+        if (bindings == null) {
+            throw new IllegalArgumentException("bindings cannot be null");
+        }
+        PositionalBindings newBindings = this;
+        for (Map.Entry<String, Binding> entry : bindings.valueBindings.entrySet()) {
+            newBindings = newBindings.bind(entry.getKey(), entry.getValue());
+        }
+        for (Map.Entry<String, List<Binding>> entry : bindings.collectionBindings.entrySet()) {
+            newBindings = newBindings.bindCollection(entry.getKey(), entry.getValue());
+        }
+        
+        return newBindings;
     }
 
     @Override
@@ -42,11 +57,11 @@ public class PositionalBindings implements ValueBindings {
         if (name == null) {
             throw new IllegalArgumentException("name cannot be null");
         }
-        return valueBindings.containsKey(name) || listBindings.containsKey(name);
+        return valueBindings.containsKey(name) || collectionBindings.containsKey(name);
     }
 
     @Override
-    public PositionalBindings valueBinding(String name, Binding binding) {
+    public PositionalBindings bind(String name, Binding binding) {
         if (binding == null) {
             throw new IllegalArgumentException("binding cannot be null");
         }
@@ -60,11 +75,12 @@ public class PositionalBindings implements ValueBindings {
 
         return new PositionalBindings(
                 newValueBindings,
-                listBindings
+                collectionBindings
         );
     }
 
-    public PositionalBindings collectionBinding(String name, List<Binding> bindings) {
+    @Override
+    public PositionalBindings bindCollection(String name, List<Binding> bindings) {
         if (name == null) {
             throw new IllegalArgumentException("name cannot be null");
         }
@@ -74,7 +90,7 @@ public class PositionalBindings implements ValueBindings {
             throw new IllegalArgumentException("named parameter \"" + name + "\" already has a binding");
         }
 
-        final Map<String, List<Binding>> newListBindings = new HashMap<>(listBindings);
+        final Map<String, List<Binding>> newListBindings = new HashMap<>(collectionBindings);
         newListBindings.put(name, bindings);
 
         return new PositionalBindings(
@@ -88,8 +104,8 @@ public class PositionalBindings implements ValueBindings {
         final PositionalBinding toReturn;
         if (valueBindings.containsKey(namedParameter)) {
             toReturn = new ValueBinding(valueBindings.get(namedParameter));
-        } else if (listBindings.containsKey(namedParameter)) {
-            toReturn = new ListBinding(listBindings.get(namedParameter));
+        } else if (collectionBindings.containsKey(namedParameter)) {
+            toReturn = new ListBinding(collectionBindings.get(namedParameter));
         } else {
             throw new IllegalArgumentException("no such binding: \"" + namedParameter + "\"");
         }

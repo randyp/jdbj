@@ -103,4 +103,15 @@ public final class NamedParameterStatement {
             throw new IllegalStateException("missing bindings, cannot proceed: " + missingBindings);
         }
     }
+
+    public void checkNoExtraBindings(ValueBindings bindings) {
+        if (bindings == null) {
+            throw new IllegalArgumentException("bindings cannot be null");
+        }
+        final HashSet<String> extraKeys = new HashSet<>(bindings.keys());
+        extraKeys.removeAll(namedParameters);
+        if(!extraKeys.isEmpty()){
+            throw new IllegalStateException("extra bindings not present in statement, cannot proceed: " + extraKeys);
+        }
+    }
 }

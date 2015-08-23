@@ -16,10 +16,9 @@ import java.util.List;
  * {@code 
  * ExecuteInsert<Long> insert = JDBJ.insert("INSERT INTO student(first_name, last_name, gpa)" +
  *     " VALUES (:first_name, :last_name, :gpa)", rs -> rs.getLong(1));
+ * NewStudent newStudent = new NewStudent("Ada", "Lovelace", new BigDecimal("4.00"));
  * final Optional<Long> generatedKey = insert
- *     .bindString(":first_name", "Ada")
- *     .bindString(":last_name", "Lovelace")
- *     .bindBigDecimal(":gpa", new BigDecimal("4.00"))
+ *     .bind(newStudent::bindings())
  *     .execute(db).stream().findFirst();
  * }     
  * </pre>
