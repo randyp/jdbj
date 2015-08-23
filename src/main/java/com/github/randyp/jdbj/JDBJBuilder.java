@@ -11,6 +11,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
+/**
+ * Build a query string from various resources, turn them into query objects with JDBJ features.
+ * <p>
+ * Is {@link Immutable}, so you will need to (re)assign to a variable after every binding.
+ * @see JDBJ for creation methods
+ */
 @Immutable
 @ThreadSafe
 public class JDBJBuilder {

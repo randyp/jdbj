@@ -15,6 +15,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Execute a series of sql statements separated by {@code ';'}.
+ * <p>
+ * Is {@link Immutable}, so you will need to (re)assign to a variable after every binding.
+ * <p>
+ * Encapsulates the execution of multiple {@link PreparedStatement#execute()} by parsing the script into multiple statements and executing them, while adding JDBJ features.
+ * <p>
+ * This is useful because {@link PreparedStatement} cannot execute multiple statements.
+ * @see JDBJ#script(String) 
+ * @see ExecuteStatement for executing only one statement.
+ */
 @Immutable
 @ThreadSafe
 public final class ExecuteScript extends PositionalBindingsBuilder<ExecuteScript> {

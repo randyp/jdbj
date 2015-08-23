@@ -12,6 +12,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Runs jdbc query so the caller can interact with the {@link ResultSet} using {@link ResultSetRunnable}.
+ * <p>
+ * Is {@link Immutable}, so you will need to (re)assign to a variable after every binding.
+ * <p>
+ * Encapsulates execution of {@link PreparedStatement#executeQuery()} for read only result sets, while adding JDBJ features.
+ * @see JDBJ#query(String)
+ * @see ReturnsQuery
+ * @see MapQuery
+ */
 @Immutable
 @ThreadSafe
 public final class ExecuteQueryRunnable extends PositionalBindingsBuilder<ExecuteQueryRunnable> {

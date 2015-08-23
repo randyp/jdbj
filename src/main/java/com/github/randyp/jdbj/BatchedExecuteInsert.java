@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Insert multiple rows into the database using jdbc batch functionality.
+ * <p>
  * Encapsulates the execution of {@link PreparedStatement#executeBatch()} with {@link Statement#RETURN_GENERATED_KEYS} while adding most of the JDBJ features.
  * <p>
  * Worth noting: {@link BatchedExecuteInsert} is Mutable, unlike most other query builders. 
@@ -19,6 +21,7 @@ import java.util.List;
  * Often times only the keys from the last batch will be returned (Oracle, H2).
  * However, this class is safe to use with current versions of postgres, mysql, and hsql.
  * @param <K> type of the returned keys
+ * @see ExecuteInsert#asBatch() 
  * @see BatchedExecuteUpdate if you do not need generated keys
  * @see ResultMapper
  */

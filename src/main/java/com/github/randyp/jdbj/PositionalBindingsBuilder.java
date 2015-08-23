@@ -9,15 +9,19 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ *
+ * @param <P> prototype type since {@link Immutable}
+ */
 @Immutable
 @ThreadSafe
-public class PositionalBindingsBuilder<E extends PositionalBindingsBuilder<E>> extends CollectionBindingsBuilder<E> implements ValueBindingsBuilder<E> {
+class PositionalBindingsBuilder<P extends PositionalBindingsBuilder<P>> extends CollectionBindingsBuilder<P> implements ValueBindingsBuilder<P> {
 
     final NamedParameterStatement statement;
     final PositionalBindings bindings;
-    final PositionalBindingsBuilderFactory<E> factory;
+    final PositionalBindingsBuilderFactory<P> factory;
 
-    protected PositionalBindingsBuilder(NamedParameterStatement statement, PositionalBindings bindings, PositionalBindingsBuilderFactory<E> factory){
+    protected PositionalBindingsBuilder(NamedParameterStatement statement, PositionalBindings bindings, PositionalBindingsBuilderFactory<P> factory){
         this.statement = statement;
         this.bindings = bindings;
         this.factory = factory;
@@ -36,7 +40,7 @@ public class PositionalBindingsBuilder<E extends PositionalBindingsBuilder<E>> e
     }
 
     @Override
-    public E bind(String name, Binding binding){
+    public P bind(String name, Binding binding){
         if(!statement.containsParameter(name)){
             throw new IllegalArgumentException("\""+name+"\" is not a named parameter");
         }
@@ -45,7 +49,7 @@ public class PositionalBindingsBuilder<E extends PositionalBindingsBuilder<E>> e
     }
 
     @Override
-    public E bindList(String name, List<Binding> bindings) {
+    public P bindList(String name, List<Binding> bindings) {
         if(!statement.containsParameter(name)){
             throw new IllegalArgumentException("\""+name+"\" is not a named parameter");
         }

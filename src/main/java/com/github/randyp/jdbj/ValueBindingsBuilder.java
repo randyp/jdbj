@@ -3,6 +3,7 @@ package com.github.randyp.jdbj;
 import com.github.randyp.jdbj.lambda.Binding;
 
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.Immutable;
 import java.io.InputStream;
 import java.io.Reader;
 import java.math.BigDecimal;
@@ -10,229 +11,233 @@ import java.net.URL;
 import java.sql.*;
 import java.util.Calendar;
 
-public interface ValueBindingsBuilder<E> {
+/**
+ *
+ * @param <P> prototype type since {@link Immutable}
+ */
+interface ValueBindingsBuilder<P> {
 
-    E bind(String name, Binding binding);
+    P bind(String name, Binding binding);
 
-    default E bindArray(String name, @Nullable Array x) {
+    default P bindArray(String name, @Nullable Array x) {
         return bind(name, pc -> pc.setArray(x));
     }
 
-    default E bindAsciiStream(String name, @Nullable InputStream x) {
+    default P bindAsciiStream(String name, @Nullable InputStream x) {
         return bind(name, pc -> pc.setAsciiStream(x));
     }
 
-    default E bindAsciiStream(String name, @Nullable InputStream x, int length) {
+    default P bindAsciiStream(String name, @Nullable InputStream x, int length) {
         return bind(name, pc -> pc.setAsciiStream(x, length));
     }
 
-    default E bindAsciiStream(String name, @Nullable InputStream x, long length) {
+    default P bindAsciiStream(String name, @Nullable InputStream x, long length) {
         return bind(name, pc -> pc.setAsciiStream(x, length));
     }
 
-    default E bindBigDecimal(String name, @Nullable BigDecimal x) {
+    default P bindBigDecimal(String name, @Nullable BigDecimal x) {
         return bind(name, pc -> pc.setBigDecimal(x));
     }
 
-    default E bindBinaryStream(String name, @Nullable InputStream x) {
+    default P bindBinaryStream(String name, @Nullable InputStream x) {
         return bind(name, pc -> pc.setBinaryStream(x));
     }
 
-    default E bindBinaryStream(String name, @Nullable InputStream x, long length) {
+    default P bindBinaryStream(String name, @Nullable InputStream x, long length) {
         return x == null
                 ? bind(name, pc -> pc.setNull(Types.BINARY))
                 : bind(name, pc -> pc.setBinaryStream(x, length));
     }
 
-    default E bindBinaryStream(String name, @Nullable InputStream x, int length) {
+    default P bindBinaryStream(String name, @Nullable InputStream x, int length) {
         return bind(name, pc -> pc.setBinaryStream(x, length));
     }
 
-    default E bindBlob(String name, @Nullable Blob x) {
+    default P bindBlob(String name, @Nullable Blob x) {
         return bind(name, pc -> pc.setBlob(x));
     }
 
-    default E bindBlob(String name, @Nullable InputStream inputStream) {
+    default P bindBlob(String name, @Nullable InputStream inputStream) {
         return bind(name, pc -> pc.setBlob(inputStream));
     }
 
-    default E bindBlob(String name, @Nullable InputStream inputStream, long length) {
+    default P bindBlob(String name, @Nullable InputStream inputStream, long length) {
         return bind(name, pc -> pc.setBlob(inputStream, length));
     }
 
-    default E bindBoolean(String name, Boolean x) {
+    default P bindBoolean(String name, Boolean x) {
         return bind(name, pc -> pc.setBoolean(x));
     }
 
-    default E bindBooleanPrimitive(String name, boolean x) {
+    default P bindBooleanPrimitive(String name, boolean x) {
         return bind(name, pc -> pc.setBooleanPrimitive(x));
     }
 
-    default E bindByte(String name, Byte x) {
+    default P bindByte(String name, Byte x) {
         return bind(name, pc -> pc.setByte(x));
     }
 
-    default E bindBytePrimitive(String name, byte x) {
+    default P bindBytePrimitive(String name, byte x) {
         return bind(name, pc -> pc.setBytePrimitive(x));
     }
 
-    default E bindByteArray(String name, byte[] x) {
+    default P bindByteArray(String name, byte[] x) {
         return bind(name, pc -> pc.setBytes(x));
     }
 
-    default E bindCharacterStream(String name, @Nullable Reader reader) {
+    default P bindCharacterStream(String name, @Nullable Reader reader) {
         return bind(name, pc -> pc.setCharacterStream(reader));
     }
 
-    default E bindCharacterStream(String name, @Nullable Reader reader, int length) {
+    default P bindCharacterStream(String name, @Nullable Reader reader, int length) {
         return bind(name, pc -> pc.setCharacterStream(reader, length));
     }
 
-    default E bindCharacterStream(String name, @Nullable Reader reader, long length) {
+    default P bindCharacterStream(String name, @Nullable Reader reader, long length) {
         return bind(name, pc -> pc.setCharacterStream(reader, length));
     }
 
-    default E bindClob(String name, @Nullable Clob x) {
+    default P bindClob(String name, @Nullable Clob x) {
         return bind(name, pc -> pc.setClob(x));
     }
 
-    default E bindClob(String name, @Nullable Reader reader) {
+    default P bindClob(String name, @Nullable Reader reader) {
         return bind(name, pc -> pc.setClob(reader));
     }
 
-    default E bindClob(String name, @Nullable Reader reader, long length) {
+    default P bindClob(String name, @Nullable Reader reader, long length) {
         return bind(name, pc -> pc.setClob(reader, length));
     }
 
-    default E bindDate(String name, @Nullable Date x) {
+    default P bindDate(String name, @Nullable Date x) {
         return bind(name, pc -> pc.setDate(x));
     }
 
-    default E bindDate(String name, @Nullable Date x, Calendar cal) {
+    default P bindDate(String name, @Nullable Date x, Calendar cal) {
         return bind(name, pc -> pc.setDate(x, cal));
     }
 
-    default E bindDouble(String name, Double x) {
+    default P bindDouble(String name, Double x) {
         return bind(name, pc -> pc.setDouble(x));
     }
 
-    default E bindDoublePrimitive(String name, double x) {
+    default P bindDoublePrimitive(String name, double x) {
         return bind(name, pc -> pc.setDoublePrimitive(x));
     }
 
-    default E bindFloat(String name, Float x) {
+    default P bindFloat(String name, Float x) {
         return bind(name, pc -> pc.setFloat(x));
     }
 
-    default E bindFloatPrimitive(String name, float x) {
+    default P bindFloatPrimitive(String name, float x) {
         return bind(name, pc -> pc.setFloatPrimitive(x));
     }
 
-    default E bindInteger(String name, Integer x) {
+    default P bindInteger(String name, Integer x) {
         return bind(name, pc -> pc.setInteger(x));
     }
 
-    default E bindIntegerPrimitive(String name, int x) {
+    default P bindIntegerPrimitive(String name, int x) {
         return bind(name, pc -> pc.setIntegerPrimitive(x));
     }
 
-    default E bindInt(String name, int x) {
+    default P bindInt(String name, int x) {
         return bind(name, pc -> pc.setInt(x));
     }
 
-    default E bindLong(String name, Long x) {
+    default P bindLong(String name, Long x) {
         return bind(name, pc -> pc.setLong(x));
     }
 
-    default E bindLongPrimitive(String name, long x) {
+    default P bindLongPrimitive(String name, long x) {
         return bind(name, pc -> pc.setLongPrimitive(x));
     }
 
-    default E bindNCharacterStream(String name, @Nullable Reader value) {
+    default P bindNCharacterStream(String name, @Nullable Reader value) {
         return bind(name, pc -> pc.setNCharacterStream(value));
     }
 
-    default E bindNCharacterStream(String name, @Nullable Reader value, long length) {
+    default P bindNCharacterStream(String name, @Nullable Reader value, long length) {
         return bind(name, pc -> pc.setNCharacterStream(value, length));
     }
 
-    default E bindNClob(String name, @Nullable NClob value) {
+    default P bindNClob(String name, @Nullable NClob value) {
         return bind(name, pc -> pc.setNClob(value));
     }
 
-    default E bindNClob(String name, @Nullable Reader reader) {
+    default P bindNClob(String name, @Nullable Reader reader) {
         return bind(name, pc -> pc.setNClob(reader));
     }
 
-    default E bindNClob(String name, @Nullable Reader reader, long length) {
+    default P bindNClob(String name, @Nullable Reader reader, long length) {
         return bind(name, pc -> pc.setNClob(reader, length));
     }
 
-    default E bindNString(String name, @Nullable String value) {
+    default P bindNString(String name, @Nullable String value) {
         return bind(name, pc -> pc.setNString(value));
     }
 
-    default E bindNull(String name, int sqlType) {
+    default P bindNull(String name, int sqlType) {
         return bind(name, pc -> pc.setNull(sqlType));
     }
 
-    default E bindNull(String name, int sqlType, String typeName) {
+    default P bindNull(String name, int sqlType, String typeName) {
         return bind(name, pc -> pc.setNull(sqlType, typeName));
     }
 
-    default E bindObject(String name, @Nullable Object x) {
+    default P bindObject(String name, @Nullable Object x) {
         return bind(name, pc -> pc.setObject(x));
     }
 
-    default E bindObject(String name, @Nullable Object x, int targetSqlType) {
+    default P bindObject(String name, @Nullable Object x, int targetSqlType) {
         return bind(name, pc -> pc.setObject(x, targetSqlType));
     }
 
-    default E bindObject(String name, @Nullable Object x, SQLType targetSqlType) {
+    default P bindObject(String name, @Nullable Object x, SQLType targetSqlType) {
         return bind(name, pc -> pc.setObject(x, targetSqlType));
     }
 
-    default E bindObject(String name, @Nullable Object x, int targetSqlType, int scaleOrLength) {
+    default P bindObject(String name, @Nullable Object x, int targetSqlType, int scaleOrLength) {
         return bind(name, pc -> pc.setObject(x, targetSqlType, scaleOrLength));
     }
 
-    default E bindObject(String name, @Nullable Object x, SQLType targetSqlType, int scaleOrLength) {
+    default P bindObject(String name, @Nullable Object x, SQLType targetSqlType, int scaleOrLength) {
         return bind(name, pc -> pc.setObject(x, targetSqlType, scaleOrLength));
     }
 
-    default E bindShort(String name, Short x) {
+    default P bindShort(String name, Short x) {
         return bind(name, pc -> pc.setShort(x));
     }
 
-    default E bindShortPrimitive(String name, short x) {
+    default P bindShortPrimitive(String name, short x) {
         return bind(name, pc -> pc.setShortPrimitive(x));
     }
 
-    default E bindSQLXML(String name, @Nullable SQLXML xmlObject) {
+    default P bindSQLXML(String name, @Nullable SQLXML xmlObject) {
         return bind(name, pc -> pc.setSQLXML(xmlObject));
     }
 
-    default E bindString(String name, @Nullable String x) {
+    default P bindString(String name, @Nullable String x) {
         return bind(name, pc -> pc.setString(x));
     }
 
-    default E bindTime(String name, @Nullable Time x) {
+    default P bindTime(String name, @Nullable Time x) {
         return bind(name, pc -> pc.setTime(x));
     }
 
-    default E bindTime(String name, @Nullable Time x, Calendar cal) {
+    default P bindTime(String name, @Nullable Time x, Calendar cal) {
         return bind(name, pc -> pc.setTime(x, cal));
     }
 
-    default E bindTimestamp(String name, @Nullable Timestamp x) {
+    default P bindTimestamp(String name, @Nullable Timestamp x) {
         return bind(name, pc -> pc.setTimestamp(x));
     }
 
-    default E bindTimestamp(String name, @Nullable Timestamp x, Calendar cal) {
+    default P bindTimestamp(String name, @Nullable Timestamp x, Calendar cal) {
         return bind(name, pc -> pc.setTimestamp(x, cal));
     }
 
-    default E bindURL(String name, @Nullable URL x) {
+    default P bindURL(String name, @Nullable URL x) {
         return bind(name, pc -> pc.setURL(x));
     }
 

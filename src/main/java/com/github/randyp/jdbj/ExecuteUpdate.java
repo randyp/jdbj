@@ -9,6 +9,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+/**
+ * Perform a single sql update statement. 
+ * <p>
+ * Is {@link Immutable}, so you will need to (re)assign to a variable after every binding.
+ * <p>
+ * Encapsulates the execution of {@link PreparedStatement#executeUpdate()} while adding JDBJ features.
+ * @see JDBJ#update(String)
+ * @see ExecuteInsert if you are performing an insert and need to return generated keys.
+ */
 @Immutable
 @ThreadSafe
 public final class ExecuteUpdate extends PositionalBindingsBuilder<ExecuteUpdate> {

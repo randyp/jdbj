@@ -3,7 +3,7 @@ package com.github.randyp.jdbj;
 import java.util.function.Consumer;
 
 /**
- * Runtime exception which wraps any exception caught in {@link ResultSetSpliterator#tryAdvance(Consumer)}.
+ * Runtime exception to wrap any exception caught in {@link ResultSetSpliterator#tryAdvance(Consumer)}.
  * @see ResultSetSpliterator
  * @see StreamQuery
  */

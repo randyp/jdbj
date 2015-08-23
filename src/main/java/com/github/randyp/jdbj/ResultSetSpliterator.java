@@ -8,24 +8,24 @@ import java.util.Spliterator;
 import java.util.function.Consumer;
 
 /**
- * Wrapper around {@link ResultSet} and {@link ResultMapper} to create a {@link Spliterator} or {@link R}.
+ * Wrapper around {@link ResultSet} and {@link ResultMapper} to create a {@link Spliterator} or {@link E}.
  * <p>
  * Does not close the {@link ResultSet}.
- * @param <R>
+ * @param <E> element type     
  * @see StreamQuery
  */
-public class ResultSetSpliterator<R> implements Spliterator<R> {
+public class ResultSetSpliterator<E> implements Spliterator<E> {
 
     private final SmartResultSet rs;
-    private final ResultMapper<R> mapper;
+    private final ResultMapper<E> mapper;
 
-    public ResultSetSpliterator(ResultSet rs, ResultMapper<R> mapper) {
+    public ResultSetSpliterator(ResultSet rs, ResultMapper<E> mapper) {
         this.rs = new SmartResultSet(rs);
         this.mapper = mapper;
     }
 
     @Override
-    public boolean tryAdvance(Consumer<? super R> action) {
+    public boolean tryAdvance(Consumer<? super E> action) {
         try {
             final boolean advanced = rs.next();
             if (advanced) {
@@ -38,7 +38,7 @@ public class ResultSetSpliterator<R> implements Spliterator<R> {
     }
 
     @Override
-    public @Nullable Spliterator<R> trySplit() {
+    public @Nullable Spliterator<E> trySplit() {
         return null;
     }
 

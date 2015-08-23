@@ -5,7 +5,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
- * Alternative to {@link javax.sql.DataSource}.
+ * Alternative to {@link javax.sql.DataSource} within the JDBJ api.
  * <p>
  * Does not require that a new connection is opened, but is expected that after calling {@link ConnectionSupplier#getConnection()} the caller will eventually call {@link Connection#close()}
  * <p>

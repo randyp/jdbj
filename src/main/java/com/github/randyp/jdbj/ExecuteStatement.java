@@ -9,6 +9,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+/**
+ * Execute a single sql statement.
+ * <p>
+ * Is {@link Immutable}, so you will need to (re)assign to a variable after every binding.
+ * <p>
+ * Encapsulates the execution of {@link PreparedStatement#execute()} while adding JDBJ features.
+ * @see JDBJ#statement(String)
+ * @see ExecuteScript for executing multiple statements.
+ */
 @Immutable
 @ThreadSafe
 public final class ExecuteStatement extends PositionalBindingsBuilder<ExecuteStatement> {

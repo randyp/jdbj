@@ -5,11 +5,11 @@ import com.github.randyp.jdbj.PreparedColumn;
 import java.sql.SQLException;
 
 /**
- * Encapsulates how to bind a specific named parameter to a prepared column.
+ * Perform a binding operation against a prepared column.
  * <p>
  * For the most common bindings prefer using convenience methods on {@link com.github.randyp.jdbj.ExecuteQuery} and related classes, such as {@link com.github.randyp.jdbj.ExecuteQuery#bindInt(String, int)}.
  * <p>
- * For more complex bindings you can sub-class/lambda {@link Binding} and call {@link com.github.randyp.jdbj.PositionalBindingsBuilder#bind(String, Binding)}.
+ * For more complex bindings you should sub-class/lambda {@link Binding}.
  * <p>
  * Example using common bindings:
  * <pre>

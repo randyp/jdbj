@@ -14,10 +14,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Updates multiple rows in the database using jdbc batch functionality.
+ * <p>
  * Encapsulates the execution of {@link PreparedStatement#executeBatch()} while adding most of the JDBJ features.
  * <p>
  * Worth noting: {@link BatchedExecuteUpdate} is Mutable, unlike most other query builders. 
  * <p>
+ * @see ExecuteUpdate#asBatch() 
  * @see BatchedExecuteInsert if you do need generated keys
  */
 @SuppressWarnings("deprecation")
