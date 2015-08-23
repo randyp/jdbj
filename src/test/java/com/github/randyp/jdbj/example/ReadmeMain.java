@@ -6,7 +6,6 @@ import com.github.randyp.jdbj.student.NewStudent;
 import com.github.randyp.jdbj.student.Student;
 
 import java.math.BigDecimal;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

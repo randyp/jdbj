@@ -28,8 +28,8 @@ import java.sql.SQLException;
  * </pre>
  * Encapsulates the execution of {@link PreparedStatement#executeBatch()} while adding most of the JDBJ features.
  * <p>
- * Worth noting: {@link BatchedExecuteUpdate} is Mutable, but individual batches {@link com.github.randyp.jdbj.BatchedExecute.Batch} are {@link Immutable}. 
- * <p>
+ * Worth noting: {@link BatchedExecuteUpdate} is Mutable, but individual batches {@link com.github.randyp.jdbj.BatchedExecute.Batch} are {@link Immutable}.
+ * 
  * @see ExecuteUpdate#asBatch() 
  * @see BatchedExecuteInsert
  */
