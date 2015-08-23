@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Encapsulates {@link PreparedStatement#executeBatch()} with {@link Statement#RETURN_GENERATED_KEYS} while adding most of the JDBJ features.
+ * Encapsulates the execution of {@link PreparedStatement#executeBatch()} with {@link Statement#RETURN_GENERATED_KEYS} while adding most of the JDBJ features.
  * <p>
  * Worth noting: {@link BatchedExecuteInsert} is Mutable, unlike most other query builders. 
  * <p>

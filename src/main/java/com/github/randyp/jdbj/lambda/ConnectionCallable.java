@@ -20,7 +20,7 @@ import java.sql.SQLException;
  * });
  * }
  * </pre>
- * @param <R> return type of callable
+ * @param <R> return type
  * @see ConnectionRunnable
  * @see com.github.randyp.jdbj.JDBJ#returningTransaction(DataSource, ConnectionCallable) 
  */

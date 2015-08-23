@@ -47,10 +47,6 @@ import java.sql.SQLException;
  *                             .execute(db);
  * }
  * </pre>
- * 
- * @see com.github.randyp.jdbj.ValueBindingsBuilder
- * @see com.github.randyp.jdbj.PositionalBindingsBuilder
- * @see com.github.randyp.jdbj.CollectionBindingsBuilder
  */
 public interface Binding {
     

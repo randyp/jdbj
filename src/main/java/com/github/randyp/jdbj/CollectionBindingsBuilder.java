@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  */
 @Immutable
 @ThreadSafe
-public abstract class CollectionBindingsBuilder<E> {
+abstract class CollectionBindingsBuilder<E> {
 
     public abstract E bindList(String name, List<Binding> bindings);
 

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Encapsulates {@link PreparedStatement#executeBatch()} while adding most of the JDBJ features.
+ * Encapsulates the execution of {@link PreparedStatement#executeBatch()} while adding most of the JDBJ features.
  * <p>
  * Worth noting: {@link BatchedExecuteUpdate} is Mutable, unlike most other query builders. 
  * <p>
