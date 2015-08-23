@@ -96,7 +96,7 @@ public final class JDBJ {
      * @throws SQLException
      */
     public static <R> R returningTransaction(DataSource db, ConnectionCallable<R> callable) throws SQLException {
-        return returningTransactionOptionalIsolation(db::getConnection, null, callable);
+        return returningTransaction(db::getConnection, callable);
     }
 
     /**
@@ -128,7 +128,7 @@ public final class JDBJ {
      * @throws SQLException
      */
     public static <R> R returningTransaction(DataSource db, int transactionIsolation, ConnectionCallable<R> callable) throws SQLException {
-        return returningTransactionOptionalIsolation(db::getConnection, transactionIsolation, callable);
+        return returningTransaction(db::getConnection, transactionIsolation, callable);
     }
 
     /**
