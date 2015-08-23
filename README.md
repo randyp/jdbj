@@ -95,7 +95,3 @@ Thank you to:
 ``` sh
 ./release.sh
 ```
-
-#### 0.1.7
-* [ ] Transactions against Connections (does not close connection)
-* [ ] Examples
