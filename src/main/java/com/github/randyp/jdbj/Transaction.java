@@ -10,6 +10,30 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * {@link Immutable} transaction builder. Only build operation is isolation. Example:
+ * <pre>
+ * {@code 
+ * JDBJ.transaction(connection->System.out.println(connection.getSchema()))
+ *     .execute(db);
+ * }
+ * </pre>
+ * <p>
+ * Exceptions are grouped using the {@link SQLException#setNextException(SQLException)}, so one can get all exceptions. Example:
+ * <pre>
+ * {@code
+ * try{
+ *     JDBJ.transaction(connection->System.out.println(connection.getSchema()))
+ *         .execute(db);
+ * }catch(SQLException e){
+ *     while(e != null){
+ *         e.printStackTrace();
+ *         e = e.getNextException();
+ *     }
+ * }         
+ * }
+ * </pre>
+ */
 @Immutable
 @ThreadSafe
 public class Transaction extends AbstractTransaction<Void> {

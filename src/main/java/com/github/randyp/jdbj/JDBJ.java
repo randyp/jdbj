@@ -1,13 +1,13 @@
 package com.github.randyp.jdbj;
 
-import com.github.randyp.jdbj.lambda.*;
+import com.github.randyp.jdbj.lambda.ConnectionCallable;
+import com.github.randyp.jdbj.lambda.ConnectionRunnable;
+import com.github.randyp.jdbj.lambda.IOSupplier;
+import com.github.randyp.jdbj.lambda.ResultMapper;
 
-import javax.annotation.Nullable;
 import java.io.InputStream;
 import java.io.Reader;
 import java.nio.file.Path;
-import java.sql.Connection;
-import java.sql.SQLException;
 
 /**
  * Entry point for building and executing queries, transactions with JDBJ features.
@@ -18,10 +18,21 @@ import java.sql.SQLException;
  */
 public final class JDBJ {
 
+    /**
+     * See {@link Transaction} for documentation.
+     * @param runnable runnable
+     * @return transaction builder
+     */
     public static Transaction transaction(ConnectionRunnable runnable){
         return new Transaction(runnable);
     }
 
+    /**
+     * See {@link ReturningTransaction} for documentation.
+     * @param callable callable
+     * @param <R> callable return type
+     * @return transaction builder
+     */
     public static <R> ReturningTransaction<R> transaction(ConnectionCallable<R> callable){
         return new ReturningTransaction<>(callable);
     }

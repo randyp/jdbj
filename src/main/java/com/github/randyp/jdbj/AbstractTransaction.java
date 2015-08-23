@@ -8,9 +8,15 @@ import javax.annotation.concurrent.ThreadSafe;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * Not for external use.
+ * <p>
+ * Primary responsibility is to execute callable against connection, close resources, and properly group the exceptions.     
+ * @param <R>
+ */
 @Immutable
 @ThreadSafe
-public abstract class AbstractTransaction<R> {
+abstract class AbstractTransaction<R> {
 
     final Integer isolation;
 

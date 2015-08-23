@@ -2,11 +2,40 @@ package com.github.randyp.jdbj;
 
 import com.github.randyp.jdbj.lambda.ConnectionCallable;
 import com.github.randyp.jdbj.lambda.ConnectionSupplier;
+import jdk.nashorn.internal.ir.annotations.Immutable;
 
+import javax.annotation.concurrent.ThreadSafe;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * {@link javax.annotation.concurrent.Immutable} transaction builder. Only build operation is isolation.
+ * <p>
+ * Example:
+ * <pre>
+ * {@code
+ * String schema = JDBJ.transaction(connection->connection.getSchema())
+ *     .execute(db);
+ * }
+ * </pre>
+ * Exceptions are grouped using the {@link SQLException#setNextException(SQLException)}, so one can get all exceptions. Example:
+ * <pre>
+ * {@code
+ * try{
+ *     String schema = JDBJ.transaction(connection->connection.getSchema())
+ *         .execute(db);
+ * }catch(SQLException e){
+ *     while(e != null){
+ *         e.printStackTrace();
+ *         e = e.getNextException();
+ *     }
+ * }         
+ * }
+ * </pre>
+ */
+@Immutable
+@ThreadSafe
 public class ReturningTransaction<R> extends AbstractTransaction<R> {
     
     private final ConnectionCallable<R> callable;
