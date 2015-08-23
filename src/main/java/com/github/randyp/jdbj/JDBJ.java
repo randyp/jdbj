@@ -87,7 +87,7 @@ public final class JDBJ {
 
     /**
      * See {@link QueryStringBuilder} for documentation.
-     * @param string
+     * @param string string
      * @return builder
      */
     public static QueryStringBuilder string(String string) {
@@ -96,7 +96,7 @@ public final class JDBJ {
 
     /**
      * See {@link QueryStringBuilder} for documentation.
-     * @param supplier
+     * @param supplier supplier
      * @return builder
      */
     public static QueryStringBuilder reader(IOSupplier<Reader> supplier) {
@@ -105,7 +105,7 @@ public final class JDBJ {
 
     /**
      * See {@link QueryStringBuilder} for documentation.
-     * @param supplier
+     * @param supplier supplier
      * @return builder
      */
     public static QueryStringBuilder stream(IOSupplier<InputStream> supplier) {
@@ -114,7 +114,7 @@ public final class JDBJ {
 
     /**
      * See {@link QueryStringBuilder} for documentation.
-     * @param path
+     * @param path path
      * @return builder
      */
     public static QueryStringBuilder path(Path path) {
@@ -123,7 +123,7 @@ public final class JDBJ {
 
     /**
      * See {@link QueryStringBuilder} for documentation.
-     * @param resourceName
+     * @param resourceName resourceName
      * @return builder
      */
     public static QueryStringBuilder resource(String resourceName) {
@@ -133,7 +133,7 @@ public final class JDBJ {
     /**
      * See {@link QueryStringBuilder} for documentation.
      * @param klass will use klass's classloader to load resource
-     * @param resourceName
+     * @param resourceName resourceName
      * @return builder
      */
     public static QueryStringBuilder resource(Class klass, String resourceName) {
@@ -142,7 +142,7 @@ public final class JDBJ {
 
     /**
      * See {@link ReturnsQuery} for documentation.
-     * @param query
+     * @param query query
      * @return instance of {@link ReturnsQuery}
      */
     public static ReturnsQuery query(String query) {
@@ -151,7 +151,7 @@ public final class JDBJ {
 
     /**
      * See {@link ExecuteUpdate} for documentation.
-     * @param query
+     * @param query query
      * @return instance of {@link ExecuteUpdate}
      */
     public static ExecuteUpdate update(String query) {
@@ -160,7 +160,7 @@ public final class JDBJ {
 
     /**
      * See {@link ExecuteInsert} for documentation.
-     * @param query
+     * @param query query
      * @return instance of {@link ExecuteInsert}
      */
     public static <R> ExecuteInsert<R> insert(String query, ResultMapper<R> keyMapper) {
@@ -169,7 +169,7 @@ public final class JDBJ {
 
     /**
      * See {@link ExecuteStatement} for documentation.
-     * @param query
+     * @param query query
      * @return instance of {@link ExecuteStatement}
      */
     public static ExecuteStatement statement(String query) {
@@ -178,7 +178,7 @@ public final class JDBJ {
 
     /**
      * See {@link ExecuteScript} for documentation.
-     * @param script
+     * @param script script
      * @return instance of {@link ExecuteStatement}
      */
     public static ExecuteScript script(String script) {
