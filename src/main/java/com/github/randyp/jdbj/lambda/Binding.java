@@ -7,7 +7,7 @@ import java.sql.SQLException;
 /**
  * Encapsulates how to bind a specific named parameter to a prepared column.
  * <p>
- * For the most common bindings prefer using convenience methods on {@link com.github.randyp.jdbj.PositionalBindingsBuilder} and related classes such as {@link com.github.randyp.jdbj.PositionalBindingsBuilder#bindInt(String, int)}.
+ * For the most common bindings prefer using convenience methods on {@link com.github.randyp.jdbj.ExecuteQuery} and related classes, such as {@link com.github.randyp.jdbj.ExecuteQuery#bindInt(String, int)}.
  * <p>
  * For more complex bindings you can sub-class/lambda {@link Binding} and call {@link com.github.randyp.jdbj.PositionalBindingsBuilder#bind(String, Binding)}.
  * <p>
