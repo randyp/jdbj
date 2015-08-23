@@ -84,8 +84,8 @@ mvn release:clean release:prepare -B && mvn release:perform
 * [x] can append multiple string sources together to build a query
 * [x] !!!!NOT IMPLEMENTED!!! Hacky-yet-compatible batch insert & update queries - not implemented because the databases which do not implement returning mulitple keys in batch also do not return multiple keys for a single insert statement with multiple rows 
 * [ ] Wrap Batch sql exceptions
-* [ ] Examples
+* [ ] Somehow remove most antlr classes we don't need from shading process...
 
 #### 0.1.7
-* [ ] Somehow remove most antlr classes we don't need from shading process...
+* [ ] Examples
 * [ ] Java Doc
