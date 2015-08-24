@@ -2,9 +2,10 @@
 [![Coverage Status](https://coveralls.io/repos/randyp/jdbj/badge.svg?branch=master&service=github)](https://coveralls.io/github/randyp/jdbj?branch=master)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.randyp/jdbj/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.randyp/jdbj/)
 
-jdbj is a small jdbc fluent interface for capturing query intent before query execution. Sample code:
+jdbj is a small jdbc fluent interface for capturing query intent before query execution.
+
+Sample insert inside a transaction:
 ``` java
-//insert some students
 final List<NewStudent> newStudents = Arrays.asList(
         new NewStudent("Ada", "Lovelace", new BigDecimal("4.00")),
         new NewStudent("Haskell", "Curry", new BigDecimal("4.00"))
@@ -20,7 +21,10 @@ List<Long> generatedKeys = JDBJ.transaction(connection -> {
     }
     return keys;
 }).execute(db);
+```
 
+Sample select to list:
+``` java
 //setup query object
 final MapQuery<Student> studentsByIds = JDBJ.resource("student_by_ids_limit.sql")
         .query()
@@ -32,7 +36,10 @@ final MapQuery<Student> studentsByIds = JDBJ.resource("student_by_ids_limit.sql"
 final ExecuteQuery<List<Student>> listQuery = studentsByIds
         .toList();
 System.out.println(listQuery.execute(db));
+```
 
+Sample select to stream:
+``` java
 //get as stream
 final StreamQuery<Student> streamQuery = studentsByIds
         .toStream();
