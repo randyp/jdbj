@@ -67,8 +67,3 @@ A full set of examples is being developed in [jdbj-examples](https://github.com/
 * [Example DAO (connection as construction parameter)](src/test/java/com/github/randyp/jdbj/example/StudentDAO.java)
 * [Example DAO (binding/result set extension)](src/test/java/com/github/randyp/jdbj/example/extension/MessageDAO.java)
 
-
-#### Release
-``` sh
-./release.sh
-```
