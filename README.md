@@ -2,9 +2,19 @@
 [![Coverage Status](https://coveralls.io/repos/randyp/jdbj/badge.svg?branch=master&service=github)](https://coveralls.io/github/randyp/jdbj?branch=master)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.randyp/jdbj/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.randyp/jdbj/)
 
-jdbj is a small jdbc fluent interface for capturing query intent before query execution.
+JDBJ is a small jdbc fluent interface for capturing query intent before query execution.
 
-Sample insert inside a transaction:
+#### Primary Features
+* Named Parameters (No Positional Parameters, ever)
+* Collections bindable (not during batch execution)
+* Null-Safe fetching of (Boolean|Byte|Double|Float|Integer|Long|Short)
+* Java8 lambda interface for bindings, transactions
+* Fetch-forward read-only cursors, always
+* Script Execution, with parameters
+* Comprehensive test suites for latest postgres,h2,derby,SQLite,MySql 
+
+#### Sample Code
+Insert inside a transaction:
 ``` java
 final List<NewStudent> newStudents = Arrays.asList(
         new NewStudent("Ada", "Lovelace", new BigDecimal("4.00")),
@@ -23,7 +33,7 @@ List<Long> generatedKeys = JDBJ.transaction(connection -> {
 }).execute(db);
 ```
 
-Sample select to list:
+Select to list:
 ``` java
 //setup query object
 final MapQuery<Student> studentsByIds = JDBJ.resource("student_by_ids_limit.sql")
@@ -38,7 +48,7 @@ final ExecuteQuery<List<Student>> listQuery = studentsByIds
 System.out.println(listQuery.execute(db));
 ```
 
-Sample select to stream:
+Select to stream:
 ``` java
 //get as stream
 final StreamQuery<Student> streamQuery = studentsByIds
@@ -47,15 +57,6 @@ try (Stream<Student> stream = streamQuery.execute(db)) {
     stream.forEach(System.out::println);
 }
 ```
-
-#### Features
-* Named Parameters (No Positional Parameters, ever)
-* Collections bindable (not during batch execution)
-* Null-Safe fetching of (Boolean|Byte|Double|Float|Integer|Long|Short)
-* Java8 lambda interface for bindings, transactions
-* Fetch-forward read-only cursors, always
-* Script Execution, with parameters
-* Comprehensive test suites for latest postgres,h2,derby,SQLite,MySql
 
 #### Examples
 A full set of examples is being developed in [jdbj-examples](https://github.com/randyp/jdbj-examples), but here are some quick examples.
