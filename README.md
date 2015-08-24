@@ -4,6 +4,9 @@
 
 JDBJ is a small jdbc fluent interface for capturing query intent before query execution.
 
+#### See Also
+ * [Wiki](/wiki) For api documentation, guiding principles, credits.
+
 #### Primary Features
 * Named Parameters (No Positional Parameters, ever)
 * Collections bindable (not during batch execution)
