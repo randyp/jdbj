@@ -1,1 +1,0 @@
-Generally expect people to use lambdas instead of sub-classing these directly
