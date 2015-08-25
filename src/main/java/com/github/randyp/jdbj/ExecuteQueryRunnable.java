@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
 
 /**
  * Runs jdbc query so the caller can interact with the {@link ResultSet} using {@link ResultSetRunnable}. Example:
@@ -38,6 +39,7 @@ public final class ExecuteQueryRunnable extends PositionalBindingsBuilder<Execut
 
     ExecuteQueryRunnable(NamedParameterStatement statement, PositionalBindings bindings, ResultSetRunnable runnable) {
         super(statement, bindings, ((s, b) -> new ExecuteQueryRunnable(s, b, runnable)));
+        Objects.requireNonNull(runnable, "runnable must not be null");
         this.runnable = runnable;
     }
 

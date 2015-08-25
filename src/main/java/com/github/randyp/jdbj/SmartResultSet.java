@@ -2,6 +2,7 @@ package com.github.randyp.jdbj;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
 
 /**
  * A table of data representing a database result set, which
@@ -16,6 +17,7 @@ public class SmartResultSet extends SmartResult implements AutoCloseable {
     private final ResultSet rs;
 
     public SmartResultSet(ResultSet rs) {
+        Objects.requireNonNull(rs, "rs must not be null");
         this.rs = rs;
     }
 

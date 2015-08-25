@@ -6,6 +6,7 @@ import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.NotThreadSafe;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
@@ -23,6 +24,7 @@ abstract class BatchedExecute<P> {
     final List<ValueBindings> batches = new ArrayList<>();
 
     BatchedExecute(NamedParameterStatement statement) {
+        Objects.requireNonNull(statement, "statement must not be null");
         this.statement = statement;
     }
 

@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
 
 /**
  * Runs jdbc query, returns result(s). Example:
@@ -34,6 +35,7 @@ public final class ExecuteQuery<R> extends PositionalBindingsBuilder<ExecuteQuer
 
     public ExecuteQuery(NamedParameterStatement statement, PositionalBindings bindings, ResultSetToResult<R> toResult) {
         super(statement, bindings, (s, b) -> new ExecuteQuery<>(s, b, toResult));
+        Objects.requireNonNull(toResult, "toResult must not be null");
         this.toResult = toResult;
     }
 
@@ -54,8 +56,7 @@ public final class ExecuteQuery<R> extends PositionalBindingsBuilder<ExecuteQuer
         try (PreparedStatement ps = connection.prepareStatement(
                 buildSql(),
                 ResultSet.TYPE_FORWARD_ONLY,
-                ResultSet.CONCUR_READ_ONLY
-        )) {
+                ResultSet.CONCUR_READ_ONLY)) {
             bindToStatement(ps);
             try (SmartResultSet rs = new SmartResultSet(ps.executeQuery())) {
                 return toResult.from(rs);

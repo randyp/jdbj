@@ -8,6 +8,7 @@ import javax.annotation.concurrent.ThreadSafe;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
@@ -25,6 +26,9 @@ public abstract class PositionalBindingsBuilder<P extends PositionalBindingsBuil
     final PositionalBindingsBuilderFactory<P> factory;
 
     protected PositionalBindingsBuilder(NamedParameterStatement statement, PositionalBindings bindings, PositionalBindingsBuilderFactory<P> factory){
+        Objects.requireNonNull(statement, "statement must not be null");
+        Objects.requireNonNull(bindings, "bindings must not be null");
+        Objects.requireNonNull(factory, "factory must not be null");
         this.statement = statement;
         this.bindings = bindings;
         this.factory = factory;

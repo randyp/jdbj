@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
 import java.util.Spliterator;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -45,6 +46,7 @@ public final class StreamQuery<R> extends PositionalBindingsBuilder<StreamQuery<
 
     StreamQuery(NamedParameterStatement statement, PositionalBindings bindings, ResultMapper<R> mapper) {
         super(statement, bindings, ((s, b) -> new StreamQuery<>(s, b, mapper)));
+        Objects.requireNonNull(mapper, "mapper must not be null");
         this.mapper = mapper;
     }
 

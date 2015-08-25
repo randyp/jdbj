@@ -47,6 +47,7 @@ public class ReturningTransaction<R> extends AbstractTransaction<R> {
     
     ReturningTransaction(ConnectionCallable<R> callable, Integer isolation) {
         super(isolation);
+        Objects.requireNonNull(callable, "callable must not be null");
         this.callable = callable;
     }
 

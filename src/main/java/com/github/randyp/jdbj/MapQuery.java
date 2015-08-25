@@ -7,6 +7,7 @@ import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -33,6 +34,7 @@ public final class MapQuery<R> extends PositionalBindingsBuilder<MapQuery<R>> {
 
     MapQuery(NamedParameterStatement statement, PositionalBindings bindings, ResultMapper<R> mapper) {
         super(statement, bindings, (s,b)->new MapQuery<>(s,b,mapper));
+        Objects.requireNonNull(mapper, "mapper must not be null");
         this.mapper = mapper;
     }
 

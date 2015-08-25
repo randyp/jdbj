@@ -9,6 +9,7 @@ import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Perform a single sql insert statement, such as inserting a single row to the database. Example:
@@ -42,6 +43,7 @@ public final class ExecuteInsert<K> extends PositionalBindingsBuilder<ExecuteIns
 
     ExecuteInsert(NamedParameterStatement statement, PositionalBindings bindings, ResultMapper<K> keysMapper) {
         super(statement, bindings, (s, b)-> new ExecuteInsert<>(s, b, keysMapper));
+        Objects.requireNonNull(keysMapper, "keysMapper must not be null");
         this.keysMapper = keysMapper;
     }
 

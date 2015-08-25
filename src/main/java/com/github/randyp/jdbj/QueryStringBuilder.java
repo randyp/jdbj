@@ -10,6 +10,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.Objects;
 
 /**
  * Build a query string from various resources, turn them into query objects with JDBJ features.
@@ -46,6 +47,7 @@ public class QueryStringBuilder {
     }
 
     static QueryStringBuilder fromString(String queryString){
+        Objects.requireNonNull(queryString, "queryString must not be null");
         return new QueryStringBuilder(new StringBuilder(queryString));
     }
 
@@ -56,6 +58,7 @@ public class QueryStringBuilder {
     }
 
     public QueryStringBuilder string(String string){
+        Objects.requireNonNull(string, "queryString must not be null");
         return new QueryStringBuilder(clone(stringBuilder).append(string));
     }
 

@@ -47,6 +47,7 @@ public class Transaction extends AbstractTransaction<Void> {
     
     Transaction(ConnectionRunnable runnable, Integer isolation) {
         super(isolation);
+        Objects.requireNonNull(runnable, "runnable must not be null");
         this.runnable = runnable;
     }
     

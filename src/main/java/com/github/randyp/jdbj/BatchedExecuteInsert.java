@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Insert multiple rows into the database using jdbc batch functionality. Does not allow binding of collections, since generated sql must be same for all batches. Example:
@@ -52,6 +53,7 @@ public class BatchedExecuteInsert<K> extends BatchedExecute<BatchedExecuteInsert
 
     BatchedExecuteInsert(NamedParameterStatement statement, ResultMapper<K> keysMapper) {
         super(statement);
+        Objects.requireNonNull(keysMapper, "keysMapper must not be null");
         this.keysMapper = keysMapper;
     }
 
