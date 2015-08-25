@@ -61,17 +61,17 @@ public abstract class ReturningTransactionTest extends StudentTest {
         assertEquals(student.getFirstName(), actual.get(0).getFirstName());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void executeNullDataSource() throws Exception {
         JDBJ.transaction(connection-> "a").execute((DataSource) null);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void executeNullConnectionSupplier() throws Exception {
         JDBJ.transaction(connection-> "a").execute((ConnectionSupplier) null);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void executeNullConnection() throws Exception {
         JDBJ.transaction(connection-> "a").execute((Connection) null);
     }

@@ -157,7 +157,7 @@ public class PositionalBindingsTest {
             left.addAll(right);
         }
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void nullBindings() throws Exception {
             new PositionalBindings().addAll((PositionalBindings) null);
         }
@@ -223,7 +223,7 @@ public class PositionalBindingsTest {
             left.addAll(right);
         }
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void nullBindings() throws Exception {
             new PositionalBindings().addAll((ValueBindings) null);
         }

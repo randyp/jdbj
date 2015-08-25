@@ -55,27 +55,27 @@ public class BindingsTest {
                 .bindCollection(":status", new ArrayList<>());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void bindValueNullName() throws Exception {
         new PositionalBindings().bind(null, pc -> pc.setInt(1));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void bindValueNullValue() throws Exception {
         new PositionalBindings().bind(":a", null);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void bindListNullName() throws Exception {
         new PositionalBindings().bindCollection(null, new ArrayList<>());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void bindListNullList() throws Exception {
         new PositionalBindings().bindCollection(":a", null);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void bindListNullInList() throws Exception {
         new PositionalBindings().bindCollection(":a", Arrays.asList(pc -> pc.setInt(1), null));
     }

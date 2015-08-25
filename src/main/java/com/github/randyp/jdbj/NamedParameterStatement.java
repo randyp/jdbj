@@ -8,10 +8,7 @@ import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -51,16 +48,12 @@ public final class NamedParameterStatement {
     }
 
     public boolean containsParameter(String name) {
-        if (name == null) {
-            throw new IllegalArgumentException("name cannot be null");
-        }
+        Objects.requireNonNull(name, "name must not be null");
         return namedParameters.contains(name);
     }
 
     public String jdbcSql(Bindings bindings) {
-        if(bindings == null){
-            throw new IllegalArgumentException("bindings cannot be null");
-        }
+        Objects.requireNonNull(bindings, "bindings must not be null");
         final StringBuilder builder = new StringBuilder();
 
         for (Token token : tokens) {
@@ -76,12 +69,8 @@ public final class NamedParameterStatement {
     }
 
     public void bind(PreparedStatement ps, Bindings bindings) throws SQLException {
-        if (ps == null) {
-            throw new IllegalArgumentException("ps cannot be null");
-        }
-        if(bindings == null){
-            throw new IllegalArgumentException("bindings cannot be null");
-        }
+        Objects.requireNonNull(ps, "ps must not be null");
+        Objects.requireNonNull(bindings, "bindings must not be null");
         int parameterIndex = 1;
         for (String namedParameter : parametersToBind) {
             final PositionalBinding binding = bindings.get(namedParameter);
@@ -90,9 +79,7 @@ public final class NamedParameterStatement {
     }
 
     public void checkAllBindingsPresent(Bindings bindings) {
-        if(bindings == null){
-            throw new IllegalArgumentException("bindings cannot be null");
-        }
+        Objects.requireNonNull(bindings, "bindings must not be null");
         final Set<String> missingBindings = new HashSet<>(namedParameters);
         missingBindings.removeAll(bindings.keys());
         if(!missingBindings.isEmpty()){
@@ -101,9 +88,7 @@ public final class NamedParameterStatement {
     }
 
     public void checkNoExtraBindings(Bindings bindings) {
-        if (bindings == null) {
-            throw new IllegalArgumentException("bindings cannot be null");
-        }
+        Objects.requireNonNull(bindings, "bindings must not be null");
         final HashSet<String> extraKeys = new HashSet<>(bindings.keys());
         extraKeys.removeAll(namedParameters);
         if(!extraKeys.isEmpty()){

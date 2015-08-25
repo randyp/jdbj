@@ -4,7 +4,7 @@ import org.junit.Test;
 
 
 public class AdvanceFailedExceptionTest {
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void causeNotNull() throws Exception {
         //noinspection ThrowableInstanceNeverThrown
         new AdvanceFailedException(null);

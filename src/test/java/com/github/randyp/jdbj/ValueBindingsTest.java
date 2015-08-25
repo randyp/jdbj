@@ -21,14 +21,14 @@ public class ValueBindingsTest {
     }
 
     public static class Get {
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void exceptOnNull() throws Exception {
             new ValueBindings().get(null);
         }
     }
 
     public static class ContainsBinding {
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void exceptOnNull() throws Exception {
             new ValueBindings().containsBinding(null);
         }
@@ -74,12 +74,12 @@ public class ValueBindingsTest {
                     .bind(":id", pc -> pc.setInt(1));
         }
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void nullBinding() throws Exception {
             new ValueBindings().bind(":id", null);
         }
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void nullName() throws Exception {
             new ValueBindings().bind(null, pc->pc.setInt(1));
         }
@@ -125,7 +125,7 @@ public class ValueBindingsTest {
             left.addAll(right);
         }
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void nullBindings() throws Exception {
             new ValueBindings().addAll(null);
         }

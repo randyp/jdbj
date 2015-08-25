@@ -78,7 +78,7 @@ public class PositionalBindingsBuilderTest {
             assertNull(selected);
         }
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void nullBinding() throws Exception {
             final String selected;
             try (Connection connection = db.getConnection()) {

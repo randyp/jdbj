@@ -41,9 +41,7 @@ public class PositionalBindings implements Bindings, ValueBindingsBuilder<Positi
     }
 
     public PositionalBindings addAll(PositionalBindings bindings) {
-        if (bindings == null) {
-            throw new IllegalArgumentException("bindings cannot be null");
-        }
+        Objects.requireNonNull(bindings, "bindings must not be null");
         PositionalBindings newBindings = this;
         for (Map.Entry<String, Binding> entry : bindings.valueBindings.entrySet()) {
             newBindings = newBindings.bind(entry.getKey(), entry.getValue());
@@ -56,9 +54,7 @@ public class PositionalBindings implements Bindings, ValueBindingsBuilder<Positi
     }
 
     public PositionalBindings addAll(ValueBindings bindings) {
-        if (bindings == null) {
-            throw new IllegalArgumentException("bindings cannot be null");
-        }
+        Objects.requireNonNull(bindings, "bindings must not be null");
         PositionalBindings newBindings = this;
         for (Map.Entry<String, Binding> entry : bindings.asMap().entrySet()) {
             newBindings = newBindings.bind(entry.getKey(), entry.getValue());
@@ -68,18 +64,14 @@ public class PositionalBindings implements Bindings, ValueBindingsBuilder<Positi
     
     @Override
     public boolean containsBinding(String name) {
-        if (name == null) {
-            throw new IllegalArgumentException("name cannot be null");
-        }
+        Objects.requireNonNull(name, "name must not be null");
         return valueBindings.containsKey(name) || collectionBindings.containsKey(name);
     }
 
     @Override
     public PositionalBindings bind(String name, Binding binding) {
-        if (binding == null) {
-            throw new IllegalArgumentException("binding cannot be null");
-        }
-
+        Objects.requireNonNull(binding, "binding must not be null");
+        
         if (containsBinding(name)) {
             throw new IllegalArgumentException("named parameter \"" + name + "\" already has a binding");
         }
@@ -95,9 +87,7 @@ public class PositionalBindings implements Bindings, ValueBindingsBuilder<Positi
 
     @Override
     public PositionalBindings bindCollection(String name, List<Binding> bindings) {
-        if (name == null) {
-            throw new IllegalArgumentException("name cannot be null");
-        }
+        Objects.requireNonNull(bindings, "bindings must not be null");
         checkBindings(bindings);
 
         if (containsBinding(name)) {
@@ -132,13 +122,9 @@ public class PositionalBindings implements Bindings, ValueBindingsBuilder<Positi
     }
 
     private static void checkBindings(List<Binding> bindings) {
-        if (bindings == null) {
-            throw new IllegalArgumentException("bindings cannot be null");
-        }
+        Objects.requireNonNull(bindings, "bindings must not be null");
         for (Binding binding : bindings) {
-            if (binding == null) {
-                throw new IllegalArgumentException("bindings cannot contain null elements");
-            }
+            Objects.requireNonNull(binding, "bindings cannot contain null elements");
         }
     }
 }

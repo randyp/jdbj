@@ -1,5 +1,6 @@
 package com.github.randyp.jdbj;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -13,8 +14,6 @@ public class AdvanceFailedException extends RuntimeException {
 
     public AdvanceFailedException(Throwable cause) {
         super(cause);
-        if (cause == null) {
-            throw new IllegalArgumentException("AdvanceFailedException must always have a cause");
-        }
+        Objects.requireNonNull(cause, "cause must not be null");
     }
 }

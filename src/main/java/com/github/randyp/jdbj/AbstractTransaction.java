@@ -7,6 +7,7 @@ import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Objects;
 
 /**
  * Not for external use.
@@ -37,9 +38,7 @@ abstract class AbstractTransaction<R> {
     }
 
     R executeInternal(ConnectionSupplier db) throws SQLException {
-        if (db == null) {
-            throw new IllegalArgumentException("db cannot be null");
-        }
+        Objects.requireNonNull(db, "db must not be null");
 
         Connection connection = null;
         R toReturn = null;
@@ -69,9 +68,7 @@ abstract class AbstractTransaction<R> {
     }
 
     R executeInternal(Connection connection) throws SQLException {
-        if (connection == null) {
-            throw new IllegalArgumentException("connection cannot be null");
-        }
+        Objects.requireNonNull(connection, "connection must not be null");
 
         R toReturn = null;
         Integer oldTransactionIsolation = null;

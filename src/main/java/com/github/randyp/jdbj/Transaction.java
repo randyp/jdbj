@@ -9,6 +9,7 @@ import javax.annotation.concurrent.ThreadSafe;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Objects;
 
 /**
  * {@link Immutable} transaction builder. Only build operation is isolation. Example:
@@ -54,9 +55,7 @@ public class Transaction extends AbstractTransaction<Void> {
     }
     
     public void execute(DataSource db) throws SQLException {
-        if (db == null) {
-            throw new IllegalArgumentException("db cannot be null");
-        }
+        Objects.requireNonNull(db, "db must not be null");
         execute(db::getConnection);
     }
     

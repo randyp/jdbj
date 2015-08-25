@@ -324,17 +324,17 @@ public abstract class TransactionTest extends StudentTest {
         }
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void executeNullDataSource() throws Exception {
         JDBJ.transaction(connection->{}).execute((DataSource) null);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void executeNullConnectionSupplier() throws Exception {
         JDBJ.transaction(connection->{}).execute((ConnectionSupplier) null);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void executeNullConnection() throws Exception {
         JDBJ.transaction(connection->{}).execute((Connection) null);
     }

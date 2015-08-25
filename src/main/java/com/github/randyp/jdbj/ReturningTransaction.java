@@ -8,6 +8,7 @@ import javax.annotation.concurrent.ThreadSafe;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Objects;
 
 /**
  * {@link javax.annotation.concurrent.Immutable} transaction builder. Only build operation is isolation.
@@ -54,9 +55,7 @@ public class ReturningTransaction<R> extends AbstractTransaction<R> {
     }
 
     public R execute(DataSource db) throws SQLException {
-        if (db == null) {
-            throw new IllegalArgumentException("db cannot be null");
-        }
+        Objects.requireNonNull(db, "db must not be null");
         return execute(db::getConnection);
     }
 

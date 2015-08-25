@@ -32,7 +32,7 @@ public class NamedParameterStatementTest {
             assertFalse(statement.containsParameter(":id"));
         }
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void Null() throws Exception {
             NamedParameterStatement.make("select id from agent_secret WHERE status = :status")
                     .containsParameter(null);
@@ -80,7 +80,7 @@ public class NamedParameterStatementTest {
             assertEquals("select id from agent_secret WHERE status in (?,?)", statement.jdbcSql(bindings));
         }
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void Null() throws Exception {
             NamedParameterStatement.make("select id from agent_secret WHERE status in :statuses")
             .jdbcSql(null);
@@ -93,14 +93,14 @@ public class NamedParameterStatementTest {
         @ClassRule
         public static final H2Rule db = new H2Rule();
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void preparedStatementNull() throws Exception {
             final NamedParameterStatement statement = NamedParameterStatement.make("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE id = :id");
             final PositionalBindings bindings = new PositionalBindings().bind(":id", pc -> pc.setInt(-29));
             statement.bind(null, bindings);
         }
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void bindingsNull() throws Exception {
             final NamedParameterStatement statement = NamedParameterStatement.make("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE id = :id");
             final PositionalBindings bindings = new PositionalBindings().bind(":id", pc -> pc.setInt(-29));
@@ -143,7 +143,7 @@ public class NamedParameterStatementTest {
             statement.checkAllBindingsPresent(bindings);
         }
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void bindingsNull() throws Exception {
             NamedParameterStatement.make("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE id = :id")
                     .checkAllBindingsPresent(null);
@@ -182,7 +182,7 @@ public class NamedParameterStatementTest {
             statement.checkNoExtraBindings(bindings);
         }
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void bindingsNull() throws Exception {
             NamedParameterStatement.make("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE id = :id")
                     .checkNoExtraBindings(null);

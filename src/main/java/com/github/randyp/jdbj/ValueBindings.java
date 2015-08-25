@@ -29,9 +29,7 @@ public class ValueBindings implements Bindings, ValueBindingsBuilder<ValueBindin
     }
 
     public ValueBindings bind(String name, Binding binding) {
-        if (binding == null) {
-            throw new IllegalArgumentException("binding cannot be null");
-        }
+        Objects.requireNonNull(binding, "binding must not be null");
 
         if (containsBinding(name)) {
             throw new IllegalArgumentException("named parameter \"" + name + "\" already has a binding");
@@ -44,9 +42,7 @@ public class ValueBindings implements Bindings, ValueBindingsBuilder<ValueBindin
     }
 
     public ValueBindings addAll(ValueBindings bindings) {
-        if (bindings == null) {
-            throw new IllegalArgumentException("bindings cannot be null");
-        }
+        Objects.requireNonNull(bindings, "bindings must not be null");
         ValueBindings newBindings = this;
         for (Map.Entry<String, Binding> entry : bindings.valueBindings.entrySet()) {
             newBindings = newBindings.bind(entry.getKey(), entry.getValue());
@@ -60,9 +56,7 @@ public class ValueBindings implements Bindings, ValueBindingsBuilder<ValueBindin
  
     @Override
     public boolean containsBinding(String name) {
-        if (name == null) {
-            throw new IllegalArgumentException("name cannot be null");
-        }
+        Objects.requireNonNull(name, "name must not be null");
         return valueBindings.containsKey(name);
     }
 
@@ -73,6 +67,7 @@ public class ValueBindings implements Bindings, ValueBindingsBuilder<ValueBindin
 
     @Override
     public ValueBinding get(String namedParameter) {
+        Objects.requireNonNull(namedParameter, "namedParameter must not be null");
         final Binding binding = valueBindings.get(namedParameter);
         if (binding  == null) {
             throw new IllegalArgumentException("no such binding: \"" + namedParameter + "\"");

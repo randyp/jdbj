@@ -23,12 +23,12 @@ public class CollectionBindingsBuilderTest {
     public static final H2Rule db = new H2Rule();
 
     public static class BindList {
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void nullName() throws Exception {
             new SimpleBuilder().bindCollection(null, Collections.singletonList(pc -> pc.setInt(1)));
         }
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void nulList() throws Exception {
             new SimpleBuilder().bindCollection(":binding", null);
         }
@@ -52,12 +52,12 @@ public class CollectionBindingsBuilderTest {
             assertArrayEquals(new Boolean[]{Boolean.TRUE, Boolean.FALSE}, selected);
         }
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void nullArray() throws Exception {
             new SimpleBuilder().bindBooleans(":binding", (boolean[]) null);
         }
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void nullList() throws Exception {
             new SimpleBuilder().bindBooleans(":binding", (List<Boolean>) null);
         }
@@ -81,12 +81,12 @@ public class CollectionBindingsBuilderTest {
             assertArrayEquals(new Byte[]{10, 12}, selected);
         }
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void nullArray() throws Exception {
             new SimpleBuilder().bindBytes(":binding", (byte[]) null);
         }
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void nullList() throws Exception {
             new SimpleBuilder().bindBytes(":binding", (List<Byte>) null);
 
@@ -112,12 +112,12 @@ public class CollectionBindingsBuilderTest {
             assertArrayEquals(expected, selected);
         }
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void Null() throws Exception {
             new SimpleBuilder().bindDates(":binding", null);
         }
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void NullAndCalendar() throws Exception {
             new SimpleBuilder().bindDates(":binding", null, GregorianCalendar.getInstance());
 
@@ -142,12 +142,12 @@ public class CollectionBindingsBuilderTest {
             assertArrayEquals(new Double[]{10.0, 12.0}, selected);
         }
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void nullArray() throws Exception {
             new SimpleBuilder().bindDoubles(":binding", (double[]) null);
         }
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void nullList() throws Exception {
             new SimpleBuilder().bindDoubles(":binding", (List<Double>) null);
 
@@ -172,12 +172,12 @@ public class CollectionBindingsBuilderTest {
             assertArrayEquals(new Float[]{10.0f, 12.0f}, selected);
         }
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void nullArray() throws Exception {
             new SimpleBuilder().bindFloats(":binding", (float[]) null);
         }
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void nullList() throws Exception {
             new SimpleBuilder().bindFloats(":binding", (List<Float>) null);
 
@@ -202,12 +202,12 @@ public class CollectionBindingsBuilderTest {
             assertArrayEquals(new Integer[]{10, 12}, selected);
         }
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void nullArray() throws Exception {
             new SimpleBuilder().bindIntegers(":binding", (int[]) null);
         }
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void nullList() throws Exception {
             new SimpleBuilder().bindIntegers(":binding", (List<Integer>) null);
         }
@@ -231,14 +231,14 @@ public class CollectionBindingsBuilderTest {
             assertArrayEquals(new Long[]{152L, 51L}, selected);
         }
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void nullArray() throws Exception {
             new SimpleBuilder()
                     .bindLongs(":binding", (long[]) null)
                     .execute(db, rs -> rs.getObject(1));
         }
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void nullList() throws Exception {
             new SimpleBuilder()
                     .bindLongs(":binding", (List<Long>) null)
@@ -265,12 +265,12 @@ public class CollectionBindingsBuilderTest {
             assertArrayEquals(expected, selected);
         }
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void nullArray() throws Exception {
             new SimpleBuilder().bindObjects(":binding", (Object[]) null);
         }
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void nullList() throws Exception {
             new SimpleBuilder().bindObjects(":binding", (List<Object>) null);
         }
@@ -294,12 +294,12 @@ public class CollectionBindingsBuilderTest {
             assertArrayEquals(new Short[]{10, 12}, selected);
         }
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void nullArray() throws Exception {
             new SimpleBuilder().bindShorts(":binding", (short[]) null);
         }
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void nullList() throws Exception {
             new SimpleBuilder().bindShorts(":binding", (List<Short>) null);
 
@@ -325,12 +325,12 @@ public class CollectionBindingsBuilderTest {
             assertArrayEquals(expected, selected);
         }
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void nullArray() throws Exception {
             new SimpleBuilder().bindStrings(":binding", (String[]) null);
         }
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void nullList() throws Exception {
             new SimpleBuilder().bindStrings(":binding", (List<String>) null);
         }
@@ -355,12 +355,12 @@ public class CollectionBindingsBuilderTest {
             assertArrayEquals(expected, selected);
         }
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void Null() throws Exception {
             new SimpleBuilder().bindTimes(":binding", null);
         }
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void NullAndCalendar() throws Exception {
             new SimpleBuilder().bindTimes(":binding", null, GregorianCalendar.getInstance());
 
@@ -386,12 +386,12 @@ public class CollectionBindingsBuilderTest {
             assertArrayEquals(expected, selected);
         }
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void Null() throws Exception {
             new SimpleBuilder().bindTimestamps(":binding", null);
         }
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = NullPointerException.class)
         public void NullAndCalendar() throws Exception {
             new SimpleBuilder().bindTimestamps(":binding", null, GregorianCalendar.getInstance());
         }
