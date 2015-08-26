@@ -16,19 +16,22 @@ import java.util.logging.Logger;
 public class SalesTaxDB implements DataSource {
 
     public static SalesTaxDB cleanStart() throws IOException {
-        Files.walkFileTree(Paths.get("./salestaxdb"), new SimpleFileVisitor<Path>() {
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                Files.delete(file);
-                return FileVisitResult.CONTINUE;
-            }
+        final Path db = Paths.get("./salestaxdb");
+        if(Files.exists(db)){
+            Files.walkFileTree(db, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    Files.delete(file);
+                    return FileVisitResult.CONTINUE;
+                }
 
-            @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                Files.delete(dir);
-                return FileVisitResult.CONTINUE;
-            }
-        });
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                    Files.delete(dir);
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        }
 
         return new SalesTaxDB();
     }

@@ -2,6 +2,7 @@ package com.github.randyp.jdbj.example.tax.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.github.randyp.jdbj.PositionalBindings;
 import com.github.randyp.jdbj.example.Collectors;
 import com.google.common.collect.ImmutableList;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -44,10 +45,20 @@ public class Shipping {
         return new Builder(id, address.builder(), lineItems);
     }
 
+    public PositionalBindings bindInsert() {
+        return new PositionalBindings()
+                .bindString(":street_line1", address.getStreetLine1())
+                .bindString(":street_line2", address.getStreetLine2())
+                .bindString(":city", address.getCity())
+                .bindString(":state", address.getState().name())
+                .bindString(":postal_code", address.getPostalCode());
+    }
+
     public static class Builder {
 
         private long id;
 
+        @Valid
         @NotNull
         private Address.Builder address;
 

@@ -2,12 +2,14 @@ package com.github.randyp.jdbj.example.tax.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.github.randyp.jdbj.PositionalBindings;
 import com.github.randyp.jdbj.example.Collectors;
 import com.google.common.collect.ImmutableList;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -43,6 +45,10 @@ public class Invoice {
                 .map(Shipping::builder)
                 .collect(Collectors.toImmutableList());
         return new Builder(id, shippings, date);
+    }
+
+    public PositionalBindings bindInsert() {
+        return new PositionalBindings().bindTimestamp(":date", new Timestamp(date.getTime()));
     }
 
     public static class Builder {
