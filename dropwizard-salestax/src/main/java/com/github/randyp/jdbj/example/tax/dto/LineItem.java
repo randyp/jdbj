@@ -1,23 +1,76 @@
 package com.github.randyp.jdbj.example.tax.dto;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.randyp.jdbj.example.tax.Cost;
 
-public class LineItem extends NewLineItem {
+import javax.validation.constraints.NotNull;
+import java.util.Objects;
+
+public class LineItem {
     
     private final long id;
-    private final long shippingId;
+    private final long sku;
+    private final Cost cost;
 
-    public LineItem(long id, long shippingId, long sku, Cost cost) {
-        super(sku, cost);
+    private LineItem(long id, long sku, Cost cost) {
+        Objects.requireNonNull(cost, "cost must not be null");
         this.id = id;
-        this.shippingId = shippingId;
+        this.sku = sku;
+        this.cost = cost;
     }
 
     public long getId() {
         return id;
     }
 
-    public long getShippingId() {
-        return shippingId;
+    public long getSku() {
+        return sku;
+    }
+
+    public Cost getCost() {
+        return cost;
+    }
+    
+    public Builder builder(){
+        return new Builder(id, sku, cost);
+    }
+    
+    public static class Builder {
+
+        private long id;
+        
+        private long sku;
+        
+        @NotNull
+        private Cost cost;
+
+        @JsonCreator
+        public Builder(@JsonProperty("id") long id,
+                       @JsonProperty("sku") long sku,
+                       @JsonProperty("cost") Cost cost) {
+            this.id = id;
+            this.sku = sku;
+            this.cost = cost;
+        }
+
+        public Builder setId(long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder setSku(long sku) {
+            this.sku = sku;
+            return this;
+        }
+
+        public Builder setCost(Cost cost) {
+            this.cost = cost;
+            return this;
+        }
+        
+        public LineItem build(){
+            return new LineItem(id, sku, cost);
+        }
     }
 }

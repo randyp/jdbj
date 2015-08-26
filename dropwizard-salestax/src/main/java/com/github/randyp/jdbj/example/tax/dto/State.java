@@ -2,7 +2,7 @@ package com.github.randyp.jdbj.example.tax.dto;
 
 import java.util.Objects;
 
-public enum  State {
+public enum State {
     
     CA("CA", "California");
 
