@@ -26,7 +26,7 @@ final List<NewStudent> newStudents = Arrays.asList(
 );
 
 //NewStudent.INSERT is the resource which contains our sql statement
-final ExecuteInsert<Long> insert = JDBJ.resource(NewStudent.INSERT)
+final ExecuteInsert<Long> insert = JDBJ.resource("student_insert.sql")
         .insert(rs->rs.getLong(1));
 
 //db is a javax.sql.DataSource
