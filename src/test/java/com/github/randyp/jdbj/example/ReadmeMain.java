@@ -20,7 +20,7 @@ public class ReadmeMain {
                     new NewStudent("Ada", "Lovelace", new BigDecimal("4.00")),
                     new NewStudent("Haskell", "Curry", new BigDecimal("4.00"))
             );
-            final ExecuteInsert<Long> insert = JDBJ.resource(NewStudent.INSERT)
+            final ExecuteInsert<Long> insert = JDBJ.resource("student_insert.sql")
                     .insert(rs->rs.getLong(1));
             
             //db is a javax.sql.DataSource
