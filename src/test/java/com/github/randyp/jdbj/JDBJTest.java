@@ -47,17 +47,17 @@ public class JDBJTest extends StudentTest {
 
     @Test
     public void string_resource() throws Exception {
-        assertTrue(Student.selectAll.execute(db).isEmpty());
+        assertTrue(Student.SELECT_ALL.execute(db).isEmpty());
         JDBJ.string("")
                 .resource("student_insert_ada10.sql")
                 .update()
                 .execute(db);
-        assertFalse(Student.selectAll.execute(db).isEmpty());
+        assertFalse(Student.SELECT_ALL.execute(db).isEmpty());
     }
 
     @Test
     public void stream_stream() throws Exception {
-        assertTrue(Student.selectAll.execute(db).isEmpty());
+        assertTrue(Student.SELECT_ALL.execute(db).isEmpty());
         final URL url = JDBJTest.class.getClassLoader().getResource("student_insert_ada10.sql");
         assertNotNull(url);
         JDBJ.stream(url::openStream)
@@ -65,7 +65,7 @@ public class JDBJTest extends StudentTest {
                 .stream(url::openStream)
                 .update()
                 .execute(db);
-        assertFalse(Student.selectAll.execute(db).isEmpty());
+        assertFalse(Student.SELECT_ALL.execute(db).isEmpty());
     }
 
     @Test
@@ -81,10 +81,10 @@ public class JDBJTest extends StudentTest {
         }
 
         try(Connection connection = db.getConnection()){
-            assertTrue(Student.selectAll.execute(connection).isEmpty());
+            assertTrue(Student.SELECT_ALL.execute(connection).isEmpty());
             //noinspection AccessStaticViaInstance
             new JDBJ().path(tmpFile.toPath()).statement().execute(connection); //for test coverage on constructor
-            assertEquals(1, Student.selectAll.execute(connection).size());
+            assertEquals(1, Student.SELECT_ALL.execute(connection).size());
         }
     }
 
@@ -101,10 +101,10 @@ public class JDBJTest extends StudentTest {
         }
 
         try(Connection connection = db.getConnection()){
-            assertTrue(Student.selectAll.execute(connection).isEmpty());
+            assertTrue(Student.SELECT_ALL.execute(connection).isEmpty());
             //noinspection AccessStaticViaInstance
             JDBJ.string("").path(tmpFile.toPath()).statement().execute(connection); //for test coverage on constructor
-            assertEquals(1, Student.selectAll.execute(connection).size());
+            assertEquals(1, Student.SELECT_ALL.execute(connection).size());
         }
     }
 

@@ -21,14 +21,14 @@ public abstract class BatchedExecuteInsertTest extends StudentTest {
         final NewStudent newStudent = new NewStudent("Ada10", "Dada10", new BigDecimal("3.1"));
 
         ResultMapper<Long> keyMapper = rs -> rs.getLong(1);
-        BatchedExecuteInsert<Long> insertQuery = JDBJ.resource(Student.insert).insert(keyMapper)
+        BatchedExecuteInsert<Long> insertQuery = JDBJ.resource(Student.INSERT).insert(keyMapper)
                 .asBatch()
                 .startBatch()
                 .bindValues(newStudent::bindings)
                 .addBatch();
 
         final List<Long> keys = insertQuery.execute(db());
-        final List<Student> actual = Student.selectAll.execute(db());
+        final List<Student> actual = Student.SELECT_ALL.execute(db());
         assertEquals(1, keys.size());
         assertEquals(Collections.singletonList(newStudent.withId(keys.get(0))), actual);
     }
@@ -41,7 +41,7 @@ public abstract class BatchedExecuteInsertTest extends StudentTest {
         );
 
         ResultMapper<Long> keyMapper = rs -> rs.getLong(1);
-        BatchedExecuteInsert<Long> insertQuery = JDBJ.resource(Student.insert).insert(keyMapper)
+        BatchedExecuteInsert<Long> insertQuery = JDBJ.resource(Student.INSERT).insert(keyMapper)
                 .asBatch();
         for (NewStudent newStudent : newStudents) {
             insertQuery.startBatch()
@@ -51,7 +51,7 @@ public abstract class BatchedExecuteInsertTest extends StudentTest {
 
 
         final List<Long> keys = insertQuery.execute(db());
-        final List<Student> actual = Student.selectAll.execute(db());
+        final List<Student> actual = Student.SELECT_ALL.execute(db());
         assertEquals(2, keys.size());
         final List<Student> expected = Arrays.asList(
                 newStudents.get(0).withId(keys.get(0)),
@@ -63,7 +63,7 @@ public abstract class BatchedExecuteInsertTest extends StudentTest {
     @Test(expected = IllegalStateException.class)
     public void noBatchesAdded() throws Exception {
         ResultMapper<Long> keyMapper = rs -> rs.getLong(1);
-        BatchedExecuteInsert<Long> insertQuery = JDBJ.resource(Student.insert)
+        BatchedExecuteInsert<Long> insertQuery = JDBJ.resource(Student.INSERT)
                 .insert(keyMapper)
                 .asBatch();
 
@@ -75,7 +75,7 @@ public abstract class BatchedExecuteInsertTest extends StudentTest {
         final NewStudent student = new NewStudent("Ada10", "Dada10", new BigDecimal("3.1"));
 
         ResultMapper<Long> keyMapper = rs -> rs.getLong(1);
-        JDBJ.resource(Student.insert)
+        JDBJ.resource(Student.INSERT)
                 .insert(keyMapper)
                 .asBatch()
                 .startBatch()
@@ -88,7 +88,7 @@ public abstract class BatchedExecuteInsertTest extends StudentTest {
     public void batchAddedMultipleTimes() throws Exception {
         final NewStudent newStudent = new NewStudent("Ada10", "Dada10", new BigDecimal("3.1"));
 
-        final BatchedExecuteInsert<Long> batchInsert = JDBJ.resource(Student.insert)
+        final BatchedExecuteInsert<Long> batchInsert = JDBJ.resource(Student.INSERT)
                 .insert(rs -> rs.getLong(1))
                 .asBatch();
         final BatchedExecuteInsert<Long>.Batch batch = batchInsert
@@ -98,6 +98,6 @@ public abstract class BatchedExecuteInsertTest extends StudentTest {
         batch.addBatch();
         batch.addBatch();
         batchInsert.execute(db());
-        assertEquals(2, Student.selectAll.execute(db()).size());
+        assertEquals(2, Student.SELECT_ALL.execute(db()).size());
     }
 }

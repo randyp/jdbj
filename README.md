@@ -19,14 +19,17 @@ JDBJ is a small jdbc fluent interface for capturing query intent before query ex
 #### Sample Code
 Insert inside a transaction:
 ``` java
+//INSERT some students
 final List<NewStudent> newStudents = Arrays.asList(
         new NewStudent("Ada", "Lovelace", new BigDecimal("4.00")),
         new NewStudent("Haskell", "Curry", new BigDecimal("4.00"))
 );
-final ExecuteInsert<Long> insert = JDBJ.resource(NewStudent.insert)
+
+//NewStudent.INSERT is the resource which contains our sql statement
+final ExecuteInsert<Long> insert = JDBJ.resource(NewStudent.INSERT)
         .insert(rs->rs.getLong(1));
 
-//db is a javax.sql.DataSource or com.github.randyp.jdbj.lambda.ConnectionSupplier
+//db is a javax.sql.DataSource
 List<Long> generatedKeys = JDBJ.transaction(connection -> {
     final List<Long> keys = new ArrayList<>();
     for (NewStudent newStudent : newStudents) {

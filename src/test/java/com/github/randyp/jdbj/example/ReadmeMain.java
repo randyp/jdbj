@@ -2,7 +2,6 @@ package com.github.randyp.jdbj.example;
 
 import com.github.randyp.jdbj.*;
 import com.github.randyp.jdbj.db.h2_1_4.H2DB;
-import com.github.randyp.jdbj.lambda.ConnectionCallable;
 import com.github.randyp.jdbj.student.NewStudent;
 import com.github.randyp.jdbj.student.Student;
 
@@ -16,12 +15,12 @@ public class ReadmeMain {
 
     public static void main(String[] args) throws Exception {
         try (H2DB db = new H2DB("PrototypeMain")) {
-            //insert some students
+            //INSERT some students
             final List<NewStudent> newStudents = Arrays.asList(
                     new NewStudent("Ada", "Lovelace", new BigDecimal("4.00")),
                     new NewStudent("Haskell", "Curry", new BigDecimal("4.00"))
             );
-            final ExecuteInsert<Long> insert = JDBJ.resource(NewStudent.insert)
+            final ExecuteInsert<Long> insert = JDBJ.resource(NewStudent.INSERT)
                     .insert(rs->rs.getLong(1));
             
             //db is a javax.sql.DataSource

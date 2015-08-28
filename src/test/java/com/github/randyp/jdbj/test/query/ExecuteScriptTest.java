@@ -14,7 +14,7 @@ public abstract class ExecuteScriptTest extends StudentTest {
     @Test
     public void insertTwoNoParams() throws Exception {
         JDBJ.resource("student_insert_ada10_ada11.sql").script().execute(db());
-        final List<Student> actual = Student.selectAll.execute(db());
+        final List<Student> actual = Student.SELECT_ALL.execute(db());
         assertEquals(2, actual.size());
         actual.sort(Student.Compare.FIRST_NAME);
         assertEquals("Ada10", actual.get(0).getFirstName());
@@ -33,7 +33,7 @@ public abstract class ExecuteScriptTest extends StudentTest {
                 .bindString(":name0", ada10)
                 .bindString(":name1", ada11)
                 .execute(db());
-        final List<Student> actual = Student.selectAll.execute(db());
+        final List<Student> actual = Student.SELECT_ALL.execute(db());
         assertEquals(2, actual.size());
         actual.sort(Student.Compare.FIRST_NAME);
         assertEquals("Ada10", actual.get(0).getFirstName());
@@ -44,6 +44,6 @@ public abstract class ExecuteScriptTest extends StudentTest {
     public void convenienceMethodOnJDBJ() throws Exception {
         JDBJ.script("INSERT INTO student(first_name, last_name, gpa) VALUES ('a', 'b', '3.1');")
                 .execute(db());
-        assertEquals(1, Student.selectAll.execute(db()).size());
+        assertEquals(1, Student.SELECT_ALL.execute(db()).size());
     }
 }

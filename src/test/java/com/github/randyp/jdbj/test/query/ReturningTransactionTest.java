@@ -20,7 +20,7 @@ public abstract class ReturningTransactionTest extends StudentTest {
 
     protected final NewStudent student = new NewStudent("Ada", "Dada", new BigDecimal("3.1"));
 
-    protected final ExecuteUpdate executeUpdate = JDBJ.resource(Student.insert).update()
+    protected final ExecuteUpdate executeUpdate = JDBJ.resource(Student.INSERT).update()
             .bindString(":first_name", student.getFirstName())
             .bindString(":last_name", student.getLastName())
             .bindBigDecimal(":gpa", student.getGpa());
@@ -41,7 +41,7 @@ public abstract class ReturningTransactionTest extends StudentTest {
     public void returning() throws Exception {
         ConnectionCallable<List<Student>> callable = connection -> {
             assertEquals(1, executeUpdate.execute(connection));
-            return Student.selectAll.execute(connection);
+            return Student.SELECT_ALL.execute(connection);
         };
         final List<Student> actual = JDBJ.transaction(callable).execute(db());
 
@@ -53,7 +53,7 @@ public abstract class ReturningTransactionTest extends StudentTest {
     public void returningWithIsolation() throws Exception {
         ConnectionCallable<List<Student>> callable = connection -> {
             assertEquals(1, executeUpdate.execute(connection));
-            return Student.selectAll.execute(connection);
+            return Student.SELECT_ALL.execute(connection);
         };
         final List<Student> actual = JDBJ.transaction(callable).isolation(highIsolation).execute(db());
 

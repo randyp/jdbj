@@ -11,7 +11,7 @@ import java.util.List;
 
 public class Student extends NewStudent {
 
-    public static final ExecuteQuery<List<Student>> selectAll = JDBJ.query("SELECT * FROM student ORDER BY id ASC")
+    public static final ExecuteQuery<List<Student>> SELECT_ALL = JDBJ.query("SELECT * FROM student ORDER BY id ASC")
             .map(Student::from)
             .toList();
 

@@ -24,7 +24,7 @@ public abstract class BatchedExecuteUpdateTest extends StudentTest {
                 new NewStudent("Ada11", "Dada11", new BigDecimal("3.2"))
         );
 
-        BatchedExecuteUpdate insertQuery = JDBJ.resource(Student.insert).update().asBatch();
+        BatchedExecuteUpdate insertQuery = JDBJ.resource(Student.INSERT).update().asBatch();
         for (NewStudent newStudent : expected) {
             insertQuery.startBatch()
                     .bindValues(newStudent::bindings)
@@ -32,7 +32,7 @@ public abstract class BatchedExecuteUpdateTest extends StudentTest {
         }
 
         assertArrayEquals(new int[]{1, 1}, insertQuery.execute(db()));
-        final List<Student> actual = Student.selectAll.execute(db());
+        final List<Student> actual = Student.SELECT_ALL.execute(db());
         assertEquals(expected.size(), actual.size());
         for (int i = 0; i < actual.size(); i++) {
             final NewStudent expectedStudent = expected.get(i);
@@ -43,7 +43,7 @@ public abstract class BatchedExecuteUpdateTest extends StudentTest {
 
     @Test(expected = IllegalStateException.class)
     public void noBatchesAdded() throws Exception {
-        BatchedExecuteUpdate insertQuery = JDBJ.resource(Student.insert)
+        BatchedExecuteUpdate insertQuery = JDBJ.resource(Student.INSERT)
                 .update()
                 .asBatch();
 
@@ -56,7 +56,7 @@ public abstract class BatchedExecuteUpdateTest extends StudentTest {
     public void missingBindings() throws Exception {
         final NewStudent student = new NewStudent("Ada10", "Dada10", new BigDecimal("3.1"));
 
-        JDBJ.resource(Student.insert)
+        JDBJ.resource(Student.INSERT)
                 .update()
                 .asBatch()
                 .startBatch()
@@ -69,7 +69,7 @@ public abstract class BatchedExecuteUpdateTest extends StudentTest {
     public void batchAddedMultipleTimes() throws Exception {
         final NewStudent newStudent = new NewStudent( "Ada10", "Dada10", new BigDecimal("3.1"));
 
-        final BatchedExecuteUpdate batchUpdate = JDBJ.resource(Student.insert)
+        final BatchedExecuteUpdate batchUpdate = JDBJ.resource(Student.INSERT)
                 .update()
                 .asBatch();
         final BatchedExecuteUpdate.Batch batch = batchUpdate
@@ -79,6 +79,6 @@ public abstract class BatchedExecuteUpdateTest extends StudentTest {
         batch.addBatch();
         batch.addBatch();
         batchUpdate.execute(db());
-        assertEquals(2, Student.selectAll.execute(db()).size());
+        assertEquals(2, Student.SELECT_ALL.execute(db()).size());
     }
 }
