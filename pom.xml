@@ -302,7 +302,7 @@
                                 </goals>
                                 <configuration>
                                     <keyname>codemonastery</keyname>
-                                    <passphrase />
+                                    <passphrase>${env.codemonastery_passphrase}</passphrase>
                                 </configuration>
                             </execution>
                         </executions>
