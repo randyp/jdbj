@@ -1,11 +1,11 @@
-[![Build Status](https://travis-ci.org/randyp/jdbj.svg?branch=master)](https://travis-ci.org/randyp/jdbj)
-[![Coverage Status](https://coveralls.io/repos/randyp/jdbj/badge.svg?branch=master&service=github)](https://coveralls.io/github/randyp/jdbj?branch=master)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.randyp/jdbj/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.randyp/jdbj/)
+[![Build Status](https://travis-ci.org/code-monastery/jdbj.svg?branch=master)](https://travis-ci.org/code-monastery/jdbj)
+[![Coverage Status](https://coveralls.io/repos/code-monastery/jdbj/badge.svg?branch=master&service=github)](https://coveralls.io/github/code-monastery/jdbj?branch=master)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.randyp/code-monastery/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.code-monastery/jdbj/)
 
 JDBJ is a small jdbc fluent interface for capturing query intent before query execution.
 
 #### See Also
- * [Wiki](https://github.com/randyp/jdbj/wiki) For api documentation, guiding principles, credits.
+ * [Wiki](https://github.com/code-monastery/jdbj/wiki) For api documentation, guiding principles, credits.
 
 #### Primary Features
 * Named Parameters (No Positional Parameters, ever)
