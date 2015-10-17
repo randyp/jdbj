@@ -201,7 +201,7 @@
                             <relocations>
                                 <relocation>
                                     <pattern>org.antlr.runtime</pattern>
-                                    <shadedPattern>jdbj.org.antlr.runtime</shadedPattern>
+                                    <shadedPattern>io.codemonastery.jdbj.org.antlr.runtime</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>
