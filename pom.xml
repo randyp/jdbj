@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.randyp</groupId>
+    <groupId>io.codemonastery</groupId>
     <artifactId>jdbj</artifactId>
     <version>0.1.10-SNAPSHOT</version>
     <packaging>jar</packaging>
@@ -11,7 +11,7 @@
     <description>
         a java8 fluent interface for jdbc
     </description>
-    <url>https://github.com/randyp/jdbj</url>
+    <url>https://github.com/code-monastery/jdbj</url>
 
     <licenses>
         <license>
@@ -22,9 +22,9 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:git://github.com/randyp/jdbj.git</connection>
-        <developerConnection>scm:git:git@github.com:randyp/jdbj.git</developerConnection>
-        <url>https://github.com/randyp/jdbj</url>
+        <connection>scm:git:git://github.com/code-monastery/jdbj.git</connection>
+        <developerConnection>scm:git:git@github.com:code-monastery/jdbj.git</developerConnection>
+        <url>https://github.com/code-monastery/jdbj</url>
         <tag>HEAD</tag>
     </scm>
 
@@ -33,6 +33,11 @@
             <id>randyp</id>
             <name>Randy Pensinger</name>
             <email>rspensinger@gmail.com</email>
+        </developer>
+        <developer>
+            <id>cyeagy</id>
+            <name>Chris Yeagy</name>
+            <email>chrisy@porch.com</email>
         </developer>
     </developers>
 
@@ -296,7 +301,7 @@
                                     <goal>sign</goal>
                                 </goals>
                                 <configuration>
-                                    <keyname>randyp/jdbj</keyname>
+                                    <keyname>codemonastery</keyname>
                                     <passphrase />
                                 </configuration>
                             </execution>
