@@ -86,16 +86,14 @@ abstract class AbstractTransaction<R> {
 
             toReturn = callable().call(connection);
             connection.commit();
-        } catch (SQLException e) {
-            caught = e;
+        } catch (Throwable e) {
+            caught = e instanceof SQLException ? (SQLException) e : new SQLException(e);
             try {
                 connection.rollback();
             } catch (SQLException re) {
                 caught.setNextException(re);
             }
             
-        } catch(Exception e){
-            caught = new SQLException("Uncaught exception in transaction", e);
         }finally {
             try {
                 connection.setAutoCommit(true);
