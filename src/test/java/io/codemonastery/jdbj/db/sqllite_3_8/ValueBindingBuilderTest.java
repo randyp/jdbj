@@ -13,6 +13,10 @@ import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 @RunWith(Enclosed.class)
 public class ValueBindingBuilderTest {
 
@@ -159,17 +163,29 @@ public class ValueBindingBuilderTest {
         @Test
         @Override
         public void value() throws Exception {
-            thrown.expect(AssertionError.class);
-            thrown.expectMessage("Driver created null blob");
-            super.value();
+            try {
+                super.value();
+                fail("Was supposed to except");
+            }catch (Exception e){
+                assertTrue(e instanceof SQLException);
+                assertTrue(e.getCause() instanceof AssertionError);
+                assertEquals("Driver created null blob", e.getCause().getMessage());
+            }
         }
+
+        
 
         @Test
         @Override
         public void valueNull() throws Exception {
-            thrown.expect(AssertionError.class);
-            thrown.expectMessage("Driver created null blob");
-            super.valueNull();
+            try {
+                super.valueNull();
+                fail("Was supposed to except");
+            }catch (Exception e){
+                assertTrue(e instanceof SQLException);
+                assertTrue(e.getCause() instanceof AssertionError);
+                assertEquals("Driver created null blob", e.getCause().getMessage());
+            }
         }
 
         @Test
