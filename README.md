@@ -1,6 +1,5 @@
 [![Build Status](https://travis-ci.org/code-monastery/jdbj.svg?branch=master)](https://travis-ci.org/code-monastery/jdbj)
-[![Coverage Status](https://coveralls.io/repos/code-monastery/jdbj/badge.svg?branch=master&service=github)](https://coveralls.io/github/code-monastery/jdbj?branch=master)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.randyp/code-monastery/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.code-monastery/jdbj/)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.code-monastery/jdbj/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.codemonastery/jdbj/)
 
 JDBJ is a small jdbc fluent interface for capturing query intent before query execution.
 
