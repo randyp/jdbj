@@ -22,11 +22,7 @@ public class QueriesTest {
             return db;
         }
 
-        @Test(expected = AssertionError.class) //because h2 doesn't return multiple keys from execute batch
-        @Override
-        public void insertBatches() throws Exception {
-            super.insertBatches();
-        }
+
     }
 
     public static class BatchedExecuteUpdate extends BatchedExecuteUpdateTest {

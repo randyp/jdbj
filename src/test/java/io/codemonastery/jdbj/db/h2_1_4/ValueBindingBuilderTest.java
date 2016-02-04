@@ -12,6 +12,8 @@ import org.junit.runner.RunWith;
 import javax.sql.DataSource;
 import java.sql.SQLFeatureNotSupportedException;
 
+import static org.junit.Assert.*;
+
 @RunWith(Enclosed.class)
 public class ValueBindingBuilderTest {
 
@@ -31,14 +33,14 @@ public class ValueBindingBuilderTest {
         @Override
         public void value() throws Exception {
             thrown.expect(JdbcSQLException.class);
-            thrown.expectMessage("Feature not supported: \"createArray\" [50100-187]");
+            thrown.expectMessage("Feature not supported: \"createArray\" [50100-191]");
             super.value();
         }
 
         @Override
         public void Null() throws Exception {
             thrown.expect(JdbcSQLException.class);
-            thrown.expectMessage("Feature not supported: \"setArray\" [50100-187]");
+            thrown.expectMessage("Feature not supported: \"setArray\" [50100-191]");
             super.Null();
         }
     }
@@ -74,12 +76,10 @@ public class ValueBindingBuilderTest {
             return db;
         }
 
-        //appears to be bug in driver
         @Override
-        @Test
         public void valueNull() throws Exception {
             thrown.expect(JdbcSQLException.class);
-            thrown.expectMessage("General error: \"java.lang.NullPointerException\" [50000-187]");
+            thrown.expectMessage("General error: \"java.lang.NullPointerException\" [50000-191]");
             super.valueNull();
         }
     }
