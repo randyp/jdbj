@@ -1,4 +1,4 @@
 #!/bin/bash
 
 echo "coverallsToken starts with ${coverallsToken:0:4}"
-mvn -DrepoToken="${coverallsToken}" -B clean test jacoco:report coveralls:report
+mvn -DrepoToken="${coverallsToken}" -B jacoco:report coveralls:report
