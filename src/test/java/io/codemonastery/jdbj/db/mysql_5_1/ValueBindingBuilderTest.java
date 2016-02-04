@@ -288,30 +288,6 @@ public class ValueBindingBuilderTest {
         }
 
         @Override
-        @Test(expected = SQLFeatureNotSupportedException.class)
-        public void valueSQLType() throws Exception {
-            super.valueSQLType();
-        }
-
-        @Override
-        @Test(expected = SQLFeatureNotSupportedException.class)
-        public void valueNullSQLType() throws Exception {
-            super.valueNullSQLType();
-        }
-
-        @Override
-        @Test(expected = SQLFeatureNotSupportedException.class)
-        public void valueSQLTypeLength() throws Exception {
-            super.valueSQLTypeLength();
-        }
-
-        @Override
-        @Test(expected = SQLFeatureNotSupportedException.class)
-        public void valueNullSQLTypeLength() throws Exception {
-            super.valueNullSQLTypeLength();
-        }
-
-        @Override
         public SimpleBuilder builder() {
             return new SimpleBuilder("char(500)");
         }
