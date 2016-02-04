@@ -4,7 +4,7 @@
 
     <groupId>io.codemonastery</groupId>
     <artifactId>jdbj</artifactId>
-    <version>0.1.16-SNAPSHOT</version>
+    <version>0.1.16</version>
     <packaging>jar</packaging>
     <name>jdbj</name>
 
@@ -25,7 +25,7 @@
         <connection>scm:git:git://github.com/code-monastery/jdbj.git</connection>
         <developerConnection>scm:git:git@github.com:code-monastery/jdbj.git</developerConnection>
         <url>https://github.com/code-monastery/jdbj</url>
-        <tag>HEAD</tag>
+        <tag>jdbj-0.1.16</tag>
     </scm>
 
     <developers>
