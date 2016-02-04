@@ -66,7 +66,7 @@ try (Stream<Student> stream = streamQuery.execute(db)) {
 
 #### Examples
 A full set of examples is being developed in the [examples-branch](https://github.com/randyp/jdbj/tree/examples), but here are some quick examples maintained in the test directory:
-* [Example Main](src/test/java/com/github/randyp/jdbj/example/InformationSchemaMain.java)
-* [Example DAO (connection as construction parameter)](src/test/java/com/github/randyp/jdbj/example/StudentDAO.java)
-* [Example DAO (binding/result set extension)](src/test/java/com/github/randyp/jdbj/example/extension/MessageDAO.java)
+* [Example Main](src/test/java/io/codemonastery/jdbj/example/InformationSchemaMain.java)
+* [Example DAO (connection as construction parameter)](src/test/java/io/codemonastery/jdbj/example/StudentDAO.java)
+* [Example DAO (binding/result set extension)](src/test/java/io/codemonastery/jdbj/example/extension/MessageDAO.java)
 
