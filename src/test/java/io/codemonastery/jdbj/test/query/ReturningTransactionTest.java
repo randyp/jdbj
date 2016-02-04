@@ -43,7 +43,7 @@ public abstract class ReturningTransactionTest extends StudentTest {
             assertEquals(1, executeUpdate.execute(connection));
             return Student.SELECT_ALL.execute(connection);
         };
-        final List<Student> actual = JDBJ.transaction(callable).execute(db());
+        final List<Student> actual = JDBJ.returningTransaction(callable).execute(db());
 
         assertEquals(1, actual.size());
         assertEquals(student.getFirstName(), actual.get(0).getFirstName());
@@ -55,7 +55,7 @@ public abstract class ReturningTransactionTest extends StudentTest {
             assertEquals(1, executeUpdate.execute(connection));
             return Student.SELECT_ALL.execute(connection);
         };
-        final List<Student> actual = JDBJ.transaction(callable).isolation(highIsolation).execute(db());
+        final List<Student> actual = JDBJ.returningTransaction(callable).isolation(highIsolation).execute(db());
 
         assertEquals(1, actual.size());
         assertEquals(student.getFirstName(), actual.get(0).getFirstName());
@@ -63,17 +63,17 @@ public abstract class ReturningTransactionTest extends StudentTest {
 
     @Test(expected = NullPointerException.class)
     public void executeNullDataSource() throws Exception {
-        JDBJ.transaction(connection-> "a").execute((DataSource) null);
+        JDBJ.returningTransaction(connection -> "a").execute((DataSource) null);
     }
 
     @Test(expected = NullPointerException.class)
     public void executeNullConnectionSupplier() throws Exception {
-        JDBJ.transaction(connection-> "a").execute((ConnectionSupplier) null);
+        JDBJ.returningTransaction(connection -> "a").execute((ConnectionSupplier) null);
     }
 
     @Test(expected = NullPointerException.class)
     public void executeNullConnection() throws Exception {
-        JDBJ.transaction(connection-> "a").execute((Connection) null);
+        JDBJ.returningTransaction(connection -> "a").execute((Connection) null);
     }
-    
+
 }

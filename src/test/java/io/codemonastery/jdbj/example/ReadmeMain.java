@@ -22,9 +22,9 @@ public class ReadmeMain {
             );
             final ExecuteInsert<Long> insert = JDBJ.resource("student_insert.sql")
                     .insert(rs->rs.getLong(1));
-            
+
             //db is a javax.sql.DataSource
-            List<Long> generatedKeys = JDBJ.transaction(connection -> {
+            List<Long> generatedKeys = JDBJ.returningTransaction(connection -> {
                 final List<Long> keys = new ArrayList<>();
                 for (NewStudent newStudent : newStudents) {
                     keys.addAll(insert.bindValues(newStudent::bindings).execute(connection));

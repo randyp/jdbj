@@ -27,7 +27,7 @@ public abstract class BindBlobTest implements DBSupplier {
                     .bindBlob(":binding", blob)
                     .execute(connection, rs -> rs.getBlob(1).getBytes(1, expected.length));
         };
-        final byte[] selected = JDBJ.transaction(callable).execute(db());
+        final byte[] selected = JDBJ.returningTransaction(callable).execute(db());
         assertArrayEquals(expected, selected);
     }
 
@@ -41,7 +41,7 @@ public abstract class BindBlobTest implements DBSupplier {
                     .bindBlob(":binding", blob)
                     .execute(connection, rs -> rs.getBytes(1));
         };
-        final byte[] selected = JDBJ.transaction(callable).execute(db());
+        final byte[] selected = JDBJ.returningTransaction(callable).execute(db());
         assertNull(selected);
     }
 
@@ -53,7 +53,7 @@ public abstract class BindBlobTest implements DBSupplier {
                     .bindBlob(":binding", expectedStream())
                     .execute(connection, rs -> rs.getBlob(1).getBytes(1, expected.length));
         };
-        final byte[] selected = JDBJ.transaction(callable).execute(db());
+        final byte[] selected = JDBJ.returningTransaction(callable).execute(db());
         assertArrayEquals(expected, selected);
     }
 
@@ -65,7 +65,7 @@ public abstract class BindBlobTest implements DBSupplier {
                     .bindBlob(":binding", (InputStream) null)
                     .execute(connection, rs -> rs.getBytes(1));
         };
-        final byte[] selected = JDBJ.transaction(callable).execute(db());
+        final byte[] selected = JDBJ.returningTransaction(callable).execute(db());
         assertNull(selected);
     }
 
@@ -77,7 +77,7 @@ public abstract class BindBlobTest implements DBSupplier {
                     .bindBlob(":binding", expectedStream(), (long) expected.length)
                     .execute(connection, rs -> rs.getBlob(1).getBytes(1, expected.length));
         };
-        final byte[] selected = JDBJ.transaction(callable).execute(db());
+        final byte[] selected = JDBJ.returningTransaction(callable).execute(db());
         assertArrayEquals(expected, selected);
     }
 
@@ -89,7 +89,7 @@ public abstract class BindBlobTest implements DBSupplier {
                     .bindBlob(":binding", null, 5L)
                     .execute(connection, rs -> rs.getBytes(1));
         };
-        final byte[] selected = JDBJ.transaction(callable).execute(db());
+        final byte[] selected = JDBJ.returningTransaction(callable).execute(db());
         assertNull(selected);
     }
 

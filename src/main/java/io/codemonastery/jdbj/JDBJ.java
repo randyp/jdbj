@@ -33,7 +33,7 @@ public final class JDBJ {
      * @param <R> callable return type
      * @return transaction builder
      */
-    public static <R> ReturningTransaction<R> transaction(ConnectionCallable<R> callable){
+    public static <R> ReturningTransaction<R> returningTransaction(ConnectionCallable<R> callable){
         return new ReturningTransaction<>(callable);
     }
 
