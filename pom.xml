@@ -146,12 +146,7 @@
                                     <directory>${pom.basedir}</directory>
                                     <includes>
                                         <include>derby.log</include>
-                                        <include>jdbjdb.log</include>
-                                        <include>jdbjdb.db</include>
-                                        <include>jdbjdb</include>
-                                        <include>jdbjdb.tmp</include>
-                                        <include>jdbjdb.script</include>
-                                        <include>jdbjdb.properties</include>
+                                        <include>jdbjdb/</include>
                                     </includes>
                                 </fileset>
                             </filesets>
