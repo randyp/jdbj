@@ -1,14 +1,17 @@
 sudo: false
 language: java
 jdk:
-  - oraclejdk8
+- oraclejdk8
 addons:
-  postgresql: "9.4"
-  mysql: "5.6.26"
+  postgresql: '9.4'
+  mysql: 5.6.26
 cache:
   directories:
-    - $HOME/.m2
+  - $HOME/.m2
 install: mvn -DskipTests=true -Dbasepom.check.skip-all=true -B install
 script: bash .travis.sh
 after_success:
-  - bash .travis_after_success.sh
+- bash .travis_after_success.sh
+notifications:
+  slack:
+    secure: Ni9WJElUg2OyXkd1JtRYgEDVJ4MG37WrgzHo5XZruNiDjfWBKTkau8lEQuNPSx11bMNyz2iZlf18Xm0zoV+sLBxq2tYzaXhnhMdf6AdOosQ6SrCUjA1TjYKX8PYLaFRNnPlHjbkA9OQVp4O1y7jacWdTFd/3r/GbTRFepcKhxfYuhi1DlCjRqxTEG91nhFVOhbY+hLeLUSHLTUlk7l587hRRSKhE4uOK4DSRD00GQ92UM1ubaECIiyjofT+Z6IidEqdA8abdYFR7DAt+IbpGZwAGffNZOWLi7VLEpvo+94aoyIk6DnCpGXqNG4P/3MNOFUDBqdT0yHpFuQIcLG9hU1kBxv/txI04OxybLpBAWL6fxmpTc/oQDF7er4tlVeXWGUchzbRWv2fI5dS+w4X4JKqX/mnbcf+W2Gql/fVGGRrJrmYU+0cAB+egucgPKX2F+EmKfrnmQO9ss10XzWPhwgWPNnWVrc1T427HD5oqItn4vANIj5PtyjnUT0kaCYem6JDmg3IYLsm56PnJHh/ElzKVHzgokOnT/xu1uJMlRksMYYmt+zesuIFkvJY/kKinnp25XFVnCkDVFtdVf8e4KK6ZKdqcOX3yqjFDgxSJhij6q1sdf1qF/nerOqNGVWpfeka9pqLqjnUVv4YRdDx9A0o0bRg5Wd9H/kZJHKhqfjw=
