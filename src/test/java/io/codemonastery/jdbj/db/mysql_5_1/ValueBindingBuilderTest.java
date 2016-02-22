@@ -1,7 +1,7 @@
 package io.codemonastery.jdbj.db.mysql_5_1;
 
-import io.codemonastery.jdbj.test.binding.value.*;
 import io.codemonastery.jdbj.SimpleBuilder;
+import io.codemonastery.jdbj.test.binding.value.*;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
@@ -11,7 +11,6 @@ import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 

@@ -1,9 +1,8 @@
 package io.codemonastery.jdbj.db.h2_1_4;
 
-import io.codemonastery.jdbj.test.query.*;
 import io.codemonastery.jdbj.student.StudentTest;
+import io.codemonastery.jdbj.test.query.*;
 import org.junit.ClassRule;
-import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 

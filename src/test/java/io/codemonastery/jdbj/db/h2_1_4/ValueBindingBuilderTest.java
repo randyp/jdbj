@@ -12,8 +12,6 @@ import org.junit.runner.RunWith;
 import javax.sql.DataSource;
 import java.sql.SQLFeatureNotSupportedException;
 
-import static org.junit.Assert.*;
-
 @RunWith(Enclosed.class)
 public class ValueBindingBuilderTest {
 
