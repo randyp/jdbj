@@ -9,11 +9,12 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.Properties;
+import java.util.TimeZone;
 import java.util.logging.Logger;
 
 public class MySqlRule extends ExternalResource implements DataSource {
 
-    private final String url = "jdbc:mysql://localhost:3306/jdbj";
+    private final String url = "jdbc:mysql://localhost:3306/jdbj?useLegacyDatetimeCode=false&serverTimezone=" + TimeZone.getDefault().getID();
     private final Properties defaultProperties = new Properties();
     private boolean open;
 

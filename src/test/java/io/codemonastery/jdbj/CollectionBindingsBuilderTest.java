@@ -1,6 +1,5 @@
 package io.codemonastery.jdbj;
 
-import io.codemonastery.jdbj.NamedParameterStatement;
 import io.codemonastery.jdbj.db.h2_1_4.H2Rule;
 import org.junit.ClassRule;
 import org.junit.Test;

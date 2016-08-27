@@ -1053,7 +1053,7 @@ public class SmartResultSetTest {
         @ClassRule
         public static final PGRule db = new PGRule();
 
-        @Test(expected = SQLFeatureNotSupportedException.class)
+        @Test
         public void index() throws Exception {
             final String expected = "abcde";
             final Binding binding = pc -> pc.setObject(expected);
@@ -1061,7 +1061,7 @@ public class SmartResultSetTest {
             assertResults(binding, assertions, db);
         }
 
-        @Test(expected = SQLFeatureNotSupportedException.class)
+        @Test
         public void label() throws Exception {
             final String expected = "abcde";
             final Binding binding = pc -> pc.setObject(expected);
