@@ -5,16 +5,16 @@
         <maven>3.3.3</maven>
     </prerequisites>
 
-    <groupId>io.codemonastery</groupId>
+    <groupId>io.github.randyp</groupId>
     <artifactId>jdbj</artifactId>
     <version>0.1.21-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>jdbj</name>
 
     <description>
-        a java8 fluent interface for jdbc
+        a java fluent interface for jdbc
     </description>
-    <url>https://github.com/code-monastery/jdbj</url>
+    <url>https://github.com/randyp/jdbj</url>
 
     <licenses>
         <license>
@@ -25,9 +25,9 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:git://github.com/code-monastery/jdbj.git</connection>
-        <developerConnection>scm:git:git@github.com:code-monastery/jdbj.git</developerConnection>
-        <url>https://github.com/code-monastery/jdbj</url>
+        <connection>scm:git:git://github.com/randyp/jdbj.git</connection>
+        <developerConnection>scm:git:git@github.com:randyp/jdbj.git</developerConnection>
+        <url>https://github.com/randyp/jdbj</url>
         <tag>HEAD</tag>
     </scm>
 
@@ -117,17 +117,6 @@
         </dependency>
     </dependencies>
 
-    <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
-
     <build>
         <plugins>
             <plugin>
@@ -199,7 +188,7 @@
                             <relocations>
                                 <relocation>
                                     <pattern>org.antlr.runtime</pattern>
-                                    <shadedPattern>io.codemonastery.jdbj.org.antlr.runtime</shadedPattern>
+                                    <shadedPattern>io.github.randyp.jdbj.org.antlr.runtime</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>
@@ -247,70 +236,12 @@
                         </goals>
                         <configuration>
                             <excludes>
-                                <exclude>io.codemonastery.jdbj.lexer.*</exclude>
+                                <exclude>io.github.randyp.jdbj.lexer.*</exclude>
                             </excludes>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.eluder.coveralls</groupId>
-                <artifactId>coveralls-maven-plugin</artifactId>
-                <version>4.2.0</version>
-            </plugin>
-            <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.7</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <serverId>ossrh</serverId>
-                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
-                <configuration>
-                    <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <useReleaseProfile>false</useReleaseProfile>
-                    <releaseProfiles>gpg</releaseProfiles>
-                    <goals>deploy</goals>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>gpg</id>
-            <properties>
-                <gpg.executable>gpg</gpg.executable>
-            </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.6</version>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                                <configuration>
-                                    <keyname>codemonastery</keyname>
-                                    <passphrase>${env.codemonastery_passphrase}</passphrase>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>
