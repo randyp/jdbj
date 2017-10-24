@@ -1,21 +1,13 @@
-[![Build Status](https://travis-ci.org/code-monastery/jdbj.svg?branch=master)](https://travis-ci.org/code-monastery/jdbj)
-[![Coverage Status](https://img.shields.io/coveralls/code-monastery/jdbj.svg)](https://coveralls.io/r/code-monastery/jdbj)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.codemonastery/jdbj/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.codemonastery/jdbj)
-[![Javadoc](https://javadoc-emblem.rhcloud.com/doc/io.codemonastery/jdbj/badge.svg)](http://www.javadoc.io/doc/io.codemonastery/jdbj)
-
 JDBJ is a small jdbc fluent interface for capturing query intent before query execution.
-
-#### See Also
- * [Wiki](https://github.com/code-monastery/jdbj/wiki) For api documentation, guiding principles, credits.
 
 #### Primary Features
 * Named Parameters (No Positional Parameters, ever)
 * Collections bindable (not during batch execution)
 * Null-Safe fetching of (Boolean|Byte|Double|Float|Integer|Long|Short)
-* Java8 lambda interface for bindings, transactions
+* Lambda interface for bindings, transactions
 * Fetch-forward read-only cursors, always
 * Script Execution, with parameters
-* Comprehensive test suites for latest postgres,h2,derby,SQLite,MySql 
+* Comprehensive test suites for latest postgres, h2, derby, SQLite, MySql 
 
 #### Sample Code
 Insert inside a transaction:
@@ -67,7 +59,7 @@ try (Stream<Student> stream = streamQuery.execute(db)) {
 
 #### Examples
 A full set of examples is being developed in the [examples-branch](https://github.com/randyp/jdbj/tree/examples), but here are some quick examples maintained in the test directory:
-* [Example Main](src/test/java/io/codemonastery/jdbj/example/InformationSchemaMain.java)
-* [Example DAO (connection as construction parameter)](src/test/java/io/codemonastery/jdbj/example/StudentDAO.java)
-* [Example DAO (binding/result set extension)](src/test/java/io/codemonastery/jdbj/example/extension/MessageDAO.java)
+* [Example Main](src/test/java/io/github/randyp/jdbj/example/InformationSchemaMain.java)
+* [Example DAO (connection as construction parameter)](src/test/java/io/github/randyp/jdbj/example/StudentDAO.java)
+* [Example DAO (binding/result set extension)](src/test/java/io/github/randyp/jdbj/example/extension/MessageDAO.java)
 
