@@ -1,4 +1,4 @@
-This library is snapshot in 2015 of how I feel we should be thinking about application SQL queries. Not intended or suited for production use.
+This library is snapshot in 2015 of how I felt we should be thinking about application SQL queries. Not intended or suited for production use.
 
 ---
 
