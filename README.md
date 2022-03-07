@@ -1,3 +1,7 @@
+This library is snapshot in 2015 of how I feel we should be thinking about application SQL queries. Not intended or suited for production use.
+
+---
+
 JDBJ is a small jdbc fluent interface for capturing query intent before query execution.
 
 #### Primary Features
